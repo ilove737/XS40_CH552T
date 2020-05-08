@@ -1,0 +1,5 @@
+".\Objects\STARTUP.obj",
+".\Objects\CompositeKM.obj",
+".\Objects\Debug.obj" 
+TO ".\Objects\XS40_CH552T" 
+PRINT(".\Listings\XS40_CH552T.m51") RAMSIZE(256) 
