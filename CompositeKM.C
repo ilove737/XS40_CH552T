@@ -8,7 +8,10 @@
 *******************************************************************************/
 
 #include "CH552.H"
+#include "UART1.H"
+#include "Timer.H"
 #include "Debug.H"
+#include "scanKey.H"
 #include <string.h>
 #include <stdio.h>
 
@@ -240,7 +243,7 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
                         UsbConfig = UsbSetupBuf->wValueL;
                         if (UsbConfig)
                         {
-#ifdef DE_PRINTF
+#if DE_PRINTF
                             printf("SET CONFIG.\n");
 #endif
                             Ready = 1; //set config命令一般代表usb枚举完成的标志
@@ -390,11 +393,13 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
             {
                 if (Ep0Buffer[0])
                 {
-                    printf("Light on Num Lock LED!\n");
+                    // printf("Light on Num Lock LED!\n");
+					UART1SendByte(0x32);
                 }
                 else if (Ep0Buffer[0] == 0)
                 {
-                    printf("Light off Num Lock LED!\n");
+                    // printf("Light off Num Lock LED!\n");
+					UART1SendByte(0x33);
                 }
             }
             UEP0_CTRL ^= bUEP_R_TOG; //同步标志位翻转
@@ -441,8 +446,11 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
 void HIDValueHandle()
 {
     UINT8 i;
+	// UART1SendByte(0x31);
+
     i = getkey();
-    printf("%c", (UINT8)i);
+    // printf("%c", (UINT8)i);
+    // i = 'A';
     switch (i)
     {
         //鼠标数据上传示例
@@ -501,13 +509,27 @@ main()
 {
     CfgFsys();    //CH559时钟选择配置
     mDelaymS(5);  //修改主频等待内部晶振稳定,必加
-    mInitSTDIO(); //串口0初始化
+    // mInitSTDIO(); //串口0初始化
 #ifdef DE_PRINTF
-    printf("start ...\n");
+    // printf("start ...\n");
 #endif
 
+	initGPIO();
+
+    // printf("T0 Test ...\n"); 
+    mTimer0Clk12DivFsys();	                                                   //T0定时器时钟设置
+    mTimer_x_ModInit(0,1);                                                     //T0 定时器模式设置
+    mTimer_x_SetData(0,0x5555);	                                               //T0定时器赋值
+    mTimer0RunCTL(1);                                                          //T0定时器启动	
+    ET0 = 1;                                                                   //T0定时器中断开启		
+    EA = 1;
+
+
+	UART1Init();
+	UART1SendByte(0x30);
+	
 //读取芯片唯一ID号
-#ifdef DE_PRINTF
+#if DE_PRINTF
     printf("ID0 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFA), (UINT16) * (PUINT8C)(0x3FFB));
     printf("ID1 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFC), (UINT16) * (PUINT8C)(0x3FFD));
     printf("ID2 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFE), (UINT16) * (PUINT8C)(0x3FFF));
@@ -533,4 +555,17 @@ main()
         }
         mDelaymS(10); //模拟单片机做其它事
     }
+
+    for(i=0;i<128;i++){	                                                     //循环写入128字节		
+        len = WriteDataFlash(i,&i,1);                                          //向DataFlash区域偏移地址i写入i
+        if(len != 1){
+          printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印				
+        }
+      }
+      for(i=0;i<128;i++){                                                      //读DataFlash区域偏移地址i并校验
+        len = ReadDataFlash(i,1,&m);
+        if((len != 1) ||(m != i)){
+          printf("Read Err 次 = %02x, = %02x,addr =%02x ,值= %02x\n",j,(UINT16)(i*2),(UINT16)ROM_DATA_L,(UINT16)m);
+        }                                                                      //读校验出错打印
+      }  
 }

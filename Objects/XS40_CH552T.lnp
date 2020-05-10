@@ -1,5 +1,9 @@
 ".\Objects\STARTUP.obj",
 ".\Objects\CompositeKM.obj",
-".\Objects\Debug.obj" 
+".\Objects\Debug.obj",
+".\Objects\UART1.obj",
+".\Objects\Timer.obj",
+".\Objects\scanKey.obj",
+".\Objects\GPIO.obj" 
 TO ".\Objects\XS40_CH552T" 
 PRINT(".\Listings\XS40_CH552T.m51") RAMSIZE(256) 

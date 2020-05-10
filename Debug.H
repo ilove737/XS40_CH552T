@@ -27,7 +27,7 @@
 #define  UART1_BUAD    57600
 #endif
 #ifndef  DE_PRINTF                      //程序Pirntf输出开启
-#define  DE_PRINTF     1
+#define  DE_PRINTF     0
 #endif
 
 void	CfgFsys( );                        //CH554时钟选择和配置
