@@ -11,6 +11,7 @@
 #include "Debug.H"
 #include "UART1.H"
 #include "Timer.H" 
+#include "scanKey.h"
 #include "stdio.h"
 
 #pragma  NOAREGS
@@ -107,9 +108,10 @@ void mTimer0Interrupt( void ) interrupt INT_NO_TMR0 using 1                //tim
     // SCK = ~SCK;
     // UART1SendByte(0x39);
 
-    mTimer_x_SetData(0,1000);                                          //非自动重载方式需重新给TH0和TL0赋值
+    mTimer_x_SetData(0,2000);                                          //非自动重载方式需重新给TH0和TL0赋值
     
 
+    scanKeyChange();
 
     
 }

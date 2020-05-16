@@ -4,8 +4,10 @@
 // 这个就是 左 键盘布局
 #if 1
 UINT8X keyMap[16] ={
-    KEY_ESC,        KEY_1,   KEY_2,  KEY_3,      KEY_4,      KEY_5,      KEY_GRAVE,   SHIFT_8,
-    KEY_TAB,        KEY_Q,   KEY_W,  KEY_E,      KEY_R,      KEY_T,      KEY_LEFTBRACE, KEY_RIGHTBRACE,
+    KEY_ESC,        KEY_1,   KEY_2,  KEY_3,
+    KEY_4,      KEY_5,      KEY_GRAVE,   KEY_7,
+    KEY_TAB,        KEY_Q,   KEY_W,  KEY_E,
+    KEY_R,      KEY_T,      KEY_LEFTBRACE, KEY_RIGHTBRACE,
 //    KEY_CAPSLOCK,   KEY_A,   KEY_S,  KEY_D,      KEY_F,      KEY_G,      SHIFT_9,     SHIFT_0,
 //    KEY_LEFTSHIFT,  SHIFT_2, KEY_Z,  KEY_X,      KEY_C,      KEY_V,      SHIFT_7,     SHIFT_3,
 //    KEY_Fn0,   KEY_LEFTMETA,  KEY_LEFTALT, KEY_LEFTSHIFT, KEY_SPACE, KEY_LEFTCTRL,  SHIFT_GRAVE, SHIFT_1,

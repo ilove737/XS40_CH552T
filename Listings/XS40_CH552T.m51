@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        05/10/2020  19:00:06  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        05/16/2020  23:06:38  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -41,25 +41,25 @@ LINK MAP OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
             * * * * * * *   D A T A   M E M O R Y   * * * * * * *
             REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
             REG     0008H     0008H     ABSOLUTE     "REG BANK 1"
-            DATA    0010H     0005H     UNIT         ?DT?MINITSTDIO?DEBUG
-            DATA    0015H     0001H     UNIT         ?DT?SCANKEY
-                    0016H     000AH                  *** GAP ***
+            DATA    0010H     000EH     UNIT         ?DT?SCANKEY
+                    001EH     0002H                  *** GAP ***
             BIT     0020H.0   0001H.1   UNIT         _BIT_GROUP_
                     0021H.1   0000H.7                *** GAP ***
             DATA    0022H     001DH     UNIT         ?DT?COMPOSITEKM
             DATA    003FH     0015H     UNIT         _DATA_GROUP_
-            IDATA   0054H     0001H     UNIT         ?STACK
+            DATA    0054H     0005H     UNIT         ?DT?MINITSTDIO?DEBUG
+            IDATA   0059H     0001H     UNIT         ?STACK
 
             * * * * * * *  X D A T A   M E M O R Y  * * * * * * *
             XDATA   0000H     000AH     ABSOLUTE     
             XDATA   000AH     0042H     ABSOLUTE     
                     004CH     0004H                  *** GAP ***
             XDATA   0050H     0042H     ABSOLUTE     
-            XDATA   0092H     0022H     UNIT         ?XD?SCANKEY
+            XDATA   0092H     0014H     UNIT         ?XD?SCANKEY
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 2
 
 
             CODE    0003H     0008H     UNIT         ?PR?UART1RCVBYTE?UART1
@@ -73,33 +73,33 @@ LINK MAP OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
             CODE    0066H     03FCH     UNIT         ?C?LIB_CODE
             CODE    0462H     035CH     UNIT         ?PR?PRINTF?PRINTF
             CODE    07BEH     032CH     UNIT         ?PR?DEVICEINTERRUPT?COMPOSITEKM
-            CODE    0AEAH     013EH     UNIT         ?PR?MAKEHIDFRAMES?SCANKEY
-            CODE    0C28H     00BFH     UNIT         ?CO?COMPOSITEKM
-            CODE    0CE7H     008CH     UNIT         ?C_C51STARTUP
-            CODE    0D73H     0074H     UNIT         ?PR?MINITSTDIO?DEBUG
-            CODE    0DE7H     006DH     UNIT         ?PR?HIDVALUEHANDLE?COMPOSITEKM
-            CODE    0E54H     0065H     UNIT         ?PR?SCANKEYCHANGE?SCANKEY
-            CODE    0EB9H     005DH     UNIT         ?PR?MAIN?COMPOSITEKM
-            CODE    0F16H     0059H     UNIT         ?PR?_PORT1CFG?GPIO
-            CODE    0F6FH     0059H     UNIT         ?PR?_PORT3CFG?GPIO
-            CODE    0FC8H     004EH     UNIT         ?PR?USBDEVICEINIT?COMPOSITEKM
-            CODE    1016H     003BH     UNIT         ?C_INITSEG
-            CODE    1051H     0037H     UNIT         ?PR?INITGPIO?SCANKEY
-            CODE    1088H     002EH     UNIT         ?PR?_MTIMER_X_MODINIT?TIMER
-            CODE    10B6H     002AH     UNIT         ?PR?GPIOINTERRUPT?GPIO
-            CODE    10E0H     0027H     UNIT         ?PR?PUTCHAR?PUTCHAR
-            CODE    1107H     001AH     UNIT         ?PR?ENP2INTIN?COMPOSITEKM
-            CODE    1121H     0018H     UNIT         ?PR?_CAP1INIT?TIMER
-            CODE    1139H     0017H     UNIT         ?PR?_MDELAYMS?DEBUG
-            CODE    1150H     0015H     UNIT         ?PR?MTIMER0INTERRUPT?TIMER
-            CODE    1165H     0013H     UNIT         ?CO?GPIO
-            CODE    1178H     0012H     UNIT         ?PR?CFGFSYS?DEBUG
-            CODE    118AH     0012H     UNIT         ?PR?_CAP2INIT?TIMER
-            CODE    119CH     000EH     UNIT         ?PR?_MDELAYUS?DEBUG
-            CODE    11AAH     000CH     UNIT         ?PR?UART1INIT?UART1
-            CODE    11B6H     000AH     UNIT         ?PR?_GETKEY?_GETKEY
-            CODE    11C0H     0009H     UNIT         ?PR?GPIOINTERRUPTCFG?GPIO
-            CODE    11C9H     0008H     UNIT         ?PR?_UART1SENDBYTE?UART1
+            CODE    0AEAH     00D3H     UNIT         ?PR?MAKEHIDFRAMES?SCANKEY
+            CODE    0BBDH     00BFH     UNIT         ?CO?COMPOSITEKM
+            CODE    0C7CH     00B6H     UNIT         ?PR?SCANKEYCHANGE?SCANKEY
+            CODE    0D32H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0DBEH     0074H     UNIT         ?PR?MINITSTDIO?DEBUG
+            CODE    0E32H     006DH     UNIT         ?PR?HIDVALUEHANDLE?COMPOSITEKM
+            CODE    0E9FH     005DH     UNIT         ?PR?MAIN?COMPOSITEKM
+            CODE    0EFCH     0059H     UNIT         ?PR?_PORT1CFG?GPIO
+            CODE    0F55H     0059H     UNIT         ?PR?_PORT3CFG?GPIO
+            CODE    0FAEH     004EH     UNIT         ?PR?USBDEVICEINIT?COMPOSITEKM
+            CODE    0FFCH     0038H     UNIT         ?PR?INITGPIO?SCANKEY
+            CODE    1034H     0037H     UNIT         ?C_INITSEG
+            CODE    106BH     002EH     UNIT         ?PR?_MTIMER_X_MODINIT?TIMER
+            CODE    1099H     002AH     UNIT         ?PR?GPIOINTERRUPT?GPIO
+            CODE    10C3H     0027H     UNIT         ?PR?PUTCHAR?PUTCHAR
+            CODE    10EAH     0024H     UNIT         ?PR?MTIMER0INTERRUPT?TIMER
+            CODE    110EH     001AH     UNIT         ?PR?ENP2INTIN?COMPOSITEKM
+            CODE    1128H     0018H     UNIT         ?PR?_CAP1INIT?TIMER
+            CODE    1140H     0017H     UNIT         ?PR?_MDELAYMS?DEBUG
+            CODE    1157H     0013H     UNIT         ?CO?GPIO
+            CODE    116AH     0012H     UNIT         ?PR?CFGFSYS?DEBUG
+            CODE    117CH     0012H     UNIT         ?PR?_CAP2INIT?TIMER
+            CODE    118EH     000EH     UNIT         ?PR?_MDELAYUS?DEBUG
+            CODE    119CH     000CH     UNIT         ?PR?UART1INIT?UART1
+            CODE    11A8H     000AH     UNIT         ?PR?_GETKEY?_GETKEY
+            CODE    11B2H     0009H     UNIT         ?PR?GPIOINTERRUPTCFG?GPIO
+            CODE    11BBH     0008H     UNIT         ?PR?_UART1SENDBYTE?UART1
 
 
 
@@ -119,7 +119,7 @@ SEGMENT                                    BIT_GROUP          DATA_GROUP
   +--> ?PR?INITGPIO?SCANKEY
   +--> ?PR?_MTIMER_X_MODINIT?TIMER
   +--> ?PR?_MTIMER_X_SETDATA?TIMER
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 3
 
 
   +--> ?PR?UART1INIT?UART1
@@ -150,6 +150,14 @@ SEGMENT                                    BIT_GROUP          DATA_GROUP
 
 ?PR?MTIMER0INTERRUPT?TIMER              -----    -----      -----    -----
   +--> ?PR?_MTIMER_X_SETDATA?TIMER
+  +--> ?PR?SCANKEYCHANGE?SCANKEY
+
+?PR?SCANKEYCHANGE?SCANKEY               -----    -----      -----    -----
+  +--> ?PR?_UART1SENDBYTE?UART1
+  +--> ?PR?MAKEHIDFRAMES?SCANKEY
+
+?PR?MAKEHIDFRAMES?SCANKEY               -----    -----      -----    -----
+  +--> ?PR?_UART1SENDBYTE?UART1
 
 *** NEW ROOT ***************************************************
 
@@ -168,9 +176,12 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   ----------------------------------
 
   -------         MODULE        ?C_STARTUP
-  C:0CE7H         SEGMENT       ?C_C51STARTUP
-  I:0054H         SEGMENT       ?STACK
+  C:0D32H         SEGMENT       ?C_C51STARTUP
+  I:0059H         SEGMENT       ?STACK
   C:0000H         PUBLIC        ?C_STARTUP
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 4
+
+
   D:00E0H         SYMBOL        ACC
   D:00F0H         SYMBOL        B
   D:0083H         SYMBOL        DPH
@@ -178,10 +189,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   N:0000H         SYMBOL        IBPSTACK
   N:0100H         SYMBOL        IBPSTACKTOP
   N:0080H         SYMBOL        IDATALEN
-  C:0CEAH         SYMBOL        IDATALOOP
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 4
-
-
+  C:0D35H         SYMBOL        IDATALOOP
   N:0000H         SYMBOL        PBPSTACK
   N:0100H         SYMBOL        PBPSTACKTOP
   N:0000H         SYMBOL        PDATALEN
@@ -190,18 +198,18 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   N:0000H         SYMBOL        PPAGEENABLE
   D:00A0H         SYMBOL        PPAGE_SFR
   D:0081H         SYMBOL        SP
-  C:0CE7H         SYMBOL        STARTUP1
+  C:0D32H         SYMBOL        STARTUP1
   N:0000H         SYMBOL        XBPSTACK
   N:0000H         SYMBOL        XBPSTACKTOP
   N:0000H         SYMBOL        XDATALEN
   N:0000H         SYMBOL        XDATASTART
   C:0000H         LINE#         126
-  C:0CE7H         LINE#         133
-  C:0CE9H         LINE#         134
-  C:0CEAH         LINE#         135
-  C:0CEBH         LINE#         136
-  C:0CEDH         LINE#         185
-  C:0CF0H         LINE#         196
+  C:0D32H         LINE#         133
+  C:0D34H         LINE#         134
+  C:0D35H         LINE#         135
+  C:0D36H         LINE#         136
+  C:0D38H         LINE#         185
+  C:0D3BH         LINE#         196
   -------         ENDMOD        ?C_STARTUP
 
   -------         MODULE        COMPOSITEKM
@@ -220,30 +228,30 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   D:00E3H         PUBLIC        USB_DEV_AD
   D:00D3H         PUBLIC        UEP1_T_LEN
   D:00D5H         PUBLIC        UEP2_T_LEN
-  C:0C3AH         PUBLIC        CfgDesc
+  C:0BCFH         PUBLIC        CfgDesc
   D:00B8H         PUBLIC        IP
   D:002CH         PUBLIC        FLAG
-  C:0C28H         PUBLIC        DevDesc
+  C:0BBDH         PUBLIC        DevDesc
   D:00D8H         PUBLIC        USB_INT_FG
-  C:0EB9H         PUBLIC        main
-  C:0DE7H         PUBLIC        HIDValueHandle
+  C:0E9FH         PUBLIC        main
+  C:0E32H         PUBLIC        HIDValueHandle
   C:07BEH         PUBLIC        DeviceInterrupt
   D:00E1H         PUBLIC        USB_INT_EN
   B:00D8H.1       PUBLIC        UIF_TRANSFER
   D:00DCH         PUBLIC        UEP0_CTRL
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 5
+
+
   D:00D2H         PUBLIC        UEP1_CTRL
   D:00D4H         PUBLIC        UEP2_CTRL
   D:0098H         PUBLIC        SCON
   D:002DH         PUBLIC        SetupLen
   D:0088H         PUBLIC        TCON
   D:00DBH         PUBLIC        USB_RX_LEN
-  C:0CB3H         PUBLIC        MouseRepDesc
+  C:0C48H         PUBLIC        MouseRepDesc
   C:0046H         PUBLIC        Enp1IntIn
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 5
-
-
   D:00F8H         PUBLIC        SPI0_STAT
-  C:1107H         PUBLIC        Enp2IntIn
+  C:110EH         PUBLIC        Enp2IntIn
   D:00DAH         PUBLIC        USB_MIS_ST
   D:002EH         PUBLIC        SetupReq
   D:00D9H         PUBLIC        USB_INT_ST
@@ -256,8 +264,8 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   D:00ECH         PUBLIC        UEP0_DMA
   D:00EEH         PUBLIC        UEP1_DMA
   D:00E4H         PUBLIC        UEP2_DMA
-  C:0C75H         PUBLIC        KeyRepDesc
-  C:0FC8H         PUBLIC        USBDeviceInit
+  C:0C0AH         PUBLIC        KeyRepDesc
+  C:0FAEH         PUBLIC        USBDeviceInit
   B:0088H.4       PUBLIC        TR0
   B:00E8H.2       PUBLIC        IE_USB
   D:002FH         PUBLIC        SetupReqBuf
@@ -273,35 +281,35 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   D:003EH         PUBLIC        Ready
   D:00D0H         PUBLIC        PSW
   -------         PROC          USBDEVICEINIT
-  C:0FC8H         LINE#         78
-  C:0FC8H         LINE#         79
-  C:0FC8H         LINE#         80
-  C:0FCAH         LINE#         81
-  C:0FCDH         LINE#         82
-  C:0FD0H         LINE#         84
-  C:0FD3H         LINE#         85
-  C:0FD6H         LINE#         91
-  C:0FDCH         LINE#         92
-  C:0FE4H         LINE#         93
-  C:0FE7H         LINE#         94
-  C:0FEDH         LINE#         95
-  C:0FF0H         LINE#         96
-  C:0FF3H         LINE#         97
-  C:0FF9H         LINE#         98
-  C:1001H         LINE#         99
-  C:1004H         LINE#         101
-  C:1007H         LINE#         102
-  C:100AH         LINE#         103
-  C:100DH         LINE#         104
-  C:1010H         LINE#         105
-  C:1013H         LINE#         106
-  C:1015H         LINE#         107
+  C:0FAEH         LINE#         78
+  C:0FAEH         LINE#         79
+  C:0FAEH         LINE#         80
+  C:0FB0H         LINE#         81
+  C:0FB3H         LINE#         82
+  C:0FB6H         LINE#         84
+  C:0FB9H         LINE#         85
+  C:0FBCH         LINE#         91
+  C:0FC2H         LINE#         92
+  C:0FCAH         LINE#         93
+  C:0FCDH         LINE#         94
+  C:0FD3H         LINE#         95
+  C:0FD6H         LINE#         96
+  C:0FD9H         LINE#         97
+  C:0FDFH         LINE#         98
+  C:0FE7H         LINE#         99
+  C:0FEAH         LINE#         101
+  C:0FEDH         LINE#         102
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 6
+
+
+  C:0FF0H         LINE#         103
+  C:0FF3H         LINE#         104
+  C:0FF6H         LINE#         105
+  C:0FF9H         LINE#         106
+  C:0FFBH         LINE#         107
   -------         ENDPROC       USBDEVICEINIT
   -------         PROC          ENP1INTIN
   C:0046H         LINE#         115
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 6
-
-
   C:0046H         LINE#         116
   C:0046H         LINE#         117
   C:0059H         LINE#         118
@@ -309,12 +317,12 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:005FH         LINE#         120
   -------         ENDPROC       ENP1INTIN
   -------         PROC          ENP2INTIN
-  C:1107H         LINE#         128
-  C:1107H         LINE#         129
-  C:1107H         LINE#         130
-  C:111AH         LINE#         131
-  C:111DH         LINE#         132
-  C:1120H         LINE#         133
+  C:110EH         LINE#         128
+  C:110EH         LINE#         129
+  C:110EH         LINE#         130
+  C:1121H         LINE#         131
+  C:1124H         LINE#         132
+  C:1127H         LINE#         133
   -------         ENDPROC       ENP2INTIN
   -------         PROC          DEVICEINTERRUPT
   -------         DO            
@@ -351,6 +359,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:0842H         LINE#         169
   C:0857H         LINE#         170
   C:0857H         LINE#         171
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 7
+
+
   C:0857H         LINE#         172
   C:0857H         LINE#         173
   C:0857H         LINE#         174
@@ -359,9 +370,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:0857H         LINE#         177
   C:0857H         LINE#         178
   C:0857H         LINE#         179
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 7
-
-
   C:0857H         LINE#         180
   C:0857H         LINE#         181
   C:0857H         LINE#         182
@@ -411,6 +419,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:08FDH         LINE#         228
   C:090EH         LINE#         229
   C:0915H         LINE#         230
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 8
+
+
   C:0920H         LINE#         231
   C:0923H         LINE#         232
   C:0923H         LINE#         233
@@ -419,9 +430,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:092CH         LINE#         236
   C:0932H         LINE#         237
   C:093CH         LINE#         238
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 8
-
-
   C:093CH         LINE#         239
   C:093FH         LINE#         240
   C:093FH         LINE#         241
@@ -471,6 +479,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:09B3H         LINE#         290
   C:09B3H         LINE#         292
   C:09B3H         LINE#         293
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 9
+
+
   C:09B3H         LINE#         294
   C:09B3H         LINE#         295
   C:09B5H         LINE#         297
@@ -479,9 +490,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:09B5H         LINE#         300
   C:09B7H         LINE#         301
   C:09BCH         LINE#         302
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 9
-
-
   C:09BCH         LINE#         303
   C:09CAH         LINE#         304
   C:09CAH         LINE#         305
@@ -531,6 +539,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:0A26H         LINE#         353
   C:0A2BH         LINE#         354
   C:0A2BH         LINE#         355
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 10
+
+
   C:0A2EH         LINE#         356
   C:0A31H         LINE#         357
   C:0A34H         LINE#         358
@@ -539,9 +550,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:0A3AH         LINE#         361
   C:0A3AH         LINE#         362
   C:0A3CH         LINE#         364
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 10
-
-
   C:0A3CH         LINE#         365
   C:0A3FH         LINE#         366
   C:0A42H         LINE#         367
@@ -591,6 +599,9 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:0ABEH         LINE#         413
   C:0ABEH         LINE#         414
   C:0AC1H         LINE#         415
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 11
+
+
   C:0AC4H         LINE#         416
   C:0AC7H         LINE#         417
   C:0ACAH         LINE#         418
@@ -599,9 +610,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:0AD0H         LINE#         421
   C:0AD0H         LINE#         422
   C:0AD3H         LINE#         423
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 11
-
-
   C:0AD3H         LINE#         424
   C:0AD5H         LINE#         425
   C:0ADAH         LINE#         426
@@ -616,94 +624,94 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   -------         DO            
   D:0007H         SYMBOL        i
   -------         ENDDO         
-  C:0DE7H         LINE#         446
-  C:0DE7H         LINE#         447
-  C:0DE7H         LINE#         451
-  C:0DEAH         LINE#         454
-  C:0DFDH         LINE#         455
-  C:0DFDH         LINE#         457
-  C:0DFDH         LINE#         458
-  C:0E00H         LINE#         459
-  C:0E00H         LINE#         460
-  C:0E00H         LINE#         461
-  C:0E02H         LINE#         462
-  C:0E02H         LINE#         463
-  C:0E05H         LINE#         464
-  C:0E08H         LINE#         465
-  C:0E0BH         LINE#         466
-  C:0E0CH         LINE#         468
-  C:0E0CH         LINE#         469
-  C:0E0FH         LINE#         470
-  C:0E12H         LINE#         471
-  C:0E15H         LINE#         472
-  C:0E18H         LINE#         473
-  C:0E1CH         LINE#         474
-  C:0E1CH         LINE#         476
-  C:0E1CH         LINE#         477
-  C:0E1CH         LINE#         478
-  C:0E1EH         LINE#         479
-  C:0E1EH         LINE#         480
-  C:0E21H         LINE#         481
-  C:0E24H         LINE#         482
-  C:0E27H         LINE#         483
-  C:0E2AH         LINE#         484
-  C:0E2EH         LINE#         485
-  C:0E2EH         LINE#         487
-  C:0E2EH         LINE#         488
-  C:0E2EH         LINE#         489
-  C:0E30H         LINE#         490
-  C:0E30H         LINE#         491
-  C:0E33H         LINE#         492
-  C:0E36H         LINE#         493
-  C:0E39H         LINE#         494
-  C:0E3CH         LINE#         495
-  C:0E40H         LINE#         496
-  C:0E40H         LINE#         498
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 12
+  C:0E32H         LINE#         446
+  C:0E32H         LINE#         447
+  C:0E32H         LINE#         451
+  C:0E35H         LINE#         454
+  C:0E48H         LINE#         455
+  C:0E48H         LINE#         457
+  C:0E48H         LINE#         458
+  C:0E4BH         LINE#         459
+  C:0E4BH         LINE#         460
+  C:0E4BH         LINE#         461
+  C:0E4DH         LINE#         462
+  C:0E4DH         LINE#         463
+  C:0E50H         LINE#         464
+  C:0E53H         LINE#         465
+  C:0E56H         LINE#         466
+  C:0E57H         LINE#         468
+  C:0E57H         LINE#         469
+  C:0E5AH         LINE#         470
+  C:0E5DH         LINE#         471
+  C:0E60H         LINE#         472
+  C:0E63H         LINE#         473
+  C:0E67H         LINE#         474
+  C:0E67H         LINE#         476
+  C:0E67H         LINE#         477
+  C:0E67H         LINE#         478
+  C:0E69H         LINE#         479
+  C:0E69H         LINE#         480
+  C:0E6CH         LINE#         481
+  C:0E6FH         LINE#         482
+  C:0E72H         LINE#         483
+  C:0E75H         LINE#         484
+  C:0E79H         LINE#         485
+  C:0E79H         LINE#         487
+  C:0E79H         LINE#         488
+  C:0E79H         LINE#         489
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 12
 
 
-  C:0E40H         LINE#         499
-  C:0E43H         LINE#         500
-  C:0E43H         LINE#         501
-  C:0E43H         LINE#         502
-  C:0E4BH         LINE#         503
-  C:0E53H         LINE#         504
-  C:0E53H         LINE#         505
-  C:0E53H         LINE#         506
+  C:0E7BH         LINE#         490
+  C:0E7BH         LINE#         491
+  C:0E7EH         LINE#         492
+  C:0E81H         LINE#         493
+  C:0E84H         LINE#         494
+  C:0E87H         LINE#         495
+  C:0E8BH         LINE#         496
+  C:0E8BH         LINE#         498
+  C:0E8BH         LINE#         499
+  C:0E8EH         LINE#         500
+  C:0E8EH         LINE#         501
+  C:0E8EH         LINE#         502
+  C:0E96H         LINE#         503
+  C:0E9EH         LINE#         504
+  C:0E9EH         LINE#         505
+  C:0E9EH         LINE#         506
   -------         ENDPROC       HIDVALUEHANDLE
   -------         PROC          MAIN
-  C:0EB9H         LINE#         508
-  C:0EB9H         LINE#         509
-  C:0EB9H         LINE#         510
-  C:0EBCH         LINE#         511
-  C:0EC3H         LINE#         517
-  C:0EC6H         LINE#         520
-  C:0EC9H         LINE#         521
-  C:0ED0H         LINE#         522
-  C:0ED9H         LINE#         523
-  C:0EDBH         LINE#         524
-  C:0EDDH         LINE#         525
-  C:0EDFH         LINE#         528
-  C:0EE2H         LINE#         529
-  C:0EE7H         LINE#         538
-  C:0EEAH         LINE#         539
-  C:0EECH         LINE#         540
-  C:0EEFH         LINE#         541
-  C:0EF1H         LINE#         542
-  C:0EF3H         LINE#         543
-  C:0EF5H         LINE#         544
-  C:0EF5H         LINE#         545
-  C:0EF5H         LINE#         546
-  C:0EF9H         LINE#         547
-  C:0EF9H         LINE#         548
-  C:0EFCH         LINE#         549
-  C:0EFCH         LINE#         551
-  C:0F03H         LINE#         552
-  C:0F03H         LINE#         553
-  C:0F06H         LINE#         554
-  C:0F0DH         LINE#         555
-  C:0F0DH         LINE#         556
-  C:0F14H         LINE#         557
+  C:0E9FH         LINE#         508
+  C:0E9FH         LINE#         509
+  C:0E9FH         LINE#         510
+  C:0EA2H         LINE#         511
+  C:0EA9H         LINE#         517
+  C:0EACH         LINE#         520
+  C:0EAFH         LINE#         521
+  C:0EB6H         LINE#         522
+  C:0EBFH         LINE#         523
+  C:0EC1H         LINE#         524
+  C:0EC3H         LINE#         525
+  C:0EC5H         LINE#         528
+  C:0EC8H         LINE#         529
+  C:0ECDH         LINE#         538
+  C:0ED0H         LINE#         539
+  C:0ED2H         LINE#         540
+  C:0ED5H         LINE#         541
+  C:0ED7H         LINE#         542
+  C:0ED9H         LINE#         543
+  C:0EDBH         LINE#         544
+  C:0EDBH         LINE#         545
+  C:0EDBH         LINE#         546
+  C:0EDFH         LINE#         547
+  C:0EDFH         LINE#         548
+  C:0EE2H         LINE#         549
+  C:0EE2H         LINE#         551
+  C:0EE9H         LINE#         552
+  C:0EE9H         LINE#         553
+  C:0EECH         LINE#         554
+  C:0EF3H         LINE#         555
+  C:0EF3H         LINE#         556
+  C:0EFAH         LINE#         557
   -------         ENDPROC       MAIN
   -------         ENDMOD        COMPOSITEKM
 
@@ -711,25 +719,25 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:0090H         PUBLIC        P1
   D:00B0H         PUBLIC        P3
-  C:0D73H         PUBLIC        mInitSTDIO
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 13
+
+
+  C:0DBEH         PUBLIC        mInitSTDIO
   D:00E8H         PUBLIC        IE_EX
   D:00A8H         PUBLIC        IE
   D:00B8H         PUBLIC        IP
   B:0098H.1       PUBLIC        TI
   D:00B9H         PUBLIC        CLOCK_CFG
-  C:1139H         PUBLIC        _mDelaymS
+  C:1140H         PUBLIC        _mDelaymS
   D:00D8H         PUBLIC        USB_INT_FG
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 13
-
-
-  C:119CH         PUBLIC        _mDelayuS
+  C:118EH         PUBLIC        _mDelayuS
   B:00C8H.5       PUBLIC        RCLK
   B:00C8H.4       PUBLIC        TCLK
   D:0087H         PUBLIC        PCON
   D:0098H         PUBLIC        SCON
   D:0089H         PUBLIC        TMOD
   D:0088H         PUBLIC        TCON
-  C:1178H         PUBLIC        CfgFsys
+  C:116AH         PUBLIC        CfgFsys
   D:00F8H         PUBLIC        SPI0_STAT
   D:008DH         PUBLIC        TH1
   B:0098H.7       PUBLIC        SM0
@@ -744,64 +752,64 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   D:00C8H         PUBLIC        T2CON
   D:00D0H         PUBLIC        PSW
   -------         PROC          CFGFSYS
-  C:1178H         LINE#         25
-  C:1178H         LINE#         26
-  C:1178H         LINE#         33
-  C:117BH         LINE#         34
-  C:117EH         LINE#         42
-  C:1186H         LINE#         56
-  C:1189H         LINE#         57
+  C:116AH         LINE#         25
+  C:116AH         LINE#         26
+  C:116AH         LINE#         33
+  C:116DH         LINE#         34
+  C:1170H         LINE#         42
+  C:1178H         LINE#         56
+  C:117BH         LINE#         57
   -------         ENDPROC       CFGFSYS
   -------         PROC          _MDELAYUS
   D:0006H         SYMBOL        n
-  C:119CH         LINE#         66
-  C:119CH         LINE#         67
-  C:119CH         LINE#         79
-  C:11A0H         LINE#         80
-  C:11A0H         LINE#         81
-  C:11A2H         LINE#         102
-  C:11A7H         LINE#         103
-  C:11A9H         LINE#         104
+  C:118EH         LINE#         66
+  C:118EH         LINE#         67
+  C:118EH         LINE#         79
+  C:1192H         LINE#         80
+  C:1192H         LINE#         81
+  C:1194H         LINE#         102
+  C:1199H         LINE#         103
+  C:119BH         LINE#         104
   -------         ENDPROC       _MDELAYUS
   -------         PROC          _MDELAYMS
   D:0004H         SYMBOL        n
-  C:1139H         LINE#         113
-  C:113DH         LINE#         114
-  C:113DH         LINE#         115
-  C:1141H         LINE#         116
-  C:1141H         LINE#         123
-  C:1148H         LINE#         125
-  C:114DH         LINE#         126
-  C:114FH         LINE#         127
+  C:1140H         LINE#         113
+  C:1144H         LINE#         114
+  C:1144H         LINE#         115
+  C:1148H         LINE#         116
+  C:1148H         LINE#         123
+  C:114FH         LINE#         125
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 14
+
+
+  C:1154H         LINE#         126
+  C:1156H         LINE#         127
   -------         ENDPROC       _MDELAYMS
   -------         PROC          MINITSTDIO
   -------         DO            
-  D:0010H         SYMBOL        x
-  D:0014H         SYMBOL        x2
+  D:0054H         SYMBOL        x
+  D:0058H         SYMBOL        x2
   -------         ENDDO         
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 14
-
-
-  C:0D73H         LINE#         149
-  C:0D73H         LINE#         150
-  C:0D73H         LINE#         154
-  C:0D75H         LINE#         155
-  C:0D77H         LINE#         156
-  C:0D79H         LINE#         158
-  C:0D7BH         LINE#         159
-  C:0D7DH         LINE#         160
-  C:0D80H         LINE#         161
-  C:0D8AH         LINE#         162
-  C:0D9EH         LINE#         163
-  C:0DB7H         LINE#         164
-  C:0DBEH         LINE#         165
-  C:0DCFH         LINE#         167
-  C:0DD7H         LINE#         168
-  C:0DDAH         LINE#         169
-  C:0DE0H         LINE#         170
-  C:0DE2H         LINE#         171
-  C:0DE4H         LINE#         172
-  C:0DE6H         LINE#         173
+  C:0DBEH         LINE#         149
+  C:0DBEH         LINE#         150
+  C:0DBEH         LINE#         154
+  C:0DC0H         LINE#         155
+  C:0DC2H         LINE#         156
+  C:0DC4H         LINE#         158
+  C:0DC6H         LINE#         159
+  C:0DC8H         LINE#         160
+  C:0DCBH         LINE#         161
+  C:0DD5H         LINE#         162
+  C:0DE9H         LINE#         163
+  C:0E02H         LINE#         164
+  C:0E09H         LINE#         165
+  C:0E1AH         LINE#         167
+  C:0E22H         LINE#         168
+  C:0E25H         LINE#         169
+  C:0E2BH         LINE#         170
+  C:0E2DH         LINE#         171
+  C:0E2FH         LINE#         172
+  C:0E31H         LINE#         173
   -------         ENDPROC       MINITSTDIO
   -------         ENDMOD        DEBUG
 
@@ -809,10 +817,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:0090H         PUBLIC        P1
   D:00B0H         PUBLIC        P3
-  C:11AAH         PUBLIC        UART1Init
+  C:119CH         PUBLIC        UART1Init
   D:00E8H         PUBLIC        IE_EX
   D:00A8H         PUBLIC        IE
-  C:11C9H         PUBLIC        _UART1SendByte
+  C:11BBH         PUBLIC        _UART1SendByte
   D:00B8H         PUBLIC        IP
   D:00C2H         PUBLIC        SBAUD1
   B:00C0H.0       PUBLIC        U1RI
@@ -831,17 +839,17 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   B:00C0H.4       PUBLIC        U1REN
   D:00D0H         PUBLIC        PSW
   -------         PROC          UART1INIT
-  C:11AAH         LINE#         24
-  C:11AAH         LINE#         25
-  C:11AAH         LINE#         26
-  C:11ACH         LINE#         27
-  C:11AEH         LINE#         28
-  C:11B0H         LINE#         29
-  C:11B3H         LINE#         30
-  C:11B5H         LINE#         39
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 15
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 15
 
 
+  C:119CH         LINE#         24
+  C:119CH         LINE#         25
+  C:119CH         LINE#         26
+  C:119EH         LINE#         27
+  C:11A0H         LINE#         28
+  C:11A2H         LINE#         29
+  C:11A5H         LINE#         30
+  C:11A7H         LINE#         39
   -------         ENDPROC       UART1INIT
   -------         PROC          UART1RCVBYTE
   C:0003H         LINE#         47
@@ -853,12 +861,12 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   -------         ENDPROC       UART1RCVBYTE
   -------         PROC          _UART1SENDBYTE
   D:0007H         SYMBOL        SendDat
-  C:11C9H         LINE#         61
-  C:11C9H         LINE#         62
-  C:11C9H         LINE#         63
-  C:11CBH         LINE#         64
-  C:11CEH         LINE#         65
-  C:11D0H         LINE#         66
+  C:11BBH         LINE#         61
+  C:11BBH         LINE#         62
+  C:11BBH         LINE#         63
+  C:11BDH         LINE#         64
+  C:11C0H         LINE#         65
+  C:11C2H         LINE#         66
   -------         ENDPROC       _UART1SENDBYTE
   -------         ENDMOD        UART1
 
@@ -869,8 +877,8 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   D:00E8H         PUBLIC        IE_EX
   D:00A8H         PUBLIC        IE
   D:00B8H         PUBLIC        IP
-  C:1121H         PUBLIC        _CAP1Init
-  C:118AH         PUBLIC        _CAP2Init
+  C:1128H         PUBLIC        _CAP1Init
+  C:117CH         PUBLIC        _CAP2Init
   D:00CBH         PUBLIC        RCAP2H
   D:00D8H         PUBLIC        USB_INT_FG
   D:00CAH         PUBLIC        RCAP2L
@@ -890,27 +898,27 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   D:00CCH         PUBLIC        TL2
   C:000EH         PUBLIC        _mTimer_x_SetData
   D:0080H         PUBLIC        ADC_CTRL
-  C:1088H         PUBLIC        _mTimer_x_ModInit
+  C:106BH         PUBLIC        _mTimer_x_ModInit
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 16
+
+
   B:00C8H.3       PUBLIC        EXEN2
   D:00C0H         PUBLIC        SCON1
   D:00C9H         PUBLIC        T2MOD
   D:00C8H         PUBLIC        T2CON
-  C:1150H         PUBLIC        mTimer0Interrupt
+  C:10EAH         PUBLIC        mTimer0Interrupt
   D:00D0H         PUBLIC        PSW
   -------         PROC          _MTIMER_X_MODINIT
   D:0007H         SYMBOL        x
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 16
-
-
   D:0005H         SYMBOL        mode
-  C:1088H         LINE#         31
-  C:1088H         LINE#         32
-  C:1088H         LINE#         33
-  C:1094H         LINE#         34
-  C:10A5H         LINE#         35
-  C:10B0H         LINE#         36
-  C:10B3H         LINE#         37
-  C:10B5H         LINE#         38
+  C:106BH         LINE#         32
+  C:106BH         LINE#         33
+  C:106BH         LINE#         34
+  C:1077H         LINE#         35
+  C:1088H         LINE#         36
+  C:1093H         LINE#         37
+  C:1096H         LINE#         38
+  C:1098H         LINE#         39
   -------         ENDPROC       _MTIMER_X_MODINIT
   -------         PROC          _MTIMER_X_SETDATA
   D:0007H         SYMBOL        x
@@ -918,180 +926,187 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   -------         DO            
   D:0004H         SYMBOL        tmp
   -------         ENDDO         
-  C:000EH         LINE#         47
   C:000EH         LINE#         48
-  C:000EH         LINE#         50
-  C:0015H         LINE#         51
-  C:0022H         LINE#         52
-  C:002CH         LINE#         53
-  C:002FH         LINE#         54
-  C:0037H         LINE#         55
-  C:003FH         LINE#         56
+  C:000EH         LINE#         49
+  C:000EH         LINE#         51
+  C:0015H         LINE#         52
+  C:0022H         LINE#         53
+  C:002CH         LINE#         54
+  C:002FH         LINE#         55
+  C:0037H         LINE#         56
   C:003FH         LINE#         57
+  C:003FH         LINE#         58
   -------         ENDPROC       _MTIMER_X_SETDATA
   -------         PROC          _CAP2INIT
   D:0007H         SYMBOL        mode
-  C:118AH         LINE#         70
-  C:118AH         LINE#         71
-  C:118AH         LINE#         72
-  C:118CH         LINE#         73
-  C:118EH         LINE#         74
-  C:1190H         LINE#         75
-  C:1192H         LINE#         76
-  C:1194H         LINE#         77
-  C:119BH         LINE#         78
+  C:117CH         LINE#         71
+  C:117CH         LINE#         72
+  C:117CH         LINE#         73
+  C:117EH         LINE#         74
+  C:1180H         LINE#         75
+  C:1182H         LINE#         76
+  C:1184H         LINE#         77
+  C:1186H         LINE#         78
+  C:118DH         LINE#         79
   -------         ENDPROC       _CAP2INIT
   -------         PROC          _CAP1INIT
   D:0007H         SYMBOL        mode
-  C:1121H         LINE#         91
-  C:1121H         LINE#         92
-  C:1121H         LINE#         93
-  C:1123H         LINE#         94
-  C:1125H         LINE#         95
-  C:1127H         LINE#         96
-  C:1129H         LINE#         97
-  C:1138H         LINE#         98
+  C:1128H         LINE#         92
+  C:1128H         LINE#         93
+  C:1128H         LINE#         94
+  C:112AH         LINE#         95
+  C:112CH         LINE#         96
+  C:112EH         LINE#         97
+  C:1130H         LINE#         98
+  C:113FH         LINE#         99
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 17
+
+
   -------         ENDPROC       _CAP1INIT
   -------         PROC          MTIMER0INTERRUPT
-  C:1150H         LINE#         105
-  C:1157H         LINE#         110
-  C:1160H         LINE#         115
+  C:10EAH         LINE#         106
+  C:10F7H         LINE#         111
+  C:1100H         LINE#         114
+  C:1103H         LINE#         117
   -------         ENDPROC       MTIMER0INTERRUPT
   -------         ENDMOD        TIMER
-
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 17
-
 
   -------         MODULE        SCANKEY
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:0090H         PUBLIC        P1
   D:00B0H         PUBLIC        P3
+  B:00B0H.0       PUBLIC        row1
+  B:00B0H.1       PUBLIC        row2
   D:00E8H         PUBLIC        IE_EX
+  B:00B0H.2       PUBLIC        row3
+  B:00B0H.3       PUBLIC        row4
   D:00A8H         PUBLIC        IE
   D:00B8H         PUBLIC        IP
-  C:0E54H         PUBLIC        scanKeyChange
-  X:0092H         PUBLIC        HIDFramesPointer
+  C:0C7CH         PUBLIC        scanKeyChange
+  D:0010H         PUBLIC        HIDFramesPointer
   D:00D8H         PUBLIC        USB_INT_FG
   D:0098H         PUBLIC        SCON
   D:0088H         PUBLIC        TCON
-  X:0093H         PUBLIC        HIDFrames
+  D:0011H         PUBLIC        HIDFrames
   D:00F8H         PUBLIC        SPI0_STAT
-  X:009BH         PUBLIC        beforeAllKey
-  X:009DH         PUBLIC        Fn0_Status
-  X:009EH         PUBLIC        Fn1_Status
-  D:0015H         PUBLIC        tttt
+  D:0019H         PUBLIC        beforeAllKey
+  X:0092H         PUBLIC        Fn0_Status
+  X:0093H         PUBLIC        Fn1_Status
   C:0AEAH         PUBLIC        makeHIDFrames
   D:0080H         PUBLIC        ADC_CTRL
-  X:009FH         PUBLIC        allKey
+  D:001BH         PUBLIC        allKey
   D:00C0H         PUBLIC        SCON1
-  C:1051H         PUBLIC        initGPIO
+  C:0FFCH         PUBLIC        initGPIO
   D:00C8H         PUBLIC        T2CON
-  X:00A1H         PUBLIC        kCode
-  X:00A2H         PUBLIC        i
-  X:00A3H         PUBLIC        j
-  X:00A4H         PUBLIC        keyMap
-  B:0090H.0       PUBLIC        col1
-  B:0090H.1       PUBLIC        col2
-  B:0090H.2       PUBLIC        col3
-  B:0090H.3       PUBLIC        col4
+  D:001DH         PUBLIC        kCode
+  X:0094H         PUBLIC        i
+  X:0095H         PUBLIC        j
+  X:0096H         PUBLIC        keyMap
   D:00D0H         PUBLIC        PSW
   -------         PROC          INITGPIO
-  C:1051H         LINE#         36
-  C:1051H         LINE#         37
-  C:1051H         LINE#         39
-  C:1058H         LINE#         40
-  C:105FH         LINE#         41
-  C:1066H         LINE#         42
-  C:106DH         LINE#         44
-  C:1073H         LINE#         45
-  C:107AH         LINE#         46
-  C:1081H         LINE#         47
+  C:0FFCH         LINE#         34
+  C:0FFCH         LINE#         35
+  C:0FFCH         LINE#         37
+  C:1003H         LINE#         38
+  C:100AH         LINE#         39
+  C:1011H         LINE#         40
+  C:1018H         LINE#         42
+  C:101FH         LINE#         43
+  C:1026H         LINE#         44
+  C:102DH         LINE#         45
   -------         ENDPROC       INITGPIO
   -------         PROC          MAKEHIDFRAMES
-  C:0AEAH         LINE#         51
-  C:0AEAH         LINE#         52
-  C:0AEAH         LINE#         53
-  C:0AEFH         LINE#         54
-  C:0AF5H         LINE#         55
-  C:0B04H         LINE#         56
-  C:0B04H         LINE#         57
-  C:0B10H         LINE#         58
-  C:0B18H         LINE#         59
-  C:0B22H         LINE#         60
-  C:0B22H         LINE#         61
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 18
+  C:0AEAH         LINE#         48
+  C:0AEAH         LINE#         49
+  C:0AEAH         LINE#         50
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 18
 
 
-  C:0B26H         LINE#         62
-  C:0B26H         LINE#         64
-  C:0B2BH         LINE#         66
-  C:0B37H         LINE#         67
-  C:0B37H         LINE#         69
-  C:0B3AH         LINE#         71
-  C:0B3AH         LINE#         93
+  C:0AEFH         LINE#         51
+  C:0AF2H         LINE#         52
+  C:0B00H         LINE#         53
+  C:0B00H         LINE#         54
+  C:0B06H         LINE#         55
+  C:0B0BH         LINE#         56
+  C:0B13H         LINE#         57
+  C:0B13H         LINE#         58
+  C:0B17H         LINE#         59
+  C:0B17H         LINE#         61
+  C:0B1CH         LINE#         62
+  C:0B29H         LINE#         64
+  C:0B29H         LINE#         66
+  C:0B29H         LINE#         88
+  C:0B38H         LINE#         89
+  C:0B38H         LINE#         90
+  C:0B3FH         LINE#         91
+  C:0B3FH         LINE#         92
+  C:0B4CH         LINE#         93
   C:0B4CH         LINE#         94
-  C:0B4CH         LINE#         95
-  C:0B5CH         LINE#         96
-  C:0B5CH         LINE#         97
-  C:0B6EH         LINE#         98
-  C:0B6EH         LINE#         99
-  C:0B8AH         LINE#         100
-  C:0B8AH         LINE#         109
-  C:0BADH         LINE#         111
-  C:0BB2H         LINE#         112
-  C:0BB2H         LINE#         113
-  C:0BC8H         LINE#         114
-  C:0BCAH         LINE#         115
-  C:0BD4H         LINE#         116
-  C:0BD4H         LINE#         117
-  C:0BDBH         LINE#         118
-  C:0BDEH         LINE#         119
-  C:0BDEH         LINE#         120
-  C:0BE0H         LINE#         122
-  C:0BE0H         LINE#         123
-  C:0BF4H         LINE#         124
-  C:0BFAH         LINE#         125
-  C:0BFAH         LINE#         126
-  C:0BFAH         LINE#         127
-  C:0C03H         LINE#         128
-  C:0C03H         LINE#         129
-  C:0C0CH         LINE#         130
-  C:0C11H         LINE#         131
-  C:0C11H         LINE#         133
-  C:0C16H         LINE#         134
-  C:0C22H         LINE#         135
-  C:0C27H         LINE#         136
-  C:0C27H         LINE#         137
+  C:0B62H         LINE#         95
+  C:0B62H         LINE#         104
+  C:0B83H         LINE#         117
+  C:0B83H         LINE#         118
+  C:0B8AH         LINE#         119
+  C:0B8CH         LINE#         120
+  C:0B8CH         LINE#         121
+  C:0B8CH         LINE#         122
+  C:0B94H         LINE#         123
+  C:0B94H         LINE#         124
+  C:0B9CH         LINE#         125
+  C:0BABH         LINE#         126
+  C:0BABH         LINE#         128
+  C:0BB4H         LINE#         129
+  C:0BBCH         LINE#         131
+  C:0BBCH         LINE#         132
   -------         ENDPROC       MAKEHIDFRAMES
   -------         PROC          SCANKEYCHANGE
-  C:0E54H         LINE#         141
-  C:0E54H         LINE#         142
-  C:0E54H         LINE#         143
-  C:0E57H         LINE#         144
-  C:0E5DH         LINE#         145
-  C:0E5DH         LINE#         146
-  C:0E5FH         LINE#         147
-  C:0E74H         LINE#         148
-  C:0E74H         LINE#         149
-  C:0E87H         LINE#         151
-  C:0E8AH         LINE#         153
-  C:0E8AH         LINE#         154
-  C:0E8AH         LINE#         156
-  C:0E8AH         LINE#         157
-  C:0E8EH         LINE#         158
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 19
+  C:0C7CH         LINE#         134
+  C:0C7CH         LINE#         135
+  C:0C7CH         LINE#         136
+  C:0C7FH         LINE#         137
+  C:0C81H         LINE#         138
+  C:0C8FH         LINE#         139
+  C:0C8FH         LINE#         140
+  C:0C91H         LINE#         141
+  C:0C93H         LINE#         142
+  C:0C95H         LINE#         143
+  C:0C97H         LINE#         145
+  C:0CA5H         LINE#         146
+  C:0CA5H         LINE#         147
+  C:0CA5H         LINE#         148
+  C:0CA7H         LINE#         149
+  C:0CAEH         LINE#         150
+  C:0CB0H         LINE#         151
+  C:0CB0H         LINE#         152
+  C:0CB2H         LINE#         153
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 19
 
 
-  C:0E90H         LINE#         159
-  C:0E95H         LINE#         160
-  C:0E97H         LINE#         161
-  C:0E9CH         LINE#         162
-  C:0E9EH         LINE#         163
-  C:0EA3H         LINE#         164
-  C:0EA5H         LINE#         167
-  C:0EB6H         LINE#         169
-  C:0EB8H         LINE#         170
-  C:0EB8H         LINE#         171
+  C:0CBCH         LINE#         154
+  C:0CBEH         LINE#         155
+  C:0CBEH         LINE#         156
+  C:0CC0H         LINE#         157
+  C:0CC7H         LINE#         158
+  C:0CC9H         LINE#         159
+  C:0CC9H         LINE#         160
+  C:0CCBH         LINE#         161
+  C:0CD5H         LINE#         162
+  C:0CD5H         LINE#         165
+  C:0CD5H         LINE#         167
+  C:0CDDH         LINE#         169
+  C:0CF3H         LINE#         170
+  C:0CF3H         LINE#         171
+  C:0CF8H         LINE#         172
+  C:0CFDH         LINE#         173
+  C:0D02H         LINE#         174
+  C:0D07H         LINE#         175
+  C:0D0CH         LINE#         177
+  C:0D1FH         LINE#         181
+  C:0D22H         LINE#         182
+  C:0D27H         LINE#         183
+  C:0D2CH         LINE#         184
+  C:0D31H         LINE#         185
+  C:0D31H         LINE#         186
   -------         ENDPROC       SCANKEYCHANGE
   -------         ENDMOD        SCANKEY
 
@@ -1099,10 +1114,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:0090H         PUBLIC        P1
   D:00B0H         PUBLIC        P3
-  C:10B6H         PUBLIC        GPIOInterrupt
+  C:1099H         PUBLIC        GPIOInterrupt
   D:00E8H         PUBLIC        IE_EX
   D:00A8H         PUBLIC        IE
-  C:11C0H         PUBLIC        GPIOInterruptCfg
+  C:11B2H         PUBLIC        GPIOInterruptCfg
   D:00B8H         PUBLIC        IP
   D:00C7H         PUBLIC        GPIO_IE
   B:00E8H.6       PUBLIC        IE_GPIO
@@ -1117,79 +1132,82 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   D:0080H         PUBLIC        ADC_CTRL
   D:00C0H         PUBLIC        SCON1
   D:00C8H         PUBLIC        T2CON
-  C:0F16H         PUBLIC        _Port1Cfg
-  C:0F6FH         PUBLIC        _Port3Cfg
+  C:0EFCH         PUBLIC        _Port1Cfg
+  C:0F55H         PUBLIC        _Port3Cfg
   D:00C6H         PUBLIC        PIN_FUNC
   D:00D0H         PUBLIC        PSW
   -------         PROC          _PORT1CFG
   D:0007H         SYMBOL        Mode
   D:0005H         SYMBOL        Pin
-  C:0F16H         LINE#         28
-  C:0F16H         LINE#         29
-  C:0F16H         LINE#         30
-  C:0F24H         LINE#         31
-  C:0F24H         LINE#         32
-  C:0F33H         LINE#         33
-  C:0F35H         LINE#         34
-  C:0F36H         LINE#         35
-  C:0F36H         LINE#         36
-  C:0F46H         LINE#         37
-  C:0F46H         LINE#         38
-  C:0F48H         LINE#         39
-  C:0F48H         LINE#         40
-  C:0F57H         LINE#         41
-  C:0F5BH         LINE#         42
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 20
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 20
 
 
-  C:0F5CH         LINE#         43
-  C:0F5CH         LINE#         44
-  C:0F6BH         LINE#         45
-  C:0F6EH         LINE#         46
-  C:0F6EH         LINE#         47
-  C:0F6EH         LINE#         48
-  C:0F6EH         LINE#         49
-  C:0F6EH         LINE#         50
+  C:0EFCH         LINE#         28
+  C:0EFCH         LINE#         29
+  C:0EFCH         LINE#         30
+  C:0F0AH         LINE#         31
+  C:0F0AH         LINE#         32
+  C:0F19H         LINE#         33
+  C:0F1BH         LINE#         34
+  C:0F1CH         LINE#         35
+  C:0F1CH         LINE#         36
+  C:0F2CH         LINE#         37
+  C:0F2CH         LINE#         38
+  C:0F2EH         LINE#         39
+  C:0F2EH         LINE#         40
+  C:0F3DH         LINE#         41
+  C:0F41H         LINE#         42
+  C:0F42H         LINE#         43
+  C:0F42H         LINE#         44
+  C:0F51H         LINE#         45
+  C:0F54H         LINE#         46
+  C:0F54H         LINE#         47
+  C:0F54H         LINE#         48
+  C:0F54H         LINE#         49
+  C:0F54H         LINE#         50
   -------         ENDPROC       _PORT1CFG
   -------         PROC          _PORT3CFG
   D:0007H         SYMBOL        Mode
   D:0005H         SYMBOL        Pin
-  C:0F6FH         LINE#         63
-  C:0F6FH         LINE#         64
-  C:0F6FH         LINE#         65
-  C:0F7DH         LINE#         66
-  C:0F7DH         LINE#         67
-  C:0F8CH         LINE#         68
-  C:0F8EH         LINE#         69
-  C:0F8FH         LINE#         70
-  C:0F8FH         LINE#         71
-  C:0F9FH         LINE#         72
-  C:0F9FH         LINE#         73
-  C:0FA1H         LINE#         74
-  C:0FA1H         LINE#         75
-  C:0FB0H         LINE#         76
-  C:0FB4H         LINE#         77
-  C:0FB5H         LINE#         78
-  C:0FB5H         LINE#         79
-  C:0FC4H         LINE#         80
-  C:0FC7H         LINE#         81
-  C:0FC7H         LINE#         82
-  C:0FC7H         LINE#         83
-  C:0FC7H         LINE#         84
-  C:0FC7H         LINE#         85
+  C:0F55H         LINE#         63
+  C:0F55H         LINE#         64
+  C:0F55H         LINE#         65
+  C:0F63H         LINE#         66
+  C:0F63H         LINE#         67
+  C:0F72H         LINE#         68
+  C:0F74H         LINE#         69
+  C:0F75H         LINE#         70
+  C:0F75H         LINE#         71
+  C:0F85H         LINE#         72
+  C:0F85H         LINE#         73
+  C:0F87H         LINE#         74
+  C:0F87H         LINE#         75
+  C:0F96H         LINE#         76
+  C:0F9AH         LINE#         77
+  C:0F9BH         LINE#         78
+  C:0F9BH         LINE#         79
+  C:0FAAH         LINE#         80
+  C:0FADH         LINE#         81
+  C:0FADH         LINE#         82
+  C:0FADH         LINE#         83
+  C:0FADH         LINE#         84
+  C:0FADH         LINE#         85
   -------         ENDPROC       _PORT3CFG
   -------         PROC          GPIOINTERRUPTCFG
-  C:11C0H         LINE#         94
-  C:11C0H         LINE#         95
-  C:11C0H         LINE#         96
-  C:11C3H         LINE#         99
-  C:11C6H         LINE#         103
-  C:11C8H         LINE#         104
+  C:11B2H         LINE#         94
+  C:11B2H         LINE#         95
+  C:11B2H         LINE#         96
+  C:11B5H         LINE#         99
+  C:11B8H         LINE#         103
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 21
+
+
+  C:11BAH         LINE#         104
   -------         ENDPROC       GPIOINTERRUPTCFG
   -------         PROC          GPIOINTERRUPT
-  C:10B6H         LINE#         111
-  C:10C3H         LINE#         114
-  C:10D5H         LINE#         116
+  C:1099H         LINE#         111
+  C:10A6H         LINE#         114
+  C:10B8H         LINE#         116
   -------         ENDPROC       GPIOINTERRUPT
   -------         ENDMOD        GPIO
 
@@ -1199,9 +1217,6 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
 
   -------         MODULE        ?C?ULDIV
   C:0198H         PUBLIC        ?C?ULDIV
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 21
-
-
   -------         ENDMOD        ?C?ULDIV
 
   -------         MODULE        PRINTF
@@ -1216,7 +1231,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   -------         ENDMOD        PRINTF
 
   -------         MODULE        _GETKEY
-  C:11B6H         PUBLIC        _GETKEY
+  C:11A8H         PUBLIC        _GETKEY
   -------         ENDMOD        _GETKEY
 
   -------         MODULE        ?C?MEMCMP
@@ -1244,7 +1259,10 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
   -------         ENDMOD        ?C?CCASE
 
   -------         MODULE        PUTCHAR
-  C:10E0H         PUBLIC        _PUTCHAR
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/16/2020  23:06:38  PAGE 22
+
+
+  C:10C3H         PUBLIC        _PUTCHAR
   -------         ENDMOD        PUTCHAR
 
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
@@ -1259,14 +1277,8 @@ SYMBOL TABLE OF MODULE:  .\Objects\XS40_CH552T (?C_STARTUP)
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_CAP1INIT?TIMER
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      05/10/2020  19:00:06  PAGE 22
-
-
-*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
-    SEGMENT: ?PR?SCANKEYCHANGE?SCANKEY
-
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?GPIOINTERRUPTCFG?GPIO
 
-Program Size: data=74.1 xdata=176 code=4555
-LINK/LOCATE RUN COMPLETE.  6 WARNING(S),  0 ERROR(S)
+Program Size: data=87.1 xdata=162 code=4541
+LINK/LOCATE RUN COMPLETE.  5 WARNING(S),  0 ERROR(S)

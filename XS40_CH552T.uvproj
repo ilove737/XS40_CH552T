@@ -393,6 +393,26 @@
               <FileType>5</FileType>
               <FilePath>.\Debug.H</FilePath>
             </File>
+            <File>
+              <FileName>UART1.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\UART1.C</FilePath>
+            </File>
+            <File>
+              <FileName>Timer.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Timer.C</FilePath>
+            </File>
+            <File>
+              <FileName>scanKey.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\scanKey.c</FilePath>
+            </File>
+            <File>
+              <FileName>GPIO.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\GPIO.C</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

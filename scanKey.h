@@ -20,6 +20,9 @@
 #define KEY_Fn0   0xFF
 #define KEY_Fn1   0xFE
 
+#define sumRow 4
+#define sumCol 4
+
 
 void initGPIO(void);
 void makeHIDFrames(void);
@@ -268,7 +271,7 @@ void scanKeyChange(void);
 // 0xdc  Keypad Decimal
 // 0xdd  Keypad Hexadecimal
 
-// shift¼ÓÆäËû¼ü
+// shiftï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #define SHIFT_1 0x1e + 0xa2 //  !
 #define SHIFT_2 0x1f + 0xa2 //  @
 #define SHIFT_3 0x20 + 0xa2 //  #
@@ -293,7 +296,7 @@ void scanKeyChange(void);
 #define SHIFT_DOT 0x37 + 0xa2        // >
 #define SHIFT_SLASH 0x38 + 0xa2      // ?
 
-// 0xd¿ªÍ·µÄÓÃ×÷ctrl¼ÓÆäËû¼ü
+// 0xdï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ctrlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 #define KEY_LEFTCTRL 0xe0   // Keyboard Left Control
 #define KEY_LEFTSHIFT 0xe1  // Keyboard Left Shift
