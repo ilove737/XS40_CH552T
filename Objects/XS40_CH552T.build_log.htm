@@ -23,7 +23,8 @@ Project File Date:  05/10/2020
 
 <h2>Output:</h2>
 Build target 'Target 1'
-compiling scanKey.c...
+compiling CompositeKM.C...
+compiling main.c...
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?MINITSTDIO?DEBUG
@@ -35,10 +36,21 @@ linking...
     SEGMENT: ?PR?_CAP1INIT?TIMER
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?GPIOINTERRUPTCFG?GPIO
-Program Size: data=87.1 xdata=162 code=4541
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  EP2INKEY
+    MODULE:  .\Objects\main.obj (MAIN)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EP2INKEY
+    MODULE:  .\Objects\main.obj (MAIN)
+    ADDRESS: 109CH
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EP2INKEY
+    MODULE:  .\Objects\main.obj (MAIN)
+    ADDRESS: 109EH
+Program Size: data=90.1 xdata=160 code=4795
 creating hex file from ".\Objects\XS40_CH552T"...
-".\Objects\XS40_CH552T" - 0 Error(s), 5 Warning(s).
-Build Time Elapsed:  00:00:01
+".\Objects\XS40_CH552T" - 0 Error(s), 8 Warning(s).
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

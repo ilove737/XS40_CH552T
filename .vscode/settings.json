@@ -4,6 +4,7 @@
         "Debug.C": "cpp",
         "Timer.C": "cpp",
         "GPIO.C": "cpp",
-        "UART1.C": "cpp"
+        "UART1.C": "cpp",
+        "DataFlash.C": "cpp"
     }
 }

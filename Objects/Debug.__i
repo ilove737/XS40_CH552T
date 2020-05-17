@@ -1,0 +1,1 @@
+"Debug.C" WARNINGLEVEL (1) OPTIMIZE (8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Debug.lst) OBJECT(.\Objects\Debug.obj)

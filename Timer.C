@@ -113,7 +113,7 @@ void mTimer0Interrupt( void ) interrupt INT_NO_TMR0 using 1                //tim
 
     scanKeyChange();
 
-    
+
 }
 #endif
 
