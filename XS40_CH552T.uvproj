@@ -176,7 +176,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2></Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -230,7 +230,7 @@
               <RCB>
                 <Type>0</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0xffff</Size>
               </RCB>
               <RXB>
                 <Type>0</Type>
@@ -302,7 +302,7 @@
             <UseInterruptVector>1</UseInterruptVector>
             <Fuzzy>3</Fuzzy>
             <Optimize>8</Optimize>
-            <WarningLevel>2</WarningLevel>
+            <WarningLevel>1</WarningLevel>
             <SizeSpeed>1</SizeSpeed>
             <ObjectExtend>1</ObjectExtend>
             <ACallAJmp>0</ACallAJmp>
@@ -412,6 +412,11 @@
               <FileName>GPIO.C</FileName>
               <FileType>1</FileType>
               <FilePath>.\GPIO.C</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main.c</FilePath>
             </File>
           </Files>
         </Group>

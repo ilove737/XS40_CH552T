@@ -10,5 +10,6 @@ void USBDeviceInit();
 void Enp1IntIn();
 void Enp2IntIn();
 void HIDValueHandle();
+void sendKeyHID(UINT8 *Frames);
 
 #endif

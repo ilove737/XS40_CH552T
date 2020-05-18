@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/17/2020 22:17:43 PAGE 1   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE SCANKEY
@@ -62,223 +62,303 @@ line level    source
   52          {
   53   1              // Fn0_Status = 0;
   54   1              HIDFramesPointer = 2;
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/17/2020 22:17:43 PAGE 2   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 2   
 
-  55   1              for (i = 0; i < 8; i++)
-  56   1              {
-  57   2                      HIDFrames[i] = 0;
-  58   2              }
-  59   1              if (allKey[0] == 0 && allKey[1] == 0)
-  60   1              { // 所有按键都是松开的状态
-  61   2                      for (i = 0; i < 8; i++)
-  62   2                      {
-  63   3                              // Send_Data_To_UART0(0x00);
-  64   3                              UART1SendByte(0x00);
-  65   3                      }
-  66   2                      // UART1SendByte(0xf1);
-  67   2              }
-  68   1              else
-  69   1              { // 有按键按下的状态
-  70   2                      //              for (i = 0; i < 5; i++)
-  71   2                      //              {
-  72   2                      //                      if (allKey[i] != 0)
-  73   2                      //                      {
-  74   2                      //                              for (j = 0; j < 8; j++)
-  75   2                      //                              {
-  76   2                      //                                      if (allKey[i] >> j & 1)
-  77   2                      //                                      {
-  78   2                      //                                              if (keyMap[i * 8 + j] == KEY_Fn0)
-  79   2                      //                                              {
-  80   2                      //                                                      Fn0_Status = 1;
-  81   2                      //                                              }
-  82   2                      //                                              if (keyMap[i * 8 + j] == KEY_Fn1)
-  83   2                      //                                              {
-  84   2                      //                                                      Fn1_Status = 1;
-  85   2                      //                                              }
-  86   2                      //                                      }
-  87   2                      //                              }
-  88   2                      //                      }
-  89   2                      //              }
-  90   2                      // for (q = 0; q < 8; q++)
-  91   2                      // {
-  92   2                      //      UART1SendByte(0x44);
-  93   2                      //      UART1SendByte(q);
-  94   2                      //      UART1SendByte(k);
-  95   2                      //      UART1SendByte(k >> 1);
-  96   2                      //      UART1SendByte(k >> 2);
-  97   2                      //      UART1SendByte((k >> q) & 1);
-  98   2                      // }
-  99   2                      for (i = 0; i < 2; i++)
- 100   2                      {
- 101   3                              if (allKey[i] != 0)
- 102   3                              {
- 103   4                                      if ((allKey[i] >> 0) & 1)
- 104   4                                      {
- 105   5                                              kCode = keyMap[i * 8 + 0];
- 106   5                                              HIDFrames[HIDFramesPointer] = kCode;
- 107   5                                              if (HIDFramesPointer < 7)
- 108   5                                                      HIDFramesPointer++;
- 109   5                                      }
- 110   4                                      if ((allKey[i] >> 1) & 1)
- 111   4                                      {
- 112   5                                              kCode = keyMap[i * 8 + 1];
- 113   5                                              HIDFrames[HIDFramesPointer] = kCode;
- 114   5                                              if (HIDFramesPointer < 7)
- 115   5                                                      HIDFramesPointer++;
- 116   5                                      }
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/17/2020 22:17:43 PAGE 3   
+  55   1              // for (i = 0; i < 8; i++)
+  56   1              // {
+  57   1              //      HIDFrames[i] = 0;
+  58   1              // }
+  59   1      
+  60   1              for (i = 0; i < 2; i++)
+  61   1              {
+  62   2      
+  63   2                      if ((allKey[i] >> 0) & 1)
+  64   2                      {
+  65   3                              kCode = keyMap[i * 8 + 0];
+  66   3                              HIDFrames[HIDFramesPointer] = kCode;
+  67   3                              if (HIDFramesPointer < 7)
+  68   3                                      HIDFramesPointer++;
+  69   3                      }
+  70   2                      if ((allKey[i] >> 1) & 1)
+  71   2                      {
+  72   3                              kCode = keyMap[i * 8 + 1];
+  73   3                              HIDFrames[HIDFramesPointer] = kCode;
+  74   3                              if (HIDFramesPointer < 7)
+  75   3                                      HIDFramesPointer++;
+  76   3                      }
+  77   2                      if ((allKey[i] >> 2) & 1)
+  78   2                      {
+  79   3                              kCode = keyMap[i * 8 + 2];
+  80   3                              HIDFrames[HIDFramesPointer] = kCode;
+  81   3                              if (HIDFramesPointer < 7)
+  82   3                                      HIDFramesPointer++;
+  83   3                      }
+  84   2                      if ((allKey[i] >> 3) & 1)
+  85   2                      {
+  86   3                              kCode = keyMap[i * 8 + 3];
+  87   3                              HIDFrames[HIDFramesPointer] = kCode;
+  88   3                              if (HIDFramesPointer < 7)
+  89   3                                      HIDFramesPointer++;
+  90   3                      }
+  91   2                      if ((allKey[i] >> 4) & 1)
+  92   2                      {
+  93   3                              kCode = keyMap[i * 8 + 4];
+  94   3                              HIDFrames[HIDFramesPointer] = kCode;
+  95   3                              if (HIDFramesPointer < 7)
+  96   3                                      HIDFramesPointer++;
+  97   3                      }
+  98   2                      if ((allKey[i] >> 5) & 1)
+  99   2                      {
+ 100   3                              kCode = keyMap[i * 8 + 5];
+ 101   3                              HIDFrames[HIDFramesPointer] = kCode;
+ 102   3                              if (HIDFramesPointer < 7)
+ 103   3                                      HIDFramesPointer++;
+ 104   3                      }
+ 105   2                      if ((allKey[i] >> 6) & 1)
+ 106   2                      {
+ 107   3                              kCode = keyMap[i * 8 + 6];
+ 108   3                              HIDFrames[HIDFramesPointer] = kCode;
+ 109   3                              if (HIDFramesPointer < 7)
+ 110   3                                      HIDFramesPointer++;
+ 111   3                      }
+ 112   2                      if ((allKey[i] >> 7) & 1)
+ 113   2                      {
+ 114   3                              kCode = keyMap[i * 8 + 7];
+ 115   3                              HIDFrames[HIDFramesPointer] = kCode;
+ 116   3                              // HIDKey[HIDFramesPointer] = kCode;
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 3   
 
- 117   4                                      if ((allKey[i] >> 2) & 1)
- 118   4                                      {
- 119   5                                              kCode = keyMap[i * 8 + 2];
- 120   5                                              HIDFrames[HIDFramesPointer] = kCode;
- 121   5                                              if (HIDFramesPointer < 7)
- 122   5                                                      HIDFramesPointer++;
- 123   5                                      }
- 124   4                                      if ((allKey[i] >> 3) & 1)
- 125   4                                      {
- 126   5                                              kCode = keyMap[i * 8 + 3];
- 127   5                                              HIDFrames[HIDFramesPointer] = kCode;
- 128   5                                              if (HIDFramesPointer < 7)
- 129   5                                                      HIDFramesPointer++;
- 130   5                                      }
- 131   4                                      if ((allKey[i] >> 4) & 1)
- 132   4                                      {
- 133   5                                              kCode = keyMap[i * 8 + 4];
- 134   5                                              HIDFrames[HIDFramesPointer] = kCode;
- 135   5                                              if (HIDFramesPointer < 7)
- 136   5                                                      HIDFramesPointer++;
- 137   5                                      }
- 138   4                                      if ((allKey[i] >> 5) & 1)
- 139   4                                      {
- 140   5                                              kCode = keyMap[i * 8 + 5];
- 141   5                                              HIDFrames[HIDFramesPointer] = kCode;
- 142   5                                              if (HIDFramesPointer < 7)
- 143   5                                                      HIDFramesPointer++;
- 144   5                                      }
- 145   4                                      if ((allKey[i] >> 6) & 1)
- 146   4                                      {
- 147   5                                              kCode = keyMap[i * 8 + 6];
- 148   5                                              HIDFrames[HIDFramesPointer] = kCode;
- 149   5                                              if (HIDFramesPointer < 7)
- 150   5                                                      HIDFramesPointer++;
- 151   5                                      }
- 152   4                                      if ((allKey[i] >> 7) & 1)
- 153   4                                      {
- 154   5                                              kCode = keyMap[i * 8 + 7];
- 155   5                                              HIDFrames[HIDFramesPointer] = kCode;
- 156   5                                              // HIDKey[HIDFramesPointer] = kCode;
- 157   5                                              if (HIDFramesPointer < 7)
- 158   5                                                      HIDFramesPointer++;
- 159   5                                      }
- 160   4      
- 161   4                                      // for (j = 0; j < 8; j++)
- 162   4                                      // {
- 163   4                                      //      if ((allKey[i] >> j) & 1 == 1)
- 164   4                                      //      {
- 165   4                                      //              //                                              if (Fn0_Status == 1)
- 166   4                                      //              //                                              {
- 167   4                                      //              //                                                      kCode = Fn0_keyMap[i * 8 + j];
- 168   4                                      //              //                                              }
- 169   4                                      //              //                                              else
- 170   4                                      //              //                                              {
- 171   4                                      //              //                                                      kCode = keyMap[i * 8 + j];
- 172   4                                      //              //                                              }
- 173   4                                      //              kCode = keyMap[i * 8 + j];
- 174   4      
- 175   4                                      //              // if (kCode == KEY_LCTRL | kCode == KEY_LSHIFT | kCode == KEY_LALT | kCode == KEY_LGUI | kCode =
+ 117   3                              if (HIDFramesPointer < 7)
+ 118   3                                      HIDFramesPointer++;
+ 119   3                      }
+ 120   2              }
+ 121   1              for (i = 0; i < 8; i++)
+ 122   1              {
+ 123   2                      UART1SendByte(HIDFrames[i]);
+ 124   2                      // HIDKey[i] = HIDFrames[i];
+ 125   2              }
+ 126   1              sendKeyHID(HIDFrames);
+ 127   1      }
+ 128          
+ 129          void makeHIDFrames00(void)
+ 130          {
+ 131   1              // Fn0_Status = 0;
+ 132   1              HIDFramesPointer = 2;
+ 133   1              for (i = 0; i < 8; i++)
+ 134   1              {
+ 135   2                      HIDFrames[i] = 0;
+ 136   2              }
+ 137   1              if (allKey[0] == 0 && allKey[1] == 0)
+ 138   1              { // 所有按键都是松开的状态
+ 139   2                      for (i = 0; i < 8; i++)
+ 140   2                      {
+ 141   3                              // Send_Data_To_UART0(0x00);
+ 142   3                              UART1SendByte(0x00);
+ 143   3                      }
+ 144   2                      // UART1SendByte(0xf1);
+ 145   2              }
+ 146   1              else
+ 147   1              { // 有按键按下的状态
+ 148   2                      //              for (i = 0; i < 5; i++)
+ 149   2                      //              {
+ 150   2                      //                      if (allKey[i] != 0)
+ 151   2                      //                      {
+ 152   2                      //                              for (j = 0; j < 8; j++)
+ 153   2                      //                              {
+ 154   2                      //                                      if (allKey[i] >> j & 1)
+ 155   2                      //                                      {
+ 156   2                      //                                              if (keyMap[i * 8 + j] == KEY_Fn0)
+ 157   2                      //                                              {
+ 158   2                      //                                                      Fn0_Status = 1;
+ 159   2                      //                                              }
+ 160   2                      //                                              if (keyMap[i * 8 + j] == KEY_Fn1)
+ 161   2                      //                                              {
+ 162   2                      //                                                      Fn1_Status = 1;
+ 163   2                      //                                              }
+ 164   2                      //                                      }
+ 165   2                      //                              }
+ 166   2                      //                      }
+ 167   2                      //              }
+ 168   2                      // for (q = 0; q < 8; q++)
+ 169   2                      // {
+ 170   2                      //      UART1SendByte(0x44);
+ 171   2                      //      UART1SendByte(q);
+ 172   2                      //      UART1SendByte(k);
+ 173   2                      //      UART1SendByte(k >> 1);
+ 174   2                      //      UART1SendByte(k >> 2);
+ 175   2                      //      UART1SendByte((k >> q) & 1);
+ 176   2                      // }
+ 177   2                      for (i = 0; i < 2; i++)
+ 178   2                      {
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 4   
+
+ 179   3                              if (allKey[i] != 0)
+ 180   3                              {
+ 181   4                                      if ((allKey[i] >> 0) & 1)
+ 182   4                                      {
+ 183   5                                              kCode = keyMap[i * 8 + 0];
+ 184   5                                              HIDFrames[HIDFramesPointer] = kCode;
+ 185   5                                              if (HIDFramesPointer < 7)
+ 186   5                                                      HIDFramesPointer++;
+ 187   5                                      }
+ 188   4                                      if ((allKey[i] >> 1) & 1)
+ 189   4                                      {
+ 190   5                                              kCode = keyMap[i * 8 + 1];
+ 191   5                                              HIDFrames[HIDFramesPointer] = kCode;
+ 192   5                                              if (HIDFramesPointer < 7)
+ 193   5                                                      HIDFramesPointer++;
+ 194   5                                      }
+ 195   4                                      if ((allKey[i] >> 2) & 1)
+ 196   4                                      {
+ 197   5                                              kCode = keyMap[i * 8 + 2];
+ 198   5                                              HIDFrames[HIDFramesPointer] = kCode;
+ 199   5                                              if (HIDFramesPointer < 7)
+ 200   5                                                      HIDFramesPointer++;
+ 201   5                                      }
+ 202   4                                      if ((allKey[i] >> 3) & 1)
+ 203   4                                      {
+ 204   5                                              kCode = keyMap[i * 8 + 3];
+ 205   5                                              HIDFrames[HIDFramesPointer] = kCode;
+ 206   5                                              if (HIDFramesPointer < 7)
+ 207   5                                                      HIDFramesPointer++;
+ 208   5                                      }
+ 209   4                                      if ((allKey[i] >> 4) & 1)
+ 210   4                                      {
+ 211   5                                              kCode = keyMap[i * 8 + 4];
+ 212   5                                              HIDFrames[HIDFramesPointer] = kCode;
+ 213   5                                              if (HIDFramesPointer < 7)
+ 214   5                                                      HIDFramesPointer++;
+ 215   5                                      }
+ 216   4                                      if ((allKey[i] >> 5) & 1)
+ 217   4                                      {
+ 218   5                                              kCode = keyMap[i * 8 + 5];
+ 219   5                                              HIDFrames[HIDFramesPointer] = kCode;
+ 220   5                                              if (HIDFramesPointer < 7)
+ 221   5                                                      HIDFramesPointer++;
+ 222   5                                      }
+ 223   4                                      if ((allKey[i] >> 6) & 1)
+ 224   4                                      {
+ 225   5                                              kCode = keyMap[i * 8 + 6];
+ 226   5                                              HIDFrames[HIDFramesPointer] = kCode;
+ 227   5                                              if (HIDFramesPointer < 7)
+ 228   5                                                      HIDFramesPointer++;
+ 229   5                                      }
+ 230   4                                      if ((allKey[i] >> 7) & 1)
+ 231   4                                      {
+ 232   5                                              kCode = keyMap[i * 8 + 7];
+ 233   5                                              HIDFrames[HIDFramesPointer] = kCode;
+ 234   5                                              // HIDKey[HIDFramesPointer] = kCode;
+ 235   5                                              if (HIDFramesPointer < 7)
+ 236   5                                                      HIDFramesPointer++;
+ 237   5                                      }
+ 238   4      
+ 239   4                                      // for (j = 0; j < 8; j++)
+ 240   4                                      // {
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 5   
+
+ 241   4                                      //      if ((allKey[i] >> j) & 1 == 1)
+ 242   4                                      //      {
+ 243   4                                      //              //                                              if (Fn0_Status == 1)
+ 244   4                                      //              //                                              {
+ 245   4                                      //              //                                                      kCode = Fn0_keyMap[i * 8 + j];
+ 246   4                                      //              //                                              }
+ 247   4                                      //              //                                              else
+ 248   4                                      //              //                                              {
+ 249   4                                      //              //                                                      kCode = keyMap[i * 8 + j];
+ 250   4                                      //              //                                              }
+ 251   4                                      //              kCode = keyMap[i * 8 + j];
+ 252   4      
+ 253   4                                      //              // if (kCode == KEY_LCTRL | kCode == KEY_LSHIFT | kCode == KEY_LALT | kCode == KEY_LGUI | kCode =
              -= KEY_RCTRL | kCode == KEY_RSHIFT | kCode == KEY_RALT | kCode == KEY_RGUI)
- 176   4                                      //              // if (kCode >= 0xE0) // Control
- 177   4                                      //              // {
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/17/2020 22:17:43 PAGE 4   
+ 254   4                                      //              // if (kCode >= 0xE0) // Control
+ 255   4                                      //              // {
+ 256   4                                      //              //      HIDFrames[0] += 0X01 << (kCode & 0X0F);
+ 257   4                                      //              // }
+ 258   4                                      //              // else if (kCode >= 0xC0) // 处理shift组合键
+ 259   4                                      //              // {
+ 260   4                                      //              //      HIDFrames[0] += 0x02;
+ 261   4                                      //              //      HIDFrames[HIDFramesPointer] = kCode - 0xa2;
+ 262   4                                      //              //      HIDFramesPointer++;
+ 263   4                                      //              // }
+ 264   4                                      //              // else
+ 265   4                                      //              // {
+ 266   4                                      //              HIDFrames[HIDFramesPointer] = kCode;
+ 267   4                                      //              if (HIDFramesPointer < 7)
+ 268   4                                      //                      HIDFramesPointer++;
+ 269   4                                      //              // }
+ 270   4                                      //      }
+ 271   4                                      // }
+ 272   4                              }
+ 273   3                      }
+ 274   2                      for (i = 0; i < 8; i++)
+ 275   2                      {
+ 276   3                              // Send_Data_To_UART0(HIDFrames[i]);
+ 277   3                              UART1SendByte(HIDFrames[i]);
+ 278   3                              // HIDKey[i] = HIDFrames[i];
+ 279   3                      }
+ 280   2                      // UART1SendByte('\n');
+ 281   2              }
+ 282   1      }
+ 283          
+ 284          void scanKeyChange(void)
+ 285          {
+ 286   1              allKey[0] = 0;
+ 287   1              allKey[1] = 0;
+ 288   1              for (i = 0; i < sumCol; i++)
+ 289   1              {
+ 290   2                      row1 = 1;
+ 291   2                      row2 = 1;
+ 292   2                      row3 = 1;
+ 293   2                      row4 = 1;
+ 294   2      
+ 295   2                      switch (i)
+ 296   2                      {
+ 297   3                      case 0:
+ 298   3                              row1 = 0;
+ 299   3                              allKey[0] |= (~P1 & 0x0f) << 0;
+ 300   3                              break;
+ 301   3                      case 1:
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 6   
 
- 178   4                                      //              //      HIDFrames[0] += 0X01 << (kCode & 0X0F);
- 179   4                                      //              // }
- 180   4                                      //              // else if (kCode >= 0xC0) // 处理shift组合键
- 181   4                                      //              // {
- 182   4                                      //              //      HIDFrames[0] += 0x02;
- 183   4                                      //              //      HIDFrames[HIDFramesPointer] = kCode - 0xa2;
- 184   4                                      //              //      HIDFramesPointer++;
- 185   4                                      //              // }
- 186   4                                      //              // else
- 187   4                                      //              // {
- 188   4                                      //              HIDFrames[HIDFramesPointer] = kCode;
- 189   4                                      //              if (HIDFramesPointer < 7)
- 190   4                                      //                      HIDFramesPointer++;
- 191   4                                      //              // }
- 192   4                                      //      }
- 193   4                                      // }
- 194   4                              }
- 195   3                      }
- 196   2                      for (i = 0; i < 8; i++)
- 197   2                      {
- 198   3                              // Send_Data_To_UART0(HIDFrames[i]);
- 199   3                              UART1SendByte(HIDFrames[i]);
- 200   3                              // HIDKey[i] = HIDFrames[i];
- 201   3                      }
- 202   2                      // UART1SendByte('\n');
- 203   2              }
- 204   1      }
- 205          
- 206          void scanKeyChange(void)
- 207          {
- 208   1              allKey[0] = 0;
- 209   1              allKey[1] = 0;
- 210   1              for (i = 0; i < sumCol; i++)
- 211   1              {
- 212   2                      row1 = 1;
- 213   2                      row2 = 1;
- 214   2                      row3 = 1;
- 215   2                      row4 = 1;
- 216   2      
- 217   2                      switch (i)
- 218   2                      {
- 219   3                      case 0:
- 220   3                              row1 = 0;
- 221   3                              allKey[0] |= (~P1 & 0x0f) << 0;
- 222   3                              break;
- 223   3                      case 1:
- 224   3                              row2 = 0;
- 225   3                              allKey[0] |= (~P1 & 0x0f) << 4;
- 226   3                              break;
- 227   3                      case 2:
- 228   3                              row3 = 0;
- 229   3                              allKey[1] |= (~P1 & 0x0f) << 0;
- 230   3                              break;
- 231   3                      case 3:
- 232   3                              row4 = 0;
- 233   3                              allKey[1] |= (~P1 & 0x0f) << 4;
- 234   3                              break;
- 235   3                              // default:
- 236   3                              // break;
- 237   3                      }
- 238   2                      // mDelayuS(200);
- 239   2              }
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/17/2020 22:17:43 PAGE 5   
-
- 240   1      
- 241   1              if (memcmp(beforeAllKey, allKey, 2) != 0)
- 242   1              {
- 243   2                      // UART1SendByte(beforeAllKey[0]);
- 244   2                      // UART1SendByte(beforeAllKey[1]);
- 245   2                      // UART1SendByte(allKey[0]);
- 246   2                      // UART1SendByte(allKey[1]);
- 247   2                      // UART1SendByte(0xff);
- 248   2      
- 249   2                      memcpy(beforeAllKey, allKey, 2);
- 250   2                      // beforeAllKey[0] = allKey[0];
- 251   2                      // beforeAllKey[1] = allKey[1];
- 252   2      
- 253   2                      makeHIDFrames();
- 254   2                      // UART1SendByte(beforeAllKey[0]);
- 255   2                      // UART1SendByte(beforeAllKey[1]);
- 256   2                      // UART1SendByte(0xfe);
- 257   2              }
- 258   1      }
+ 302   3                              row2 = 0;
+ 303   3                              allKey[0] |= (~P1 & 0x0f) << 4;
+ 304   3                              break;
+ 305   3                      case 2:
+ 306   3                              row3 = 0;
+ 307   3                              allKey[1] |= (~P1 & 0x0f) << 0;
+ 308   3                              break;
+ 309   3                      case 3:
+ 310   3                              row4 = 0;
+ 311   3                              allKey[1] |= (~P1 & 0x0f) << 4;
+ 312   3                              break;
+ 313   3                              // default:
+ 314   3                              // break;
+ 315   3                      }
+ 316   2                      // mDelayuS(200);
+ 317   2              }
+ 318   1      
+ 319   1              if (memcmp(beforeAllKey, allKey, 2) != 0)
+ 320   1              {
+ 321   2                      // UART1SendByte(beforeAllKey[0]);
+ 322   2                      // UART1SendByte(beforeAllKey[1]);
+ 323   2                      // UART1SendByte(allKey[0]);
+ 324   2                      // UART1SendByte(allKey[1]);
+ 325   2                      // UART1SendByte(0xff);
+ 326   2      
+ 327   2                      memcpy(beforeAllKey, allKey, 2);
+ 328   2                      // beforeAllKey[0] = allKey[0];
+ 329   2                      // beforeAllKey[1] = allKey[1];
+ 330   2      
+ 331   2                      makeHIDFrames();
+ 332   2                      // UART1SendByte(beforeAllKey[0]);
+ 333   2                      // UART1SendByte(beforeAllKey[1]);
+ 334   2                      // UART1SendByte(0xfe);
+ 335   2              }
+ 336   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    708    ----
+   CODE SIZE        =   1165    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     18    ----
    PDATA SIZE       =   ----    ----

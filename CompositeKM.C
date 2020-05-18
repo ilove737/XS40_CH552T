@@ -26,7 +26,7 @@ UINT8X Ep2Buffer[64 > (MAX_PACKET_SIZE + 2) ? 64 : (MAX_PACKET_SIZE + 2)] _at_ 0
 UINT8 SetupReq, SetupLen, Ready, Count, FLAG, UsbConfig;
 PUINT8 pDescr;             //USB配置标志
 USB_SETUP_REQ SetupReqBuf; //暂存Setup包
-sbit Ep2InKey = P1 ^ 5;
+// sbit Ep2InKey = P1 ^ 5;
 #define UsbSetupBuf ((PUSB_SETUP_REQ)Ep0Buffer)
 #define DEBUG 0
 #pragma NOAREGS
@@ -140,22 +140,26 @@ void Enp2IntIn()
 void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,使用寄存器组1
 {
     UINT8 len = 0;
+    UART1SendByte(UIF_TRANSFER);
     if (UIF_TRANSFER) //USB传输完成标志
     {
         switch (USB_INT_ST & (MASK_UIS_TOKEN | MASK_UIS_ENDP))
         {
         case UIS_TOKEN_IN | 2:                                       //endpoint 2# 中断端点上传
             UEP2_T_LEN = 0;                                          //预使用发送长度一定要清空
-                                                                     //            UEP1_CTRL ^= bUEP_T_TOG;                                          //如果不设置自动翻转则需要手动翻转
+            // UEP1_CTRL ^= bUEP_T_TOG;                                          //如果不设置自动翻转则需要手动翻转
             UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+            UART1SendByte(0x22);
             break;
         case UIS_TOKEN_IN | 1:                                       //endpoint 1# 中断端点上传
             UEP1_T_LEN = 0;                                          //预使用发送长度一定要清空
-                                                                     //            UEP2_CTRL ^= bUEP_T_TOG;                                          //如果不设置自动翻转则需要手动翻转
+            // UEP2_CTRL ^= bUEP_T_TOG;                                 //如果不设置自动翻转则需要手动翻转
             UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+            UART1SendByte(0x21);
             FLAG = 1;                                                /*传输完成标志*/
             break;
         case UIS_TOKEN_SETUP | 0: //SETUP事务
+        UART1SendByte(0x20);
             len = USB_RX_LEN;
             if (len == (sizeof(USB_SETUP_REQ)))
             {
@@ -396,12 +400,12 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
                 if (Ep0Buffer[0])
                 {
                     // printf("Light on Num Lock LED!\n");
-                    UART1SendByte(0x32);
+                    UART1SendByte(0xF1);
                 }
                 else if (Ep0Buffer[0] == 0)
                 {
                     // printf("Light off Num Lock LED!\n");
-                    UART1SendByte(0x33);
+                    UART1SendByte(0xf0);
                 }
             }
             UEP0_CTRL ^= bUEP_R_TOG; //同步标志位翻转
@@ -507,6 +511,20 @@ void HIDValueHandle()
     }
 }
 
+void sendKeyHID(UINT8 *Frames)
+{
+    memcpy(HIDKey, Frames, 8);
+
+    FLAG = 0;
+    Enp1IntIn();
+    // UIF_TRANSFER=1;
+    while (FLAG == 0)
+    {
+        ; /*等待上一包传输完成*/
+    }
+    UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+    UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+}
 
 // main()
 // {
@@ -530,7 +548,6 @@ void HIDValueHandle()
 //     ET0 = 1;                     //T0定时器中断开启
 //     EA = 1;
 
-
 // //读取芯片唯一ID号
 // #if DE_PRINTF
 //     printf("ID0 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFA), (UINT16) * (PUINT8C)(0x3FFB));
@@ -544,7 +561,6 @@ void HIDValueHandle()
 //     UEP2_T_LEN = 0;  //预使用发送长度一定要清空
 //     FLAG = 0;
 //     Ready = 0;
-
 
 //     while (1)
 //     {

@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 extern UINT8 Ready;
-extern  Ep2InKey;
+// extern  Ep2InKey;
 
 main()
 {
@@ -50,16 +50,16 @@ main()
 
     while (1)
     {
-        if (Ready)
-        {
-            HIDValueHandle(); //该函数会一直等待串口接收一个字节
-        }
+        // if (Ready)
+        // {
+        //     HIDValueHandle(); //该函数会一直等待串口接收一个字节
+        // }
 
-        if ((Ready) && (Ep2InKey == 0))
-        {
-            Enp1IntIn(); //仅发送键盘键值“抬起”操作
-            mDelaymS(10);
-        }
+        // if ((Ready) && (Ep2InKey == 0))
+        // {
+        //     Enp1IntIn(); //仅发送键盘键值“抬起”操作
+        //     mDelaymS(10);
+        // }
         // mDelaymS(10); //模拟单片机做其它事
     }
 

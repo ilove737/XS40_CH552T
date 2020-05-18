@@ -52,6 +52,84 @@ void makeHIDFrames(void)
 {
 	// Fn0_Status = 0;
 	HIDFramesPointer = 2;
+	// for (i = 0; i < 8; i++)
+	// {
+	// 	HIDFrames[i] = 0;
+	// }
+
+	for (i = 0; i < 2; i++)
+	{
+
+		if ((allKey[i] >> 0) & 1)
+		{
+			kCode = keyMap[i * 8 + 0];
+			HIDFrames[HIDFramesPointer] = kCode;
+			if (HIDFramesPointer < 7)
+				HIDFramesPointer++;
+		}
+		if ((allKey[i] >> 1) & 1)
+		{
+			kCode = keyMap[i * 8 + 1];
+			HIDFrames[HIDFramesPointer] = kCode;
+			if (HIDFramesPointer < 7)
+				HIDFramesPointer++;
+		}
+		if ((allKey[i] >> 2) & 1)
+		{
+			kCode = keyMap[i * 8 + 2];
+			HIDFrames[HIDFramesPointer] = kCode;
+			if (HIDFramesPointer < 7)
+				HIDFramesPointer++;
+		}
+		if ((allKey[i] >> 3) & 1)
+		{
+			kCode = keyMap[i * 8 + 3];
+			HIDFrames[HIDFramesPointer] = kCode;
+			if (HIDFramesPointer < 7)
+				HIDFramesPointer++;
+		}
+		if ((allKey[i] >> 4) & 1)
+		{
+			kCode = keyMap[i * 8 + 4];
+			HIDFrames[HIDFramesPointer] = kCode;
+			if (HIDFramesPointer < 7)
+				HIDFramesPointer++;
+		}
+		if ((allKey[i] >> 5) & 1)
+		{
+			kCode = keyMap[i * 8 + 5];
+			HIDFrames[HIDFramesPointer] = kCode;
+			if (HIDFramesPointer < 7)
+				HIDFramesPointer++;
+		}
+		if ((allKey[i] >> 6) & 1)
+		{
+			kCode = keyMap[i * 8 + 6];
+			HIDFrames[HIDFramesPointer] = kCode;
+			if (HIDFramesPointer < 7)
+				HIDFramesPointer++;
+		}
+		if ((allKey[i] >> 7) & 1)
+		{
+			kCode = keyMap[i * 8 + 7];
+			HIDFrames[HIDFramesPointer] = kCode;
+			// HIDKey[HIDFramesPointer] = kCode;
+			if (HIDFramesPointer < 7)
+				HIDFramesPointer++;
+		}
+	}
+	for (i = 0; i < 8; i++)
+	{
+		UART1SendByte(HIDFrames[i]);
+		// HIDKey[i] = HIDFrames[i];
+	}
+	sendKeyHID(HIDFrames);
+}
+
+void makeHIDFrames00(void)
+{
+	// Fn0_Status = 0;
+	HIDFramesPointer = 2;
 	for (i = 0; i < 8; i++)
 	{
 		HIDFrames[i] = 0;
