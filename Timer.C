@@ -106,11 +106,9 @@ void CAP1Init(UINT8 mode)
 void mTimer0Interrupt( void ) interrupt INT_NO_TMR0 using 1                //timer0中断服务程序,使用寄存器组1
 {                                                                           //方式3时，TH0使用Timer1的中断资源
     // SCK = ~SCK;
-    // UART1SendByte(0x39);
 
     mTimer_x_SetData(0,2000);                                          //非自动重载方式需重新给TH0和TL0赋值
     
-
     scanKeyChange();
 
 
@@ -122,10 +120,11 @@ void mTimer0Interrupt( void ) interrupt INT_NO_TMR0 using 1                //tim
 * Function Name  : mTimer1Interrupt()
 * Description    : CH554定时计数器0定时计数器中断处理函数
 *******************************************************************************/
-void	mTimer1Interrupt( void ) interrupt INT_NO_TMR1 using 2                //timer1中断服务程序,使用寄存器组2
+void mTimer1Interrupt( void ) interrupt INT_NO_TMR1 using 2                //timer1中断服务程序,使用寄存器组2
 {                                                                           //方式3时，Timer1停止
-    SCK = ~SCK;
-//     mTimer_x_SetData(1,0x0000);                                          //非自动重载方式需重新给TH1和TL1赋值      
+    // SCK = ~SCK;
+    mTimer_x_SetData(1,2000);                                          //非自动重载方式需重新给TH1和TL1赋值      
+    scanKeyChange();
 }
 #endif
 

@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdio.h>
 
-extern UINT8 Ready;
+// extern UINT8 Ready;
 // extern  Ep2InKey;
 
 main()
@@ -21,8 +21,7 @@ main()
 
     initGPIO();
 
-    UART1Init();
-    UART1SendByte(0x30);
+    // UART1Init();
 
     // printf("T0 Test ...\n");
     mTimer0Clk12DivFsys();       //T0定时器时钟设置
@@ -45,7 +44,7 @@ main()
     UEP1_T_LEN = 0;  //预使用发送长度一定要清空
     UEP2_T_LEN = 0;  //预使用发送长度一定要清空
     FLAG = 0;
-    Ready = 0;
+    // Ready = 0;
 
 
     while (1)

@@ -52,10 +52,10 @@ void makeHIDFrames(void)
 {
 	// Fn0_Status = 0;
 	HIDFramesPointer = 2;
-	// for (i = 0; i < 8; i++)
-	// {
-	// 	HIDFrames[i] = 0;
-	// }
+	for (i = 0; i < 8; i++)
+	{
+		HIDFrames[i] = 0;
+	}
 
 	for (i = 0; i < 2; i++)
 	{
@@ -118,11 +118,11 @@ void makeHIDFrames(void)
 				HIDFramesPointer++;
 		}
 	}
-	for (i = 0; i < 8; i++)
-	{
-		UART1SendByte(HIDFrames[i]);
-		// HIDKey[i] = HIDFrames[i];
-	}
+	// for (i = 0; i < 8; i++)
+	// {
+	// 	UART1SendByte(HIDFrames[i]);
+	// 	// HIDKey[i] = HIDFrames[i];
+	// }
 	sendKeyHID(HIDFrames);
 }
 

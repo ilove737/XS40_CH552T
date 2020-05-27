@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 1   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE COMPOSITEKM
@@ -62,7 +62,7 @@ line level    source
   49          UINT8C KeyRepDesc[62] =
   50              {
   51                  0x05, 0x01, 0x09, 0x06, 0xA1, 0x01, 0x05, 0x07,
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 2   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 2   
 
   52                  0x19, 0xe0, 0x29, 0xe7, 0x15, 0x00, 0x25, 0x01,
   53                  0x75, 0x01, 0x95, 0x08, 0x81, 0x02, 0x95, 0x01,
@@ -126,7 +126,7 @@ line level    source
  108   1          IE_USB = 1;
  109   1      }
  110          /*******************************************************************************
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 3   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 3   
 
  111          * Function Name  : Enp1IntIn()
  112          * Description    : USB设备模式端点1的中断上传
@@ -160,424 +160,422 @@ line level    source
  140          void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,使用寄存器组1
  141          {
  142   1          UINT8 len = 0;
- 143   1          UART1SendByte(UIF_TRANSFER);
+ 143   1          // UART1SendByte(0xaa);
  144   1          if (UIF_TRANSFER) //USB传输完成标志
  145   1          {
  146   2              switch (USB_INT_ST & (MASK_UIS_TOKEN | MASK_UIS_ENDP))
  147   2              {
- 148   3              case UIS_TOKEN_IN | 2:                                       //endpoint 2# 中断端点上传
- 149   3                  UEP2_T_LEN = 0;                                          //预使用发送长度一定要清�
-             -�
+ 148   3              case UIS_TOKEN_IN | 2: //endpoint 2# 中断端点上传
+ 149   3                  UEP2_T_LEN = 0;    //预使用发送长度一定要清空
  150   3                  // UEP1_CTRL ^= bUEP_T_TOG;                                          //如果不设置自动�
              -�转则需要手动翻转
  151   3                  UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
- 152   3                  UART1SendByte(0x22);
- 153   3                  break;
- 154   3              case UIS_TOKEN_IN | 1:                                       //endpoint 1# 中断端点上传
- 155   3                  UEP1_T_LEN = 0;                                          //预使用发送长度一定要清�
-             -�
- 156   3                  // UEP2_CTRL ^= bUEP_T_TOG;                                 //如果不设置自动翻转则�
+ 152   3                  break;
+ 153   3              case UIS_TOKEN_IN | 1: //endpoint 1# 中断端点上传
+ 154   3                  UEP1_T_LEN = 0;    //预使用发送长度一定要清空
+ 155   3                  // UEP2_CTRL ^= bUEP_T_TOG;                                 //如果不设置自动翻转则�
              -�要手动翻转
- 157   3                  UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
- 158   3                  UART1SendByte(0x21);
- 159   3                  FLAG = 1;                                                /*传输完成标志*/
- 160   3                  break;
- 161   3              case UIS_TOKEN_SETUP | 0: //SETUP事务
- 162   3              UART1SendByte(0x20);
- 163   3                  len = USB_RX_LEN;
- 164   3                  if (len == (sizeof(USB_SETUP_REQ)))
- 165   3                  {
- 166   4                      SetupLen = UsbSetupBuf->wLengthL;
- 167   4                      if (UsbSetupBuf->wLengthH || SetupLen > 0x7F)
- 168   4                      {
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 4   
+ 156   3                  UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+ 157   3                  FLAG = 1; /*传输完成标志*/
+ 158   3                  break;
+ 159   3              case UIS_TOKEN_SETUP | 0: //SETUP事务
+ 160   3                  len = USB_RX_LEN;
+ 161   3                  if (len == (sizeof(USB_SETUP_REQ)))
+ 162   3                  {
+ 163   4                      SetupLen = UsbSetupBuf->wLengthL;
+ 164   4                      if (UsbSetupBuf->wLengthH || SetupLen > 0x7F)
+ 165   4                      {
+ 166   5                          SetupLen = 0x7F; // 限制总长度
+ 167   5                      }
+ 168   4                      len = 0; // 默认为成功并且上传0长度
+ 169   4                      SetupReq = UsbSetupBuf->bRequest;
+ 170   4                      if ((UsbSetupBuf->bRequestType & USB_REQ_TYP_MASK) != USB_REQ_TYP_STANDARD) /* HID类命�
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 4   
 
- 169   5                          SetupLen = 0x7F; // 限制总长度
- 170   5                      }
- 171   4                      len = 0; // 默认为成功并且上传0长度
- 172   4                      SetupReq = UsbSetupBuf->bRequest;
- 173   4                      if ((UsbSetupBuf->bRequestType & USB_REQ_TYP_MASK) != USB_REQ_TYP_STANDARD) /* HID类命�
              -� */
- 174   4                      {
- 175   5                          switch (SetupReq)
- 176   5                          {
- 177   6                          case 0x01: //GetReport
- 178   6                              break;
- 179   6                          case 0x02: //GetIdle
- 180   6                              break;
- 181   6                          case 0x03: //GetProtocol
- 182   6                              break;
- 183   6                          case 0x09: //SetReport
- 184   6                              break;
- 185   6                          case 0x0A: //SetIdle
- 186   6                              break;
- 187   6                          case 0x0B: //SetProtocol
+ 171   4                      {
+ 172   5                          switch (SetupReq)
+ 173   5                          {
+ 174   6                          case 0x01: //GetReport
+ 175   6                              break;
+ 176   6                          case 0x02: //GetIdle
+ 177   6                              break;
+ 178   6                          case 0x03: //GetProtocol
+ 179   6                              break;
+ 180   6                          case 0x09: //SetReport
+ 181   6                              break;
+ 182   6                          case 0x0A: //SetIdle
+ 183   6                              break;
+ 184   6                          case 0x0B: //SetProtocol
+ 185   6                              break;
+ 186   6                          default:
+ 187   6                              len = 0xFF; /*命令不支持*/
  188   6                              break;
- 189   6                          default:
- 190   6                              len = 0xFF; /*命令不支持*/
- 191   6                              break;
- 192   6                          }
- 193   5                      }
- 194   4                      else
- 195   4                      {                     //标准请求
- 196   5                          switch (SetupReq) //请求码
- 197   5                          {
- 198   6                          case USB_GET_DESCRIPTOR:
- 199   6                              switch (UsbSetupBuf->wValueH)
- 200   6                              {
- 201   7                              case 1:               //设备描述符
- 202   7                                  pDescr = DevDesc; //把设备描述符送到要发送的缓冲区
- 203   7                                  len = sizeof(DevDesc);
- 204   7                                  break;
- 205   7                              case 2:               //配置描述符
- 206   7                                  pDescr = CfgDesc; //把设备描述符送到要发送的缓冲区
- 207   7                                  len = sizeof(CfgDesc);
- 208   7                                  break;
- 209   7                              case 0x22:                         //报表描述符
- 210   7                                  if (UsbSetupBuf->wIndexL == 0) //接口0报表描述符
- 211   7                                  {
- 212   8                                      pDescr = KeyRepDesc; //数据准备上传
- 213   8                                      len = sizeof(KeyRepDesc);
- 214   8                                  }
- 215   7                                  else if (UsbSetupBuf->wIndexL == 1) //接口1报表描述符
- 216   7                                  {
- 217   8                                      pDescr = MouseRepDesc; //数据准备上传
- 218   8                                      len = sizeof(MouseRepDesc);
- 219   8                                  }
- 220   7                                  else
- 221   7                                  {
- 222   8                                      len = 0xff; //本程序只有2个接口，这句话正常不可能执行
- 223   8                                  }
+ 189   6                          }
+ 190   5                      }
+ 191   4                      else
+ 192   4                      {                     //标准请求
+ 193   5                          switch (SetupReq) //请求码
+ 194   5                          {
+ 195   6                          case USB_GET_DESCRIPTOR:
+ 196   6                              switch (UsbSetupBuf->wValueH)
+ 197   6                              {
+ 198   7                              case 1:               //设备描述符
+ 199   7                                  pDescr = DevDesc; //把设备描述符送到要发送的缓冲区
+ 200   7                                  len = sizeof(DevDesc);
+ 201   7                                  break;
+ 202   7                              case 2:               //配置描述符
+ 203   7                                  pDescr = CfgDesc; //把设备描述符送到要发送的缓冲区
+ 204   7                                  len = sizeof(CfgDesc);
+ 205   7                                  break;
+ 206   7                              case 0x22:                         //报表描述符
+ 207   7                                  if (UsbSetupBuf->wIndexL == 0) //接口0报表描述符
+ 208   7                                  {
+ 209   8                                      pDescr = KeyRepDesc; //数据准备上传
+ 210   8                                      len = sizeof(KeyRepDesc);
+ 211   8                                  }
+ 212   7                                  else if (UsbSetupBuf->wIndexL == 1) //接口1报表描述符
+ 213   7                                  {
+ 214   8                                      pDescr = MouseRepDesc; //数据准备上传
+ 215   8                                      len = sizeof(MouseRepDesc);
+ 216   8                                  }
+ 217   7                                  else
+ 218   7                                  {
+ 219   8                                      len = 0xff; //本程序只有2个接口，这句话正常不可能执行
+ 220   8                                  }
+ 221   7                                  break;
+ 222   7                              default:
+ 223   7                                  len = 0xff; //不支持的命令或者出错
  224   7                                  break;
- 225   7                              default:
- 226   7                                  len = 0xff; //不支持的命令或者出错
- 227   7                                  break;
- 228   7                              }
- 229   6                              if (SetupLen > len)
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 5   
-
- 230   6                              {
- 231   7                                  SetupLen = len; //限制总长度
- 232   7                              }
- 233   6                              len = SetupLen >= THIS_ENDP0_SIZE ? THIS_ENDP0_SIZE : SetupLen; //本次传输长�
+ 225   7                              }
+ 226   6                              if (SetupLen > len)
+ 227   6                              {
+ 228   7                                  SetupLen = len; //限制总长度
+ 229   7                              }
+ 230   6                              len = SetupLen >= THIS_ENDP0_SIZE ? THIS_ENDP0_SIZE : SetupLen; //本次传输长�
              -��
- 234   6                              memcpy(Ep0Buffer, pDescr, len);                                 //加载上传数�
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 5   
+
+ 231   6                              memcpy(Ep0Buffer, pDescr, len);                                 //加载上传数�
              -��
- 235   6                              SetupLen -= len;
- 236   6                              pDescr += len;
+ 232   6                              SetupLen -= len;
+ 233   6                              pDescr += len;
+ 234   6                              break;
+ 235   6                          case USB_SET_ADDRESS:
+ 236   6                              SetupLen = UsbSetupBuf->wValueL; //暂存USB设备地址
  237   6                              break;
- 238   6                          case USB_SET_ADDRESS:
- 239   6                              SetupLen = UsbSetupBuf->wValueL; //暂存USB设备地址
- 240   6                              break;
- 241   6                          case USB_GET_CONFIGURATION:
- 242   6                              Ep0Buffer[0] = UsbConfig;
- 243   6                              if (SetupLen >= 1)
- 244   6                              {
- 245   7                                  len = 1;
- 246   7                              }
- 247   6                              break;
- 248   6                          case USB_SET_CONFIGURATION:
- 249   6                              UsbConfig = UsbSetupBuf->wValueL;
- 250   6                              if (UsbConfig)
- 251   6                              {
- 252   7      #if DE_PRINTF
+ 238   6                          case USB_GET_CONFIGURATION:
+ 239   6                              Ep0Buffer[0] = UsbConfig;
+ 240   6                              if (SetupLen >= 1)
+ 241   6                              {
+ 242   7                                  len = 1;
+ 243   7                              }
+ 244   6                              break;
+ 245   6                          case USB_SET_CONFIGURATION:
+ 246   6                              UsbConfig = UsbSetupBuf->wValueL;
+ 247   6                              if (UsbConfig)
+ 248   6                              {
+ 249   7      #if DE_PRINTF
                                           printf("SET CONFIG.\n");
               #endif
- 255   7                                  Ready = 1; //set config命令一般代表usb枚举完成的标志
- 256   7                              }
- 257   6                              break;
- 258   6                          case 0x0A:
- 259   6                              break;
- 260   6                          case USB_CLEAR_FEATURE:                                                         //Clea
+ 252   7                                  Ready = 1; //set config命令一般代表usb枚举完成的标志
+ 253   7                              }
+ 254   6                              break;
+ 255   6                          case 0x0A:
+ 256   6                              break;
+ 257   6                          case USB_CLEAR_FEATURE:                                                         //Clea
              -r Feature
- 261   6                              if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_ENDP) // 端
+ 258   6                              if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_ENDP) // 端
              -点
- 262   6                              {
- 263   7                                  switch (UsbSetupBuf->wIndexL)
- 264   7                                  {
- 265   8                                  case 0x82:
- 266   8                                      UEP2_CTRL = UEP2_CTRL & ~(bUEP_T_TOG | MASK_UEP_T_RES) | UEP_T_RES_NAK;
+ 259   6                              {
+ 260   7                                  switch (UsbSetupBuf->wIndexL)
+ 261   7                                  {
+ 262   8                                  case 0x82:
+ 263   8                                      UEP2_CTRL = UEP2_CTRL & ~(bUEP_T_TOG | MASK_UEP_T_RES) | UEP_T_RES_NAK;
+ 264   8                                      break;
+ 265   8                                  case 0x81:
+ 266   8                                      UEP1_CTRL = UEP1_CTRL & ~(bUEP_T_TOG | MASK_UEP_T_RES) | UEP_T_RES_NAK;
  267   8                                      break;
- 268   8                                  case 0x81:
- 269   8                                      UEP1_CTRL = UEP1_CTRL & ~(bUEP_T_TOG | MASK_UEP_T_RES) | UEP_T_RES_NAK;
+ 268   8                                  case 0x01:
+ 269   8                                      UEP1_CTRL = UEP1_CTRL & ~(bUEP_R_TOG | MASK_UEP_R_RES) | UEP_R_RES_ACK;
  270   8                                      break;
- 271   8                                  case 0x01:
- 272   8                                      UEP1_CTRL = UEP1_CTRL & ~(bUEP_R_TOG | MASK_UEP_R_RES) | UEP_R_RES_ACK;
+ 271   8                                  default:
+ 272   8                                      len = 0xFF; // 不支持的端点
  273   8                                      break;
- 274   8                                  default:
- 275   8                                      len = 0xFF; // 不支持的端点
- 276   8                                      break;
- 277   8                                  }
- 278   7                              }
- 279   6                              if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_DEVICE) // �
+ 274   8                                  }
+ 275   7                              }
+ 276   6                              if ((UsbSetupBuf->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_DEVICE) // �
              -��备
- 280   6                              {
- 281   7                                  break;
- 282   7                              }
- 283   6                              else
- 284   6                              {
- 285   7                                  len = 0xFF; // 不是端点不支持
- 286   7                              }
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 6   
+ 277   6                              {
+ 278   7                                  break;
+ 279   7                              }
+ 280   6                              else
+ 281   6                              {
+ 282   7                                  len = 0xFF; // 不是端点不支持
+ 283   7                              }
+ 284   6                              break;
+ 285   6                          case USB_SET_FEATURE:                               /* Set Feature */
+ 286   6                              if ((UsbSetupBuf->bRequestType & 0x1F) == 0x00) /* 设置设备 */
+ 287   6                              {
+ 288   7                                  if ((((UINT16)UsbSetupBuf->wValueH << 8) | UsbSetupBuf->wValueL) == 0x01)
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 6   
 
- 287   6                              break;
- 288   6                          case USB_SET_FEATURE:                               /* Set Feature */
- 289   6                              if ((UsbSetupBuf->bRequestType & 0x1F) == 0x00) /* 设置设备 */
- 290   6                              {
- 291   7                                  if ((((UINT16)UsbSetupBuf->wValueH << 8) | UsbSetupBuf->wValueL) == 0x01)
- 292   7                                  {
- 293   8                                      if (CfgDesc[7] & 0x20)
- 294   8                                      {
- 295   9                                          /* 设置唤醒使能标志 */
- 296   9                                      }
- 297   8                                      else
- 298   8                                      {
- 299   9                                          len = 0xFF; /* 操作失败 */
- 300   9                                      }
- 301   8                                  }
- 302   7                                  else
- 303   7                                  {
- 304   8                                      len = 0xFF; /* 操作失败 */
- 305   8                                  }
- 306   7                              }
- 307   6                              else if ((UsbSetupBuf->bRequestType & 0x1F) == 0x02) /* 设置端点 */
- 308   6                              {
- 309   7                                  if ((((UINT16)UsbSetupBuf->wValueH << 8) | UsbSetupBuf->wValueL) == 0x00)
- 310   7                                  {
- 311   8                                      switch (((UINT16)UsbSetupBuf->wIndexH << 8) | UsbSetupBuf->wIndexL)
- 312   8                                      {
- 313   9                                      case 0x82:
- 314   9                                          UEP2_CTRL = UEP2_CTRL & (~bUEP_T_TOG) | UEP_T_RES_STALL; /* 设置端�
+ 289   7                                  {
+ 290   8                                      if (CfgDesc[7] & 0x20)
+ 291   8                                      {
+ 292   9                                          /* 设置唤醒使能标志 */
+ 293   9                                      }
+ 294   8                                      else
+ 295   8                                      {
+ 296   9                                          len = 0xFF; /* 操作失败 */
+ 297   9                                      }
+ 298   8                                  }
+ 299   7                                  else
+ 300   7                                  {
+ 301   8                                      len = 0xFF; /* 操作失败 */
+ 302   8                                  }
+ 303   7                              }
+ 304   6                              else if ((UsbSetupBuf->bRequestType & 0x1F) == 0x02) /* 设置端点 */
+ 305   6                              {
+ 306   7                                  if ((((UINT16)UsbSetupBuf->wValueH << 8) | UsbSetupBuf->wValueL) == 0x00)
+ 307   7                                  {
+ 308   8                                      switch (((UINT16)UsbSetupBuf->wIndexH << 8) | UsbSetupBuf->wIndexL)
+ 309   8                                      {
+ 310   9                                      case 0x82:
+ 311   9                                          UEP2_CTRL = UEP2_CTRL & (~bUEP_T_TOG) | UEP_T_RES_STALL; /* 设置端�
              -��2 IN STALL */
- 315   9                                          break;
- 316   9                                      case 0x02:
- 317   9                                          UEP2_CTRL = UEP2_CTRL & (~bUEP_R_TOG) | UEP_R_RES_STALL; /* 设置端�
+ 312   9                                          break;
+ 313   9                                      case 0x02:
+ 314   9                                          UEP2_CTRL = UEP2_CTRL & (~bUEP_R_TOG) | UEP_R_RES_STALL; /* 设置端�
              -��2 OUT Stall */
- 318   9                                          break;
- 319   9                                      case 0x81:
- 320   9                                          UEP1_CTRL = UEP1_CTRL & (~bUEP_T_TOG) | UEP_T_RES_STALL; /* 设置端�
+ 315   9                                          break;
+ 316   9                                      case 0x81:
+ 317   9                                          UEP1_CTRL = UEP1_CTRL & (~bUEP_T_TOG) | UEP_T_RES_STALL; /* 设置端�
              -��1 IN STALL */
+ 318   9                                          break;
+ 319   9                                      default:
+ 320   9                                          len = 0xFF; //操作失败
  321   9                                          break;
- 322   9                                      default:
- 323   9                                          len = 0xFF; //操作失败
- 324   9                                          break;
- 325   9                                      }
- 326   8                                  }
- 327   7                                  else
- 328   7                                  {
- 329   8                                      len = 0xFF; //操作失败
- 330   8                                  }
- 331   7                              }
- 332   6                              else
- 333   6                              {
- 334   7                                  len = 0xFF; //操作失败
- 335   7                              }
- 336   6                              break;
- 337   6                          case USB_GET_STATUS:
- 338   6                              Ep0Buffer[0] = 0x00;
- 339   6                              Ep0Buffer[1] = 0x00;
- 340   6                              if (SetupLen >= 2)
- 341   6                              {
- 342   7                                  len = 2;
- 343   7                              }
- 344   6                              else
- 345   6                              {
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 7   
+ 322   9                                      }
+ 323   8                                  }
+ 324   7                                  else
+ 325   7                                  {
+ 326   8                                      len = 0xFF; //操作失败
+ 327   8                                  }
+ 328   7                              }
+ 329   6                              else
+ 330   6                              {
+ 331   7                                  len = 0xFF; //操作失败
+ 332   7                              }
+ 333   6                              break;
+ 334   6                          case USB_GET_STATUS:
+ 335   6                              Ep0Buffer[0] = 0x00;
+ 336   6                              Ep0Buffer[1] = 0x00;
+ 337   6                              if (SetupLen >= 2)
+ 338   6                              {
+ 339   7                                  len = 2;
+ 340   7                              }
+ 341   6                              else
+ 342   6                              {
+ 343   7                                  len = SetupLen;
+ 344   7                              }
+ 345   6                              break;
+ 346   6                          default:
+ 347   6                              len = 0xff; //操作失败
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 7   
 
- 346   7                                  len = SetupLen;
- 347   7                              }
  348   6                              break;
- 349   6                          default:
- 350   6                              len = 0xff; //操作失败
- 351   6                              break;
- 352   6                          }
- 353   5                      }
- 354   4                  }
- 355   3                  else
- 356   3                  {
- 357   4                      len = 0xff; //包长度错误
- 358   4                  }
- 359   3                  if (len == 0xff)
- 360   3                  {
- 361   4                      SetupReq = 0xFF;
- 362   4                      UEP0_CTRL = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_STALL | UEP_T_RES_STALL; //STALL
- 363   4                  }
- 364   3                  else if (len) //上传数据或者状态阶段返回0长度包
- 365   3                  {
- 366   4                      UEP0_T_LEN = len;
- 367   4                      UEP0_CTRL = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_ACK; //默认数据包是D
+ 349   6                          }
+ 350   5                      }
+ 351   4                  }
+ 352   3                  else
+ 353   3                  {
+ 354   4                      len = 0xff; //包长度错误
+ 355   4                  }
+ 356   3                  if (len == 0xff)
+ 357   3                  {
+ 358   4                      SetupReq = 0xFF;
+ 359   4                      UEP0_CTRL = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_STALL | UEP_T_RES_STALL; //STALL
+ 360   4                  }
+ 361   3                  else if (len) //上传数据或者状态阶段返回0长度包
+ 362   3                  {
+ 363   4                      UEP0_T_LEN = len;
+ 364   4                      UEP0_CTRL = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_ACK; //默认数据包是D
              -ATA1，返回应答ACK
- 368   4                  }
- 369   3                  else
- 370   3                  {
- 371   4                      UEP0_T_LEN = 0;                                                      //虽然尚未到状�
+ 365   4                  }
+ 366   3                  else
+ 367   3                  {
+ 368   4                      UEP0_T_LEN = 0;                                                      //虽然尚未到状�
              -��阶段，但是提前预置上传0长度数据包以防主机提前进入状态阶段
- 372   4                      UEP0_CTRL = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_ACK; //默认数据包是D
+ 369   4                      UEP0_CTRL = bUEP_R_TOG | bUEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_ACK; //默认数据包是D
              -ATA1,返回应答ACK
- 373   4                  }
- 374   3                  break;
- 375   3              case UIS_TOKEN_IN | 0: //endpoint0 IN
- 376   3                  switch (SetupReq)
- 377   3                  {
- 378   4                  case USB_GET_DESCRIPTOR:
- 379   4                      len = SetupLen >= THIS_ENDP0_SIZE ? THIS_ENDP0_SIZE : SetupLen; //本次传输长度
- 380   4                      memcpy(Ep0Buffer, pDescr, len);                                 //加载上传数据
- 381   4                      SetupLen -= len;
- 382   4                      pDescr += len;
- 383   4                      UEP0_T_LEN = len;
- 384   4                      UEP0_CTRL ^= bUEP_T_TOG; //同步标志位翻转
- 385   4                      break;
- 386   4                  case USB_SET_ADDRESS:
- 387   4                      USB_DEV_AD = USB_DEV_AD & bUDA_GP_BIT | SetupLen;
- 388   4                      UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
- 389   4                      break;
- 390   4                  default:
- 391   4                      UEP0_T_LEN = 0; //状态阶段完成中断或者是强制上传0长度数据包结束控�
+ 370   4                  }
+ 371   3                  break;
+ 372   3              case UIS_TOKEN_IN | 0: //endpoint0 IN
+ 373   3                  switch (SetupReq)
+ 374   3                  {
+ 375   4                  case USB_GET_DESCRIPTOR:
+ 376   4                      len = SetupLen >= THIS_ENDP0_SIZE ? THIS_ENDP0_SIZE : SetupLen; //本次传输长度
+ 377   4                      memcpy(Ep0Buffer, pDescr, len);                                 //加载上传数据
+ 378   4                      SetupLen -= len;
+ 379   4                      pDescr += len;
+ 380   4                      UEP0_T_LEN = len;
+ 381   4                      UEP0_CTRL ^= bUEP_T_TOG; //同步标志位翻转
+ 382   4                      break;
+ 383   4                  case USB_SET_ADDRESS:
+ 384   4                      USB_DEV_AD = USB_DEV_AD & bUDA_GP_BIT | SetupLen;
+ 385   4                      UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
+ 386   4                      break;
+ 387   4                  default:
+ 388   4                      UEP0_T_LEN = 0; //状态阶段完成中断或者是强制上传0长度数据包结束控�
              -�传输
- 392   4                      UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
- 393   4                      break;
- 394   4                  }
- 395   3                  break;
- 396   3              case UIS_TOKEN_OUT | 0: // endpoint0 OUT
- 397   3                  len = USB_RX_LEN;
- 398   3                  if (SetupReq == 0x09)
- 399   3                  {
- 400   4                      if (Ep0Buffer[0])
- 401   4                      {
- 402   5                          // printf("Light on Num Lock LED!\n");
- 403   5                          UART1SendByte(0xF1);
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 8   
+ 389   4                      UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
+ 390   4                      break;
+ 391   4                  }
+ 392   3                  break;
+ 393   3              case UIS_TOKEN_OUT | 0: // endpoint0 OUT
+ 394   3                  len = USB_RX_LEN;
+ 395   3                  if (SetupReq == 0x09)
+ 396   3                  {
+ 397   4                      if (Ep0Buffer[0])
+ 398   4                      {
+ 399   5                          // printf("Light on Num Lock LED!\n");
+ 400   5                          // UART1SendByte(0xF1);
+ 401   5                      }
+ 402   4                      else if (Ep0Buffer[0] == 0)
+ 403   4                      {
+ 404   5                          // printf("Light off Num Lock LED!\n");
+ 405   5                          // UART1SendByte(0xf0);
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 8   
 
- 404   5                      }
- 405   4                      else if (Ep0Buffer[0] == 0)
- 406   4                      {
- 407   5                          // printf("Light off Num Lock LED!\n");
- 408   5                          UART1SendByte(0xf0);
- 409   5                      }
- 410   4                  }
- 411   3                  UEP0_CTRL ^= bUEP_R_TOG; //同步标志位翻转
- 412   3                  break;
- 413   3              default:
- 414   3                  break;
- 415   3              }
- 416   2              UIF_TRANSFER = 0; //写0清空中断
- 417   2          }
- 418   1          if (UIF_BUS_RST) //设备模式USB总线复位中断
- 419   1          {
- 420   2              UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
- 421   2              UEP1_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK;
- 422   2              UEP2_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK | UEP_T_RES_NAK;
- 423   2              USB_DEV_AD = 0x00;
- 424   2              UIF_SUSPEND = 0;
- 425   2              UIF_TRANSFER = 0;
- 426   2              UIF_BUS_RST = 0; //清中断标志
- 427   2          }
- 428   1          if (UIF_SUSPEND) //USB总线挂起/唤醒完成
- 429   1          {
- 430   2              UIF_SUSPEND = 0;
- 431   2              if (USB_MIS_ST & bUMS_SUSPEND) //挂起
- 432   2              {
- 433   3      #if DEBUG
+ 406   5                      }
+ 407   4                  }
+ 408   3                  UEP0_CTRL ^= bUEP_R_TOG; //同步标志位翻转
+ 409   3                  break;
+ 410   3              default:
+ 411   3                  break;
+ 412   3              }
+ 413   2              UIF_TRANSFER = 0; //写0清空中断
+ 414   2          }
+ 415   1          if (UIF_BUS_RST) //设备模式USB总线复位中断
+ 416   1          {
+ 417   2              UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
+ 418   2              UEP1_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK;
+ 419   2              UEP2_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK | UEP_T_RES_NAK;
+ 420   2              USB_DEV_AD = 0x00;
+ 421   2              UIF_SUSPEND = 0;
+ 422   2              UIF_TRANSFER = 0;
+ 423   2              UIF_BUS_RST = 0; //清中断标志
+ 424   2          }
+ 425   1          if (UIF_SUSPEND) //USB总线挂起/唤醒完成
+ 426   1          {
+ 427   2              UIF_SUSPEND = 0;
+ 428   2              if (USB_MIS_ST & bUMS_SUSPEND) //挂起
+ 429   2              {
+ 430   3      #if DEBUG
                           printf("zz"); //睡眠状态
               #endif
- 436   3                  //             while ( XBUS_AUX & bUART0_TX );                              //等待发送完�
+ 433   3                  //             while ( XBUS_AUX & bUART0_TX );                              //等待发送完�
              -��
- 437   3                  //             SAFE_MOD = 0x55;
- 438   3                  //             SAFE_MOD = 0xAA;
- 439   3                  //             WAKE_CTRL = bWAK_BY_USB | bWAK_RXD0_LO;                      //USB或者RXD0有
+ 434   3                  //             SAFE_MOD = 0x55;
+ 435   3                  //             SAFE_MOD = 0xAA;
+ 436   3                  //             WAKE_CTRL = bWAK_BY_USB | bWAK_RXD0_LO;                      //USB或者RXD0有
              -信号时可被唤醒
- 440   3                  //             PCON |= PD;                                                  //睡眠
- 441   3                  //             SAFE_MOD = 0x55;
- 442   3                  //             SAFE_MOD = 0xAA;
- 443   3                  //             WAKE_CTRL = 0x00;
- 444   3              }
- 445   2          }
- 446   1          else
- 447   1          {                      //意外的中断,不可能发生的情况
- 448   2              USB_INT_FG = 0xFF; //清中断标志
- 449   2                                 //      printf("UnknownInt  N");
- 450   2          }
- 451   1      }
- 452          void HIDValueHandle()
- 453          {
- 454   1          UINT8 i;
- 455   1          // UART1SendByte(0x31);
- 456   1      
- 457   1          i = getkey();
- 458   1          // printf("%c", (UINT8)i);
- 459   1          // i = 'A';
- 460   1          switch (i)
- 461   1          {
- 462   2              //鼠标数据上传示例
- 463   2          case 'L': //左键
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 9   
+ 437   3                  //             PCON |= PD;                                                  //睡眠
+ 438   3                  //             SAFE_MOD = 0x55;
+ 439   3                  //             SAFE_MOD = 0xAA;
+ 440   3                  //             WAKE_CTRL = 0x00;
+ 441   3              }
+ 442   2          }
+ 443   1          else
+ 444   1          {                      //意外的中断,不可能发生的情况
+ 445   2              USB_INT_FG = 0xFF; //清中断标志
+ 446   2                                 //      printf("UnknownInt  N");
+ 447   2          }
+ 448   1      }
+ 449          
+ 450          // void HIDValueHandle()
+ 451          // {
+ 452          //     UINT8 i;
+ 453          
+ 454          //     i = getkey();
+ 455          //     // printf("%c", (UINT8)i);
+ 456          //     // i = 'A';
+ 457          //     switch (i)
+ 458          //     {
+ 459          //         //鼠标数据上传示例
+ 460          //     case 'L': //左键
+ 461          //         HIDMouse[0] = 0x01;
+ 462          //         Enp2IntIn();
+ 463          //         HIDMouse[0] = 0;
+ 464          //         break;
+ 465          //     case 'R': //右键
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 9   
 
- 464   2              HIDMouse[0] = 0x01;
- 465   2              Enp2IntIn();
- 466   2              HIDMouse[0] = 0;
- 467   2              break;
- 468   2          case 'R': //右键
- 469   2              HIDMouse[0] = 0x02;
- 470   2              Enp2IntIn();
- 471   2              HIDMouse[0] = 0;
- 472   2              break;
- 473   2              //键盘数据上传示例
- 474   2          case 'A': //A键
- 475   2              FLAG = 0;
- 476   2              HIDKey[2] = 0x1d; //按键开始
- 477   2              Enp1IntIn();
- 478   2              HIDKey[2] = 0; //按键结束
- 479   2              while (FLAG == 0)
- 480   2              {
- 481   3                  ; /*等待上一包传输完成*/
- 482   3              }
- 483   2              Enp1IntIn();
- 484   2              break;
- 485   2          case 'P': //P键
- 486   2              FLAG = 0;
- 487   2              HIDKey[2] = 0x38;
- 488   2              Enp1IntIn();
- 489   2              HIDKey[2] = 0; //按键结束
- 490   2              while (FLAG == 0)
- 491   2              {
- 492   3                  ; /*等待上一包传输完成*/
- 493   3              }
- 494   2              Enp1IntIn();
- 495   2              break;
- 496   2          case 'Q': //Num Lock键
- 497   2              FLAG = 0;
- 498   2              HIDKey[2] = 0x39;
- 499   2              Enp1IntIn();
- 500   2              HIDKey[2] = 0; //按键结束
- 501   2              while (FLAG == 0)
- 502   2              {
- 503   3                  ; /*等待上一包传输完成*/
- 504   3              }
- 505   2              Enp1IntIn();
- 506   2              break;
- 507   2          default:                                                     //其他
- 508   2              UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
- 509   2              UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
- 510   2              break;
- 511   2          }
- 512   1      }
- 513          
- 514          void sendKeyHID(UINT8 *Frames)
- 515          {
- 516   1          memcpy(HIDKey, Frames, 8);
- 517   1      
- 518   1          FLAG = 0;
- 519   1          Enp1IntIn();
- 520   1          // UIF_TRANSFER=1;
- 521   1          while (FLAG == 0)
- 522   1          {
- 523   2              ; /*等待上一包传输完成*/
- 524   2          }
- 525   1          UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 10  
-
- 526   1          UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+ 466          //         HIDMouse[0] = 0x02;
+ 467          //         Enp2IntIn();
+ 468          //         HIDMouse[0] = 0;
+ 469          //         break;
+ 470          //         //键盘数据上传示例
+ 471          //     case 'A': //A键
+ 472          //         FLAG = 0;
+ 473          //         HIDKey[2] = 0x1d; //按键开始
+ 474          //         Enp1IntIn();
+ 475          //         HIDKey[2] = 0; //按键结束
+ 476          //         while (FLAG == 0)
+ 477          //         {
+ 478          //             ; /*等待上一包传输完成*/
+ 479          //         }
+ 480          //         Enp1IntIn();
+ 481          //         break;
+ 482          //     case 'P': //P键
+ 483          //         FLAG = 0;
+ 484          //         HIDKey[2] = 0x38;
+ 485          //         Enp1IntIn();
+ 486          //         HIDKey[2] = 0; //按键结束
+ 487          //         while (FLAG == 0)
+ 488          //         {
+ 489          //             ; /*等待上一包传输完成*/
+ 490          //         }
+ 491          //         Enp1IntIn();
+ 492          //         break;
+ 493          //     case 'Q': //Num Lock键
+ 494          //         FLAG = 0;
+ 495          //         HIDKey[2] = 0x39;
+ 496          //         Enp1IntIn();
+ 497          //         HIDKey[2] = 0; //按键结束
+ 498          //         while (FLAG == 0)
+ 499          //         {
+ 500          //             ; /*等待上一包传输完成*/
+ 501          //         }
+ 502          //         Enp1IntIn();
+ 503          //         break;
+ 504          //     default:                                                     //其他
+ 505          //         UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+ 506          //         UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+ 507          //         break;
+ 508          //     }
+ 509          // }
+ 510          
+ 511          void sendKeyHID(UINT8 *Frames)
+ 512          {
+ 513   1          memcpy(HIDKey, Frames, 8);
+ 514   1      
+ 515   1          if (Ready)
+ 516   1          {
+ 517   2              FLAG = 0;
+ 518   2              Enp1IntIn();
+ 519   2              // UIF_TRANSFER=1;
+ 520   2              // while (FLAG == 0)
+ 521   2              // {
+ 522   2              //     ; /*等待上一包传输完成*/
+ 523   2              // }
+ 524   2              // UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+ 525   2              // UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+ 526   2          }
  527   1      }
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 10  
+
  528          
  529          // main()
  530          // {
@@ -591,69 +589,68 @@ line level    source
  538          //     initGPIO();
  539          
  540          //     UART1Init();
- 541          //     UART1SendByte(0x30);
- 542          
- 543          //     // printf("T0 Test ...\n");
- 544          //     mTimer0Clk12DivFsys();       //T0定时器时钟设置
- 545          //     mTimer_x_ModInit(0, 1);      //T0 定时器模式设置
- 546          //     mTimer_x_SetData(0, 0x5555); //T0定时器赋值
- 547          //     mTimer0RunCTL(1);            //T0定时器启动
- 548          //     ET0 = 1;                     //T0定时器中断开启
- 549          //     EA = 1;
- 550          
- 551          // //读取芯片唯一ID号
- 552          // #if DE_PRINTF
- 553          //     printf("ID0 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFA), (UINT16) * (PUINT8C)(0x3FFB));
- 554          //     printf("ID1 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFC), (UINT16) * (PUINT8C)(0x3FFD));
- 555          //     printf("ID2 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFE), (UINT16) * (PUINT8C)(0x3FFF));
- 556          // #endif
- 557          
- 558          //     USBDeviceInit(); //USB设备模式初始化
- 559          //     EA = 1;          //允许单片机中断
- 560          //     UEP1_T_LEN = 0;  //预使用发送长度一定要清空
- 561          //     UEP2_T_LEN = 0;  //预使用发送长度一定要清空
- 562          //     FLAG = 0;
- 563          //     Ready = 0;
- 564          
- 565          //     while (1)
- 566          //     {
- 567          //         if (Ready)
- 568          //         {
- 569          //             HIDValueHandle(); //该函数会一直等待串口接收一个字节
- 570          //         }
- 571          
- 572          //         if ((Ready) && (Ep2InKey == 0))
- 573          //         {
- 574          //             Enp1IntIn(); //仅发送键盘键值“抬起”操作
- 575          //             mDelaymS(10);
- 576          //         }
- 577          //         // mDelaymS(10); //模拟单片机做其它事
- 578          //     }
- 579          
- 580          //     //    for(i=0;i<128;i++){                                                             //循环写入128字
+ 541          
+ 542          //     // printf("T0 Test ...\n");
+ 543          //     mTimer0Clk12DivFsys();       //T0定时器时钟设置
+ 544          //     mTimer_x_ModInit(0, 1);      //T0 定时器模式设置
+ 545          //     mTimer_x_SetData(0, 0x5555); //T0定时器赋值
+ 546          //     mTimer0RunCTL(1);            //T0定时器启动
+ 547          //     ET0 = 1;                     //T0定时器中断开启
+ 548          //     EA = 1;
+ 549          
+ 550          // //读取芯片唯一ID号
+ 551          // #if DE_PRINTF
+ 552          //     printf("ID0 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFA), (UINT16) * (PUINT8C)(0x3FFB));
+ 553          //     printf("ID1 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFC), (UINT16) * (PUINT8C)(0x3FFD));
+ 554          //     printf("ID2 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFE), (UINT16) * (PUINT8C)(0x3FFF));
+ 555          // #endif
+ 556          
+ 557          //     USBDeviceInit(); //USB设备模式初始化
+ 558          //     EA = 1;          //允许单片机中断
+ 559          //     UEP1_T_LEN = 0;  //预使用发送长度一定要清空
+ 560          //     UEP2_T_LEN = 0;  //预使用发送长度一定要清空
+ 561          //     FLAG = 0;
+ 562          //     Ready = 0;
+ 563          
+ 564          //     while (1)
+ 565          //     {
+ 566          //         if (Ready)
+ 567          //         {
+ 568          //             HIDValueHandle(); //该函数会一直等待串口接收一个字节
+ 569          //         }
+ 570          
+ 571          //         if ((Ready) && (Ep2InKey == 0))
+ 572          //         {
+ 573          //             Enp1IntIn(); //仅发送键盘键值“抬起”操作
+ 574          //             mDelaymS(10);
+ 575          //         }
+ 576          //         // mDelaymS(10); //模拟单片机做其它事
+ 577          //     }
+ 578          
+ 579          //     //    for(i=0;i<128;i++){                                                             //循环写入128字
              -节
- 581          //     //        len = WriteDataFlash(i,&i,1);                                          //向DataFlash区�
+ 580          //     //        len = WriteDataFlash(i,&i,1);                                          //向DataFlash区�
              -��偏移地址i写入i
- 582          //     //        if(len != 1){
- 583          //     //          printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
- 584          //     //        }
- 585          //     //      }
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/18/2020 22:14:47 PAGE 11  
-
- 586          //     //      for(i=0;i<128;i++){                                                      //读DataFlash区�
+ 581          //     //        if(len != 1){
+ 582          //     //          printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
+ 583          //     //        }
+ 584          //     //      }
+ 585          //     //      for(i=0;i<128;i++){                                                      //读DataFlash区�
              -��偏移地址i并校验
- 587          //     //        len = ReadDataFlash(i,1,&m);
- 588          //     //        if((len != 1) ||(m != i)){
- 589          //     //          printf("Read Err 次 = %02x, = %02x,addr =%02x ,值= %02x\n",j,(UINT16)(i*2),(UINT16)RO
+ 586          //     //        len = ReadDataFlash(i,1,&m);
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       05/27/2020 21:57:42 PAGE 11  
+
+ 587          //     //        if((len != 1) ||(m != i)){
+ 588          //     //          printf("Read Err 次 = %02x, = %02x,addr =%02x ,值= %02x\n",j,(UINT16)(i*2),(UINT16)RO
              -M_DATA_L,(UINT16)m);
- 590          //     //        }                                                                      //读校验出错�
+ 589          //     //        }                                                                      //读校验出错�
              -��印
- 591          //     //      }
- 592          // }
+ 590          //     //      }
+ 591          // }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1114    ----
+   CODE SIZE        =    939    ----
    CONSTANT SIZE    =    191    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

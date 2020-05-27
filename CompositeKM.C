@@ -140,26 +140,23 @@ void Enp2IntIn()
 void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,使用寄存器组1
 {
     UINT8 len = 0;
-    UART1SendByte(UIF_TRANSFER);
+    // UART1SendByte(0xaa);
     if (UIF_TRANSFER) //USB传输完成标志
     {
         switch (USB_INT_ST & (MASK_UIS_TOKEN | MASK_UIS_ENDP))
         {
-        case UIS_TOKEN_IN | 2:                                       //endpoint 2# 中断端点上传
-            UEP2_T_LEN = 0;                                          //预使用发送长度一定要清空
+        case UIS_TOKEN_IN | 2: //endpoint 2# 中断端点上传
+            UEP2_T_LEN = 0;    //预使用发送长度一定要清空
             // UEP1_CTRL ^= bUEP_T_TOG;                                          //如果不设置自动翻转则需要手动翻转
             UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-            UART1SendByte(0x22);
             break;
-        case UIS_TOKEN_IN | 1:                                       //endpoint 1# 中断端点上传
-            UEP1_T_LEN = 0;                                          //预使用发送长度一定要清空
+        case UIS_TOKEN_IN | 1: //endpoint 1# 中断端点上传
+            UEP1_T_LEN = 0;    //预使用发送长度一定要清空
             // UEP2_CTRL ^= bUEP_T_TOG;                                 //如果不设置自动翻转则需要手动翻转
             UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-            UART1SendByte(0x21);
-            FLAG = 1;                                                /*传输完成标志*/
+            FLAG = 1; /*传输完成标志*/
             break;
         case UIS_TOKEN_SETUP | 0: //SETUP事务
-        UART1SendByte(0x20);
             len = USB_RX_LEN;
             if (len == (sizeof(USB_SETUP_REQ)))
             {
@@ -400,12 +397,12 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
                 if (Ep0Buffer[0])
                 {
                     // printf("Light on Num Lock LED!\n");
-                    UART1SendByte(0xF1);
+                    // UART1SendByte(0xF1);
                 }
                 else if (Ep0Buffer[0] == 0)
                 {
                     // printf("Light off Num Lock LED!\n");
-                    UART1SendByte(0xf0);
+                    // UART1SendByte(0xf0);
                 }
             }
             UEP0_CTRL ^= bUEP_R_TOG; //同步标志位翻转
@@ -449,81 +446,84 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
                            //      printf("UnknownInt  N");
     }
 }
-void HIDValueHandle()
-{
-    UINT8 i;
-    // UART1SendByte(0x31);
 
-    i = getkey();
-    // printf("%c", (UINT8)i);
-    // i = 'A';
-    switch (i)
-    {
-        //鼠标数据上传示例
-    case 'L': //左键
-        HIDMouse[0] = 0x01;
-        Enp2IntIn();
-        HIDMouse[0] = 0;
-        break;
-    case 'R': //右键
-        HIDMouse[0] = 0x02;
-        Enp2IntIn();
-        HIDMouse[0] = 0;
-        break;
-        //键盘数据上传示例
-    case 'A': //A键
-        FLAG = 0;
-        HIDKey[2] = 0x1d; //按键开始
-        Enp1IntIn();
-        HIDKey[2] = 0; //按键结束
-        while (FLAG == 0)
-        {
-            ; /*等待上一包传输完成*/
-        }
-        Enp1IntIn();
-        break;
-    case 'P': //P键
-        FLAG = 0;
-        HIDKey[2] = 0x38;
-        Enp1IntIn();
-        HIDKey[2] = 0; //按键结束
-        while (FLAG == 0)
-        {
-            ; /*等待上一包传输完成*/
-        }
-        Enp1IntIn();
-        break;
-    case 'Q': //Num Lock键
-        FLAG = 0;
-        HIDKey[2] = 0x39;
-        Enp1IntIn();
-        HIDKey[2] = 0; //按键结束
-        while (FLAG == 0)
-        {
-            ; /*等待上一包传输完成*/
-        }
-        Enp1IntIn();
-        break;
-    default:                                                     //其他
-        UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-        UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-        break;
-    }
-}
+// void HIDValueHandle()
+// {
+//     UINT8 i;
+
+//     i = getkey();
+//     // printf("%c", (UINT8)i);
+//     // i = 'A';
+//     switch (i)
+//     {
+//         //鼠标数据上传示例
+//     case 'L': //左键
+//         HIDMouse[0] = 0x01;
+//         Enp2IntIn();
+//         HIDMouse[0] = 0;
+//         break;
+//     case 'R': //右键
+//         HIDMouse[0] = 0x02;
+//         Enp2IntIn();
+//         HIDMouse[0] = 0;
+//         break;
+//         //键盘数据上传示例
+//     case 'A': //A键
+//         FLAG = 0;
+//         HIDKey[2] = 0x1d; //按键开始
+//         Enp1IntIn();
+//         HIDKey[2] = 0; //按键结束
+//         while (FLAG == 0)
+//         {
+//             ; /*等待上一包传输完成*/
+//         }
+//         Enp1IntIn();
+//         break;
+//     case 'P': //P键
+//         FLAG = 0;
+//         HIDKey[2] = 0x38;
+//         Enp1IntIn();
+//         HIDKey[2] = 0; //按键结束
+//         while (FLAG == 0)
+//         {
+//             ; /*等待上一包传输完成*/
+//         }
+//         Enp1IntIn();
+//         break;
+//     case 'Q': //Num Lock键
+//         FLAG = 0;
+//         HIDKey[2] = 0x39;
+//         Enp1IntIn();
+//         HIDKey[2] = 0; //按键结束
+//         while (FLAG == 0)
+//         {
+//             ; /*等待上一包传输完成*/
+//         }
+//         Enp1IntIn();
+//         break;
+//     default:                                                     //其他
+//         UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+//         UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+//         break;
+//     }
+// }
 
 void sendKeyHID(UINT8 *Frames)
 {
     memcpy(HIDKey, Frames, 8);
 
-    FLAG = 0;
-    Enp1IntIn();
-    // UIF_TRANSFER=1;
-    while (FLAG == 0)
+    if (Ready)
     {
-        ; /*等待上一包传输完成*/
+        FLAG = 0;
+        Enp1IntIn();
+        // UIF_TRANSFER=1;
+        // while (FLAG == 0)
+        // {
+        //     ; /*等待上一包传输完成*/
+        // }
+        // UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
+        // UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
     }
-    UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-    UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
 }
 
 // main()
@@ -538,7 +538,6 @@ void sendKeyHID(UINT8 *Frames)
 //     initGPIO();
 
 //     UART1Init();
-//     UART1SendByte(0x30);
 
 //     // printf("T0 Test ...\n");
 //     mTimer0Clk12DivFsys();       //T0定时器时钟设置

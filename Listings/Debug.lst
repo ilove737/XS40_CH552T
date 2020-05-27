@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   DEBUG                                                             05/17/2020 21:20:35 PAGE 1   
+C51 COMPILER V9.56.0.0   DEBUG                                                             05/27/2020 20:47:18 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE DEBUG
@@ -62,7 +62,7 @@ line level    source
               #endif
   53   1      #if FREQ_SYS == 187500
                   CLOCK_CFG = CLOCK_CFG & ~MASK_SYS_CK_SEL | 0x00; // 187.5KHz
-C51 COMPILER V9.56.0.0   DEBUG                                                             05/17/2020 21:20:35 PAGE 2   
+C51 COMPILER V9.56.0.0   DEBUG                                                             05/27/2020 20:47:18 PAGE 2   
 
               #endif
   56   1          SAFE_MOD = 0x00;
@@ -126,7 +126,7 @@ line level    source
  114          {
  115   1          while (n)
  116   1          {
-C51 COMPILER V9.56.0.0   DEBUG                                                             05/17/2020 21:20:35 PAGE 3   
+C51 COMPILER V9.56.0.0   DEBUG                                                             05/27/2020 20:47:18 PAGE 3   
 
  117   2      #ifdef DELAY_MS_HW
                       while ((TKEY_CTRL & bTKC_IF) == 0)
@@ -190,7 +190,7 @@ line level    source
  173   1      }
  174          
  175          /*******************************************************************************
-C51 COMPILER V9.56.0.0   DEBUG                                                             05/17/2020 21:20:35 PAGE 4   
+C51 COMPILER V9.56.0.0   DEBUG                                                             05/27/2020 20:47:18 PAGE 4   
 
  176          * Function Name  : CH554UART0RcvByte()
  177          * Description    : CH554UART0接收一个字节
@@ -254,7 +254,7 @@ line level    source
  232          *******************************************************************************/
  233          //void CH554WDTFeed(UINT8 tim)
  234          //{
-C51 COMPILER V9.56.0.0   DEBUG                                                             05/17/2020 21:20:35 PAGE 5   
+C51 COMPILER V9.56.0.0   DEBUG                                                             05/27/2020 20:47:18 PAGE 5   
 
  235          //   WDOG_COUNT = tim;                                                             //看门狗计数器赋
              -值

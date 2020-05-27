@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 1   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/27/2020 22:03:01 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE SCANKEY
@@ -62,12 +62,12 @@ line level    source
   52          {
   53   1              // Fn0_Status = 0;
   54   1              HIDFramesPointer = 2;
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 2   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/27/2020 22:03:01 PAGE 2   
 
-  55   1              // for (i = 0; i < 8; i++)
-  56   1              // {
-  57   1              //      HIDFrames[i] = 0;
-  58   1              // }
+  55   1              for (i = 0; i < 8; i++)
+  56   1              {
+  57   2                      HIDFrames[i] = 0;
+  58   2              }
   59   1      
   60   1              for (i = 0; i < 2; i++)
   61   1              {
@@ -126,17 +126,17 @@ line level    source
  114   3                              kCode = keyMap[i * 8 + 7];
  115   3                              HIDFrames[HIDFramesPointer] = kCode;
  116   3                              // HIDKey[HIDFramesPointer] = kCode;
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 3   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/27/2020 22:03:01 PAGE 3   
 
  117   3                              if (HIDFramesPointer < 7)
  118   3                                      HIDFramesPointer++;
  119   3                      }
  120   2              }
- 121   1              for (i = 0; i < 8; i++)
- 122   1              {
- 123   2                      UART1SendByte(HIDFrames[i]);
- 124   2                      // HIDKey[i] = HIDFrames[i];
- 125   2              }
+ 121   1              // for (i = 0; i < 8; i++)
+ 122   1              // {
+ 123   1              //      UART1SendByte(HIDFrames[i]);
+ 124   1              //      // HIDKey[i] = HIDFrames[i];
+ 125   1              // }
  126   1              sendKeyHID(HIDFrames);
  127   1      }
  128          
@@ -190,7 +190,7 @@ line level    source
  176   2                      // }
  177   2                      for (i = 0; i < 2; i++)
  178   2                      {
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 4   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/27/2020 22:03:01 PAGE 4   
 
  179   3                              if (allKey[i] != 0)
  180   3                              {
@@ -254,7 +254,7 @@ line level    source
  238   4      
  239   4                                      // for (j = 0; j < 8; j++)
  240   4                                      // {
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 5   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/27/2020 22:03:01 PAGE 5   
 
  241   4                                      //      if ((allKey[i] >> j) & 1 == 1)
  242   4                                      //      {
@@ -318,7 +318,7 @@ line level    source
  299   3                              allKey[0] |= (~P1 & 0x0f) << 0;
  300   3                              break;
  301   3                      case 1:
-C51 COMPILER V9.56.0.0   SCANKEY                                                           05/18/2020 21:07:39 PAGE 6   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           05/27/2020 22:03:01 PAGE 6   
 
  302   3                              row2 = 0;
  303   3                              allKey[0] |= (~P1 & 0x0f) << 4;
@@ -358,7 +358,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1165    ----
+   CODE SIZE        =   1159    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     18    ----
    PDATA SIZE       =   ----    ----

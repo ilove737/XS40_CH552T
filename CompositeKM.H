@@ -1,6 +1,6 @@
 
-#ifndef Composite_KM
-#define Composite_KM
+#ifndef __Composite_KM__
+#define __Composite_KM__
 
 // extern Ready;
 // extern Ep2InKey;
@@ -9,7 +9,7 @@
 void USBDeviceInit();
 void Enp1IntIn();
 void Enp2IntIn();
-void HIDValueHandle();
+// void HIDValueHandle();
 void sendKeyHID(UINT8 *Frames);
 
 #endif
