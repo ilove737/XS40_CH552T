@@ -1,14 +1,13 @@
 #include "CH552.H"
-#include "UART1.H"
+// #include "UART1.H"
 #include "Timer.H"
 #include "Debug.H"
-#include "scanKey.H"
+#include "scanKey.h"
+// #include "keyMap.h"
 #include "CompositeKM.H"
 #include <string.h>
 #include <stdio.h>
 
-// extern UINT8 Ready;
-// extern  Ep2InKey;
 
 main()
 {
@@ -21,6 +20,8 @@ main()
 
     initGPIO();
 
+	readDataFlash();
+    
     // UART1Init();
 
     // printf("T0 Test ...\n");
@@ -30,7 +31,6 @@ main()
     mTimer0RunCTL(1);            //T0定时器启动
     ET0 = 1;                     //T0定时器中断开启
     EA = 1;
-
 
 //读取芯片唯一ID号
 #if DE_PRINTF
@@ -47,7 +47,8 @@ main()
     // Ready = 0;
 
 
-    while (1)
+    
+	while (1)
     {
         // if (Ready)
         // {

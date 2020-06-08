@@ -8,7 +8,7 @@
 *******************************************************************************/
 
 #include "CH552.H"
-#include "UART1.H"
+// #include "UART1.H"
 #include "Timer.H"
 #include "Debug.H"
 #include "scanKey.H"

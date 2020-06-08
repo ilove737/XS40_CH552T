@@ -1,13 +1,18 @@
 #include "CH552.H"
 #include "scanKey.h"
-#include "UART1.H"
+// #include "UART1.H"
 #include "Debug.H"
 #include "GPIO.H"
+#include "DataFlash.H"
 #include "keyMap.h"
 #include "CompositeKM.H"
 
 #include <string.h>
 #include <stdio.h>
+
+UINT8X len = 0;
+UINT8 k = 0;
+UINT8 m = 0;
 
 UINT8X i = 0;
 UINT8X j = 0;
@@ -16,7 +21,7 @@ UINT8 beforeAllKey[2]; // 16个位，保存上一次所有16个建的状态
 UINT8 allKey[2];	   // 16个位，保存当前所有16个建的状态
 
 int q = 0;
-UINT8 k = 5;
+// UINT8 k = 5;
 
 UINT8 kCode;
 UINT8 HIDFrames[8];
@@ -46,6 +51,7 @@ void initGPIO(void)
 	Port3Cfg(1, 1);
 	Port3Cfg(1, 2);
 	Port3Cfg(1, 3);
+
 }
 
 void makeHIDFrames(void)
@@ -62,56 +68,64 @@ void makeHIDFrames(void)
 
 		if ((allKey[i] >> 0) & 1)
 		{
-			kCode = keyMap[i * 8 + 0];
+			HIDFrames[0] = keyMap[i * 8 + 0][0];
+			kCode = keyMap[i * 8 + 0][1];
 			HIDFrames[HIDFramesPointer] = kCode;
 			if (HIDFramesPointer < 7)
 				HIDFramesPointer++;
 		}
 		if ((allKey[i] >> 1) & 1)
 		{
-			kCode = keyMap[i * 8 + 1];
+			HIDFrames[0] = keyMap[i * 8 + 1][0];
+			kCode = keyMap[i * 8 + 1][1];
 			HIDFrames[HIDFramesPointer] = kCode;
 			if (HIDFramesPointer < 7)
 				HIDFramesPointer++;
 		}
 		if ((allKey[i] >> 2) & 1)
 		{
-			kCode = keyMap[i * 8 + 2];
+			HIDFrames[0] = keyMap[i * 8 + 2][0];
+			kCode = keyMap[i * 8 + 2][1];
 			HIDFrames[HIDFramesPointer] = kCode;
 			if (HIDFramesPointer < 7)
 				HIDFramesPointer++;
 		}
 		if ((allKey[i] >> 3) & 1)
 		{
-			kCode = keyMap[i * 8 + 3];
+			HIDFrames[0] = keyMap[i * 8 + 3][0];
+			kCode = keyMap[i * 8 + 3][1];
 			HIDFrames[HIDFramesPointer] = kCode;
 			if (HIDFramesPointer < 7)
 				HIDFramesPointer++;
 		}
 		if ((allKey[i] >> 4) & 1)
 		{
-			kCode = keyMap[i * 8 + 4];
+			HIDFrames[0] = keyMap[i * 8 + 4][0];
+			kCode = keyMap[i * 8 + 4][1];
 			HIDFrames[HIDFramesPointer] = kCode;
 			if (HIDFramesPointer < 7)
 				HIDFramesPointer++;
 		}
 		if ((allKey[i] >> 5) & 1)
 		{
-			kCode = keyMap[i * 8 + 5];
+			HIDFrames[0] = keyMap[i * 8 + 5][0];
+			kCode = keyMap[i * 8 + 5][1];
 			HIDFrames[HIDFramesPointer] = kCode;
 			if (HIDFramesPointer < 7)
 				HIDFramesPointer++;
 		}
 		if ((allKey[i] >> 6) & 1)
 		{
-			kCode = keyMap[i * 8 + 6];
+			HIDFrames[0] = keyMap[i * 8 + 6][0];
+			kCode = keyMap[i * 8 + 6][1];
 			HIDFrames[HIDFramesPointer] = kCode;
 			if (HIDFramesPointer < 7)
 				HIDFramesPointer++;
 		}
 		if ((allKey[i] >> 7) & 1)
 		{
-			kCode = keyMap[i * 8 + 7];
+			HIDFrames[0] = keyMap[i * 8 + 7][0];
+			kCode = keyMap[i * 8 + 7][1];
 			HIDFrames[HIDFramesPointer] = kCode;
 			// HIDKey[HIDFramesPointer] = kCode;
 			if (HIDFramesPointer < 7)
@@ -124,161 +138,6 @@ void makeHIDFrames(void)
 	// 	// HIDKey[i] = HIDFrames[i];
 	// }
 	sendKeyHID(HIDFrames);
-}
-
-void makeHIDFrames00(void)
-{
-	// Fn0_Status = 0;
-	HIDFramesPointer = 2;
-	for (i = 0; i < 8; i++)
-	{
-		HIDFrames[i] = 0;
-	}
-	if (allKey[0] == 0 && allKey[1] == 0)
-	{ // 所有按键都是松开的状态
-		for (i = 0; i < 8; i++)
-		{
-			// Send_Data_To_UART0(0x00);
-			UART1SendByte(0x00);
-		}
-		// UART1SendByte(0xf1);
-	}
-	else
-	{ // 有按键按下的状态
-		//		for (i = 0; i < 5; i++)
-		//		{
-		//			if (allKey[i] != 0)
-		//			{
-		//				for (j = 0; j < 8; j++)
-		//				{
-		//					if (allKey[i] >> j & 1)
-		//					{
-		//						if (keyMap[i * 8 + j] == KEY_Fn0)
-		//						{
-		//							Fn0_Status = 1;
-		//						}
-		//						if (keyMap[i * 8 + j] == KEY_Fn1)
-		//						{
-		//							Fn1_Status = 1;
-		//						}
-		//					}
-		//				}
-		//			}
-		//		}
-		// for (q = 0; q < 8; q++)
-		// {
-		// 	UART1SendByte(0x44);
-		// 	UART1SendByte(q);
-		// 	UART1SendByte(k);
-		// 	UART1SendByte(k >> 1);
-		// 	UART1SendByte(k >> 2);
-		// 	UART1SendByte((k >> q) & 1);
-		// }
-		for (i = 0; i < 2; i++)
-		{
-			if (allKey[i] != 0)
-			{
-				if ((allKey[i] >> 0) & 1)
-				{
-					kCode = keyMap[i * 8 + 0];
-					HIDFrames[HIDFramesPointer] = kCode;
-					if (HIDFramesPointer < 7)
-						HIDFramesPointer++;
-				}
-				if ((allKey[i] >> 1) & 1)
-				{
-					kCode = keyMap[i * 8 + 1];
-					HIDFrames[HIDFramesPointer] = kCode;
-					if (HIDFramesPointer < 7)
-						HIDFramesPointer++;
-				}
-				if ((allKey[i] >> 2) & 1)
-				{
-					kCode = keyMap[i * 8 + 2];
-					HIDFrames[HIDFramesPointer] = kCode;
-					if (HIDFramesPointer < 7)
-						HIDFramesPointer++;
-				}
-				if ((allKey[i] >> 3) & 1)
-				{
-					kCode = keyMap[i * 8 + 3];
-					HIDFrames[HIDFramesPointer] = kCode;
-					if (HIDFramesPointer < 7)
-						HIDFramesPointer++;
-				}
-				if ((allKey[i] >> 4) & 1)
-				{
-					kCode = keyMap[i * 8 + 4];
-					HIDFrames[HIDFramesPointer] = kCode;
-					if (HIDFramesPointer < 7)
-						HIDFramesPointer++;
-				}
-				if ((allKey[i] >> 5) & 1)
-				{
-					kCode = keyMap[i * 8 + 5];
-					HIDFrames[HIDFramesPointer] = kCode;
-					if (HIDFramesPointer < 7)
-						HIDFramesPointer++;
-				}
-				if ((allKey[i] >> 6) & 1)
-				{
-					kCode = keyMap[i * 8 + 6];
-					HIDFrames[HIDFramesPointer] = kCode;
-					if (HIDFramesPointer < 7)
-						HIDFramesPointer++;
-				}
-				if ((allKey[i] >> 7) & 1)
-				{
-					kCode = keyMap[i * 8 + 7];
-					HIDFrames[HIDFramesPointer] = kCode;
-					// HIDKey[HIDFramesPointer] = kCode;
-					if (HIDFramesPointer < 7)
-						HIDFramesPointer++;
-				}
-
-				// for (j = 0; j < 8; j++)
-				// {
-				// 	if ((allKey[i] >> j) & 1 == 1)
-				// 	{
-				// 		//						if (Fn0_Status == 1)
-				// 		//						{
-				// 		//							kCode = Fn0_keyMap[i * 8 + j];
-				// 		//						}
-				// 		//						else
-				// 		//						{
-				// 		//							kCode = keyMap[i * 8 + j];
-				// 		//						}
-				// 		kCode = keyMap[i * 8 + j];
-
-				// 		// if (kCode == KEY_LCTRL | kCode == KEY_LSHIFT | kCode == KEY_LALT | kCode == KEY_LGUI | kCode == KEY_RCTRL | kCode == KEY_RSHIFT | kCode == KEY_RALT | kCode == KEY_RGUI)
-				// 		// if (kCode >= 0xE0) // Control
-				// 		// {
-				// 		// 	HIDFrames[0] += 0X01 << (kCode & 0X0F);
-				// 		// }
-				// 		// else if (kCode >= 0xC0) // 处理shift组合键
-				// 		// {
-				// 		// 	HIDFrames[0] += 0x02;
-				// 		// 	HIDFrames[HIDFramesPointer] = kCode - 0xa2;
-				// 		// 	HIDFramesPointer++;
-				// 		// }
-				// 		// else
-				// 		// {
-				// 		HIDFrames[HIDFramesPointer] = kCode;
-				// 		if (HIDFramesPointer < 7)
-				// 			HIDFramesPointer++;
-				// 		// }
-				// 	}
-				// }
-			}
-		}
-		for (i = 0; i < 8; i++)
-		{
-			// Send_Data_To_UART0(HIDFrames[i]);
-			UART1SendByte(HIDFrames[i]);
-			// HIDKey[i] = HIDFrames[i];
-		}
-		// UART1SendByte('\n');
-	}
 }
 
 void scanKeyChange(void)
@@ -318,19 +177,45 @@ void scanKeyChange(void)
 
 	if (memcmp(beforeAllKey, allKey, 2) != 0)
 	{
-		// UART1SendByte(beforeAllKey[0]);
-		// UART1SendByte(beforeAllKey[1]);
-		// UART1SendByte(allKey[0]);
-		// UART1SendByte(allKey[1]);
-		// UART1SendByte(0xff);
-
 		memcpy(beforeAllKey, allKey, 2);
-		// beforeAllKey[0] = allKey[0];
-		// beforeAllKey[1] = allKey[1];
-
 		makeHIDFrames();
-		// UART1SendByte(beforeAllKey[0]);
-		// UART1SendByte(beforeAllKey[1]);
-		// UART1SendByte(0xfe);
 	}
+}
+
+void readDataFlash(void){
+
+	// for(k=0;k<128;k++){	                                                     //循环写入128字节
+	// 	len = WriteDataFlash(k,&k,1);                                          //向DataFlash区域偏移地址i写入i
+	// 	// len = ReadDataFlash(i,1,&m);
+	// 	if(len != 1){
+	// 		// printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
+	// 	}
+	// }
+
+    // for (i = 0; i < 16; i++)
+    // {
+    //     for (j = 0; j < 2; j++)
+    //     {
+    //         len = WriteDataFlash(i*2+j, &keyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[i][j]
+    //         if (len != 1)
+    //         {
+    //             // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
+    //         }
+    //     }
+    // }
+
+	for (i = 0; i < 16; i++)
+    {
+        for (j = 0; j < 2; j++)
+        {
+            // len = WriteDataFlash(i*2+j, &keyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[i][j]
+			len = ReadDataFlash(i*2+j,1,&keyMap[i][j]);
+            if (len != 1)
+            {
+                // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
+            }
+        }
+    }
+
+
 }

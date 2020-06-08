@@ -1,18 +1,32 @@
 
+#ifndef KEY_MAP
+#define KEY_MAP
+
 #include "scanKey.h"
 
 // 这个就是 左 键盘布局
 #if 1
-UINT8X keyMap[16] ={
-    KEY_ESC,        KEY_1,   KEY_2,  KEY_3,
-    KEY_4,      KEY_5,      KEY_GRAVE,   KEY_7,
-    KEY_TAB,        KEY_Q,   KEY_W,  KEY_E,
-    KEY_R,      KEY_T,      KEY_LEFTBRACE, KEY_RIGHTBRACE,
-//    KEY_CAPSLOCK,   KEY_A,   KEY_S,  KEY_D,      KEY_F,      KEY_G,      SHIFT_9,     SHIFT_0,
-//    KEY_LEFTSHIFT,  SHIFT_2, KEY_Z,  KEY_X,      KEY_C,      KEY_V,      SHIFT_7,     SHIFT_3,
-//    KEY_Fn0,   KEY_LEFTMETA,  KEY_LEFTALT, KEY_LEFTSHIFT, KEY_SPACE, KEY_LEFTCTRL,  SHIFT_GRAVE, SHIFT_1,
-};
+// UINT8X keyMap[16] ={
+//     KEY_7,   KEY_8,  KEY_9,  KEY_A,
+//     KEY_4,   KEY_5,  KEY_6,  KEY_B,
+//     KEY_1,   KEY_2,  KEY_3,  KEY_C,
+//     KEY_0,   KEY_DOT, KEY_E,   KEY_D,
+    
+// //    KEY_CAPSLOCK,   KEY_A,   KEY_S,  KEY_D,      KEY_F,      KEY_G,      SHIFT_9,     SHIFT_0,
+// //    KEY_LEFTSHIFT,  SHIFT_2, KEY_Z,  KEY_X,      KEY_C,      KEY_V,      SHIFT_7,     SHIFT_3,
+// //    KEY_Fn0,   KEY_LEFTMETA,  KEY_LEFTALT, KEY_LEFTSHIFT, KEY_SPACE, KEY_LEFTCTRL,  SHIFT_GRAVE, SHIFT_1,
+// };
 
+
+// #define KEY_MOD_LCTRL 0x01
+// #define KEY_MOD_LSHIFT 0x02
+// #define KEY_MOD_LALT 0x04
+// #define KEY_MOD_LMETA 0x08
+UINT8X keyMap[16][2]={ {0x02,KEY_7}, {0x02,KEY_8}, {0x02,KEY_9}, {0x01,KEY_A}, 
+                        {0x02,KEY_4}, {0x02,KEY_5}, {0x02,KEY_6}, {0x02,KEY_B}, 
+                        {0x02,KEY_1}, {0x02,KEY_2}, {0x02,KEY_3}, {0x01,KEY_C}, 
+                        {0x02,KEY_0}, {0x02,KEY_DOT}, {0x02,KEY_E}, {0x08,KEY_D}, 
+};
 //unsigned char Fn0_keyMap[16] ={
 //    KEY_ESC,        KEY_F1,   KEY_F2,  KEY_F3,      KEY_F4,      KEY_F5,      KEY_GRAVE,   SHIFT_8,
 //    KEY_TAB,        KEY_F11,   KEY_F12,  KEY_E,      KEY_R,      KEY_T,      KEY_LEFTBRACE, KEY_RIGHTBRACE,
@@ -60,3 +74,5 @@ http://www.keyboard-layout-editor.com/#/
 [{c:"#6495ed"},"Fn0","Fn2","Fn4",{c:"#ff4500",a:7},"",{c:"#cccccc"},"",{c:"#444444"},"",{a:4},"","",{x:1},"","","PEnter",{c:"#cccccc"},"0\nIns",{c:"#ff4500"},"Fn0",{c:"#bb0000"},"+","",""]
 
 */
+
+#endif // KEY_MAP

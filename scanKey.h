@@ -27,7 +27,7 @@
 void initGPIO(void);
 void makeHIDFrames(void);
 void scanKeyChange(void);
-
+void readDataFlash(void);
 
 /**
  * Modifier masks - used for the first byte in the HID report.
