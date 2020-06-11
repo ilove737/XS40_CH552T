@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta class="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #keyBoard {
+            background-color: green;
+            width: 244px;
+            height: 278px;
+        }
+
+        .kx {
+            width: 54px;
+            height: 54px;
+            background-color: white;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            margin-left: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <input id="class" type="text" οnkeydοwn="myKeyDown(this.id)" οnkeyup="myKeyUp(this.id)"> -->
+    <h2>XS16 键位设计工具</h2>
+
+    <div>
+        <div id="keyBoard" style="display:inline-block;">
+
+            <div style="margin-top: 35px;margin-left: 5px;">
+                <p id="k1" class="kx" style="display:inline-block;" onclick="changeText(this)"></p>
+                <p id="k2" class="kx" style="display:inline-block;"></p>
+                <p id="k3" class="kx" style="display:inline-block;"></p>
+                <p id="k4" class="kx" style="display:inline-block;"></p>
+            </div>
+            <div style="margin-left: 5px;">
+                <p id="k5" class="kx" style="display:inline-block;"></p>
+                <p id="k6" class="kx" style="display:inline-block;"></p>
+                <p id="k7" class="kx" style="display:inline-block;"></p>
+                <p id="k8" class="kx" style="display:inline-block;"></p>
+            </div>
+            <div style="margin-left: 5px;">
+                <p id="k9" class="kx" style="display:inline-block;"></p>
+                <p id="k10" class="kx" style="display:inline-block;"></p>
+                <p id="k11" class="kx" style="display:inline-block;"></p>
+                <p id="k12" class="kx" style="display:inline-block;"></p>
+            </div>
+            <div style="margin-left: 5px;">
+                <p id="k13" class="kx" style="display:inline-block;"></p>
+                <p id="k14" class="kx" style="display:inline-block;"></p>
+                <p id="k15" class="kx" style="display:inline-block;"></p>
+                <p id="k16" class="kx" style="display:inline-block;"></p>
+            </div>
+
+        </div>
+
+        <div style="display:inline-block;margin-left: 40px;">
+            <h2 id="keyc">ccc</h2>
+        </div>
+    </div>
+
+
+
+    <script>
+        let allKeyList = new Map();
+        var keyList = [];
+        var keyCount = 0;
+        window.onload = function () {
+
+            var keyCode;
+            var isCtrl = false;
+            document.onkeydown = function (e) {
+                // if (!keyCode) {
+                //     if (window.event) {
+                //         keyCode = event.keyCode;
+                //     } else if (e.which) {
+                //         keyCode = e.which;
+                //     }
+                //     if (keyCode === 17) {
+                //         isCtrl = true;
+                //     }
+                //     console.log("key1：" + keyCode + ",isCtrl：" + isCtrl);
+                // }
+
+                // keyCode = event.keyCode;
+                // console.log("key down：" + keyCode);
+
+                var oEvent = window.event;
+                if (oEvent && oEvent.preventDefault) {
+                    console.log("key down：" + oEvent.keyCode);
+                    keyList.push(oEvent.keyCode);
+                    keyCount++;
+                    event.preventDefault();
+                } else {
+                    window.event.returnValue = false;
+                }
+            };
+
+            document.onkeyup = function () {
+                keyCount--;
+                if (keyCount == 0) {
+                    // document.getElementById("keyc").innerHTML = keyList.toString();
+                    document.getElementById("k1").innerText = keyList.toString();
+                    console.log("keyList.length: " + keyList.length);
+
+                    console.log("keyList: " + keyList);
+                    // for (let index = 0; index < keyList.length; index++) {
+                    for (let index = 0; index < 20; index++) {
+                        // const element = array[index];
+                        // keyList.pop();
+                        console.log("key pop: " + keyList.pop());
+                    }
+                    console.log("keyList: " + keyList);
+                }
+
+                keyCode = event.keyCode;
+                console.log("key up：" + keyCode);
+                if (keyCode) {
+                    keyCode = undefined;
+                }
+            };
+        }
+        function changeText(id) {
+            id.innerText = "Hello\n:)";
+            id.innerText= "dferfase"
+        }
+    </script>
+
+</body>
+
+</html>
