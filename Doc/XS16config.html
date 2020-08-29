@@ -14,15 +14,6 @@
             height: 316px;
         }
 
-        .kx {
-            width: 54px;
-            height: 54px;
-            background-color: white;
-            margin-top: 0px;
-            margin-bottom: 0px;
-            margin-left: 1px;
-        }
-
         .keycap {
             position: relative;
             color: #000;
@@ -77,195 +68,43 @@
 </head>
 
 <body>
-    <!-- <input id="class" type="text" οnkeydοwn="myKeyDown(this.id)" οnkeyup="myKeyUp(this.id)"> -->
     <h2>XS16 键位设计工具</h2>
-
     <div>
         <div id="keyBoard" style="display:inline-block;">
-
             <div style="margin-top: 35px;margin-left: 5px;">
-                <div style="float: left;">
+                <div id="firstKey" style="float: left;">
                     <div class="keycap">
                         <div class="keyborder"></div>
                         <div class="keytop"></div>
                         <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>a</div>
+                            <div class="keyNmae">Ctrl</div>
+                            <div class="keyNmae">Shift</div>
+                            <div class="keyNmae">a</div>
                         </div>
                     </div>
                 </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>b</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>c</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>x</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
             </div>
             <div style="margin-left: 5px;">
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>a</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>b</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>c</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>x</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
             </div>
             <div style="margin-left: 5px;">
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>a</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>b</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>c</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>x</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
             </div>
             <div style="margin-left: 5px;">
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>a</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>b</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>c</div>
-                        </div>
-                    </div>
-                </div>
-                <div style="float: left;">
-                    <div class="keycap">
-                        <div class="keyborder"></div>
-                        <div class="keytop"></div>
-                        <div class="keylabels">
-                            <div>Ctrl</div>
-                            <div>Shift</div>
-                            <div>x</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
+                <div class="otherKey" style="float: left;"></div>
             </div>
         </div>
 
@@ -275,111 +114,83 @@
     </div>
 
     <script>
+        $(function () {
+            let int8Array = new Uint8Array(32);
 
-        $(".keylabels").click(function () {
-            $('.keylabels').attr("style", "border-width: 0px;");
-            $(this).attr("style", "border-style: solid;border-width: 1px;border-color: rgba(255, 129, 129, 0.8);");
-            $(this).attr("id", "kkkk");
-            // $(this).text("dsf")
-        })
+            var keyCodeName = [
+                "", "", "", "", "", "", "", "",
+                "Backspace", "Tab", "", "", "", "Enter", "", "",
+                "Shift", "Ctrl", "Alt", "pause/break", "CapsLock", "", "", "",
+                "", "", "", "Esc", "", "", "", "",
+                "Space", "PgUp", "PgDn", "End", "Home", "arrow left", "arrow up", "arrow right",
+                "arrow down", "", "", "", "", "Insert", "Delete", "",
+                "0", "1", "2", "3", "4", "5", "6", "7",
+                "8", "9", "", "", "", "", "", "",
+                "", "a", "b", "c", "d", "e", "f", "g",
+                "h", "i", "j", "k", "l", "m", "n", "o",
+                "p", "q", "r", "s", "t", "u", "v", "w",
+                "x", "y", "z", "L Win", "R Win", "select key", "", "",
+                "numpad 0", "numpad 1", "numpad 2", "numpad 3", "numpad 4", "numpad 5", "numpad 6", "numpad 7",
+                "numpad 8", "numpad 9", "multiply", "add", "Enter", "subtract", "decimal point", "divide",
+                "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8",
+                "F9", "F10", "F11", "F12", "", "", "", "",
+                "", "", "", "", "", "", "", "",    // 128 - 135
+                "", "", "", "", "", "", "", "",    // 136 - 143
+                "NumLock", "", "", "", "", "", "", "",    // 144 - 151
+                "", "", "", "", "", "", "", "",    // 152 - 159
+                "", "", "", "", "", "", "", "",    // 160 - 167
+                "", "", "seach", "", "liulanqi", "jingyin", "V-", "V+",    // 168 - 175
+                "", "", "", "Stop", "Mail", "", "", "",    // 176 - 183
+                "", "", ";:", "=+", ",<", "-_", ".>", "/?",    // 184 - 191
+                "`~", "", "", "", "", "", "", "",    // 192 - 199
+                "", "", "", "", "", "", "", "",    // 200 - 207
+                "", "", "", "", "", "", "", "",    // 208 - 215
+                "", "", "", "[{", "\\|", "]}", "\'\"", "",    // 216 - 223
+            ];
 
-        $(document).keydown(function (event) {
-            // 拦截浏览器默认事件
-            var oEvent = window.event;
-            if (oEvent && oEvent.preventDefault) {
-                event.preventDefault();
-            } else {
-                window.event.returnValue = false;
-            }
+            var keylabelsDOM
+            var akeyCode = new Array();
+            var akeyCodeP = 0;
 
-            $('#kkkk').text(event.keyCode)
-            console.log(event.keyCode);
-        });
+            // $(".keyName").text("");
 
-        // $(document).ready(
-        //     function () {
-        //         document.onkeydown = function () {
-        //             var oEvent = window.event;
-        //             for (i = 0; i < 12; i++) {
-        //                 if (oEvent.keyCode == 112 + i) {
-        //                     alert("刚刚按下的是 F" + (i + 1) + "组合键");
-        //                 }
-        //             }
-        //             if (oEvent && oEvent.preventDefault) {
-        //                 event.preventDefault();
-        //             } else {
-        //                 window.event.returnValue = false;
-        //             }
-        //         }
-        //     }
-        // );
-    </script>
+            $("#firstKey").hide();
+            var firstKey = $("#firstKey").html();
+            $(".otherKey").html(firstKey);
 
-    <!-- <script>
-        let allKeyList = new Map();
-        var keyList = [];
-        var keyCount = 0;
-        window.onload = function () {
+            $(".keylabels").click(function () {
+                $('.keylabels').attr("style", "border-width: 0px;");
+                $(this).attr("style", "border-style: solid;border-width: 1px;border-color: rgba(255, 129, 129, 0.8);");
+                // $(this).attr("id", "kkkk");
+                // $(this).text("dsf")
+                keylabelsDOM = $(this);
+                console.log(keylabelsDOM.children());
+                for (let i = 0; i < 3; i++) {
+                    $(keylabelsDOM.children()[i]).text("");
+                }
+            });
 
-            var keyCode;
-            var isCtrl = false;
-            document.onkeydown = function (e) {
-                // if (!keyCode) {
-                //     if (window.event) {
-                //         keyCode = event.keyCode;
-                //     } else if (e.which) {
-                //         keyCode = e.which;
-                //     }
-                //     if (keyCode === 17) {
-                //         isCtrl = true;
-                //     }
-                //     console.log("key1：" + keyCode + ",isCtrl：" + isCtrl);
-                // }
-
-                // keyCode = event.keyCode;
-                // console.log("key down：" + keyCode);
-
+            $(document).keydown(function (event) {
+                // 拦截浏览器默认事件
                 var oEvent = window.event;
                 if (oEvent && oEvent.preventDefault) {
-                    console.log("key down：" + oEvent.keyCode);
-                    keyList.push(oEvent.keyCode);
-                    keyCount++;
                     event.preventDefault();
                 } else {
                     window.event.returnValue = false;
                 }
-            };
 
-            document.onkeyup = function () {
-                keyCount--;
-                if (keyCount == 0) {
-                    // document.getElementById("keyc").innerHTML = keyList.toString();
-                    document.getElementById("k1").innerText = keyList.toString();
-                    console.log("keyList.length: " + keyList.length);
+                akeyCode[akeyCodeP] = event.keyCode;
+                akeyCodeP = akeyCodeP + 1;
 
-                    console.log("keyList: " + keyList);
-                    // for (let index = 0; index < keyList.length; index++) {
-                    for (let index = 0; index < 20; index++) {
-                        // const element = array[index];
-                        // keyList.pop();
-                        console.log("key pop: " + keyList.pop());
+                $(document).keyup(function (event) {
+                    for (let index = 0; index < akeyCodeP; index++) {
+                        $(keylabelsDOM.children()[index]).text(keyCodeName[akeyCode[index]]);
                     }
-                    console.log("keyList: " + keyList);
-                }
-
-                keyCode = event.keyCode;
-                console.log("key up：" + keyCode);
-                if (keyCode) {
-                    keyCode = undefined;
-                }
-            };
-        }
-        function changeText(id) {
-            id.innerText = "Hello\n:)";
-            id.innerText = "dferfase"
-        }
-    </script> -->
-
+                    akeyCodeP = 0;
+                });
+                console.log(event.keyCode);
+            });
+        });
+    </script>
 </body>
-
 </html>
