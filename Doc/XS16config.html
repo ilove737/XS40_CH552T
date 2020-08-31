@@ -168,7 +168,29 @@
                 for (let i = 0; i < 3; i++) {
                     $(keylabelsDOM.children()[i]).text("");
                 }
+                akeyCodeP = 0;
             });
+
+            // $(document).keydown(function (event) {
+            //     // 拦截浏览器默认事件
+            //     var oEvent = window.event;
+            //     if (oEvent && oEvent.preventDefault) {
+            //         event.preventDefault();
+            //     } else {
+            //         window.event.returnValue = false;
+            //     }
+
+            //     akeyCode[akeyCodeP] = event.keyCode;
+            //     akeyCodeP = akeyCodeP + 1;
+
+            //     $(document).keyup(function (event) {
+            //         for (let index = 0; index < akeyCodeP; index++) {
+            //             $(keylabelsDOM.children()[index]).text(keyCodeName[akeyCode[index]]);
+            //         }
+            //         akeyCodeP = 0;
+            //     });
+            //     console.log(event.keyCode);
+            // });
 
             $(document).keydown(function (event) {
                 // 拦截浏览器默认事件
@@ -178,19 +200,13 @@
                 } else {
                     window.event.returnValue = false;
                 }
-
-                akeyCode[akeyCodeP] = event.keyCode;
+                // akeyCode[akeyCodeP] = event.keyCode;
+                $(keylabelsDOM.children()[akeyCodeP]).text(keyCodeName[event.keyCode]);
                 akeyCodeP = akeyCodeP + 1;
 
-                $(document).keyup(function (event) {
-                    for (let index = 0; index < akeyCodeP; index++) {
-                        $(keylabelsDOM.children()[index]).text(keyCodeName[akeyCode[index]]);
-                    }
-                    akeyCodeP = 0;
-                });
-                console.log(event.keyCode);
             });
         });
     </script>
 </body>
+
 </html>
