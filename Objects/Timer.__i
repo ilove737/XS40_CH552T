@@ -1,0 +1,1 @@
+"Timer.C" WARNINGLEVEL (1) OPTIMIZE (8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Timer.lst) OBJECT(.\Objects\Timer.obj)

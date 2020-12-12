@@ -20,8 +20,8 @@
 #define KEY_Fn0   0xFF
 #define KEY_Fn1   0xFE
 
-#define sumRow 4
-#define sumCol 4
+#define sumRow 8
+#define sumCol 5
 
 
 void initGPIO(void);

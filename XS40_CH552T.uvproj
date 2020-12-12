@@ -394,11 +394,6 @@
               <FilePath>.\Debug.H</FilePath>
             </File>
             <File>
-              <FileName>UART1.C</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\UART1.C</FilePath>
-            </File>
-            <File>
               <FileName>Timer.C</FileName>
               <FileType>1</FileType>
               <FilePath>.\Timer.C</FilePath>
@@ -417,6 +412,11 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>DataFlash.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\DataFlash.C</FilePath>
             </File>
           </Files>
         </Group>
