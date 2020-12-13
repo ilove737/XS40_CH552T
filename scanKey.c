@@ -11,8 +11,6 @@
 #include <stdio.h>
 
 UINT8X len = 0;
-UINT8 k = 0;
-UINT8 m = 0;
 
 UINT8X i = 0;
 UINT8X j = 0;
@@ -75,6 +73,18 @@ void makeHIDFrames(void)
 
 	for (i = 0; i < 5; i++)
 	{
+		// for (j = 0; j < 8; j++)
+		// {
+		// 	if ((allKey[i] >> j) & 1)
+		// 	{
+		// 		HIDFrames[0] = keyMap[i * j * 8 + 0][0];
+		// 		kCode = keyMap[i * j * 8 + 0][1];
+		// 		HIDFrames[HIDFramesPointer] = kCode;
+		// 		if (HIDFramesPointer < 7 && kCode > 0)
+		// 			HIDFramesPointer++;
+		// 	}
+		// }
+		
 		if ((allKey[i] >> 0) & 1)
 		{
 			HIDFrames[0] = keyMap[i * 8 + 0][0];
@@ -139,12 +149,9 @@ void makeHIDFrames(void)
 			if (HIDFramesPointer < 7 && kCode > 0)
 				HIDFramesPointer++;
 		}
+		
 	}
-	// for (i = 0; i < 8; i++)
-	// {
-	// 	UART1SendByte(HIDFrames[i]);
-	// 	// HIDKey[i] = HIDFrames[i];
-	// }
+
 	sendKeyHID(HIDFrames);
 }
 
@@ -182,7 +189,7 @@ void scanKeyChange(void)
 			allKey[3] |= (~P1 & 0xff);
 			break;
 		case 4:
-			row4 = 0;
+			row5 = 0;
 			allKey[4] |= (~P1 & 0xff);
 			break;
 			// default:

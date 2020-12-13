@@ -8,7 +8,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
 main()
 {
     CfgFsys();   //CH559时钟选择配置
@@ -20,8 +19,8 @@ main()
 
     initGPIO();
 
-	readDataFlash();
-    
+    // readDataFlash();
+
     // UART1Init();
 
     // printf("T0 Test ...\n");
@@ -46,9 +45,7 @@ main()
     FLAG = 0;
     // Ready = 0;
 
-
-    
-	while (1)
+    while (1)
     {
         // if (Ready)
         // {

@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   MAIN                                                              12/12/2020 21:57:01 PAGE 1   
+C51 COMPILER V9.56.0.0   MAIN                                                              12/13/2020 22:20:29 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
@@ -18,84 +18,81 @@ line level    source
    8          #include <string.h>
    9          #include <stdio.h>
   10          
-  11          
-  12          main()
-  13          {
-  14   1          CfgFsys();   //CH559时钟选择配置
-  15   1          mDelaymS(5); //修改主频等待内部晶振稳定,必加
-  16   1          // mInitSTDIO(); //串口0初始化
-  17   1      #ifdef DE_PRINTF
-  18   1          // printf("start ...\n");
-  19   1      #endif
-  20   1      
-  21   1          initGPIO();
-  22   1      
-  23   1              readDataFlash();
-  24   1          
-  25   1          // UART1Init();
-  26   1      
-  27   1          // printf("T0 Test ...\n");
-  28   1          mTimer0Clk12DivFsys();       //T0定时器时钟设置
-  29   1          mTimer_x_ModInit(0, 1);      //T0 定时器模式设置
-  30   1          mTimer_x_SetData(0, 0x5555); //T0定时器赋值
-  31   1          mTimer0RunCTL(1);            //T0定时器启动
-  32   1          ET0 = 1;                     //T0定时器中断开启
-  33   1          EA = 1;
-  34   1      
-  35   1      //读取芯片唯一ID号
-  36   1      #if DE_PRINTF
+  11          main()
+  12          {
+  13   1          CfgFsys();   //CH559时钟选择配置
+  14   1          mDelaymS(5); //修改主频等待内部晶振稳定,必加
+  15   1          // mInitSTDIO(); //串口0初始化
+  16   1      #ifdef DE_PRINTF
+  17   1          // printf("start ...\n");
+  18   1      #endif
+  19   1      
+  20   1          initGPIO();
+  21   1      
+  22   1          // readDataFlash();
+  23   1      
+  24   1          // UART1Init();
+  25   1      
+  26   1          // printf("T0 Test ...\n");
+  27   1          mTimer0Clk12DivFsys();       //T0定时器时钟设置
+  28   1          mTimer_x_ModInit(0, 1);      //T0 定时器模式设置
+  29   1          mTimer_x_SetData(0, 0x5555); //T0定时器赋值
+  30   1          mTimer0RunCTL(1);            //T0定时器启动
+  31   1          ET0 = 1;                     //T0定时器中断开启
+  32   1          EA = 1;
+  33   1      
+  34   1      //读取芯片唯一ID号
+  35   1      #if DE_PRINTF
                   printf("ID0 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFA), (UINT16) * (PUINT8C)(0x3FFB));
                   printf("ID1 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFC), (UINT16) * (PUINT8C)(0x3FFD));
                   printf("ID2 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFE), (UINT16) * (PUINT8C)(0x3FFF));
               #endif
-  41   1      
-  42   1          USBDeviceInit(); //USB设备模式初始化
-  43   1          EA = 1;          //允许单片机中断
-  44   1          UEP1_T_LEN = 0;  //预使用发送长度一定要清空
-  45   1          UEP2_T_LEN = 0;  //预使用发送长度一定要清空
-  46   1          FLAG = 0;
-  47   1          // Ready = 0;
-  48   1      
-  49   1      
-  50   1          
-  51   1              while (1)
-  52   1          {
-  53   2              // if (Ready)
-  54   2              // {
-C51 COMPILER V9.56.0.0   MAIN                                                              12/12/2020 21:57:01 PAGE 2   
+  40   1      
+  41   1          USBDeviceInit(); //USB设备模式初始化
+  42   1          EA = 1;          //允许单片机中断
+  43   1          UEP1_T_LEN = 0;  //预使用发送长度一定要清空
+  44   1          UEP2_T_LEN = 0;  //预使用发送长度一定要清空
+  45   1          FLAG = 0;
+  46   1          // Ready = 0;
+  47   1      
+  48   1          while (1)
+  49   1          {
+  50   2              // if (Ready)
+  51   2              // {
+  52   2              //     HIDValueHandle(); //该函数会一直等待串口接收一个字节
+  53   2              // }
+  54   2      
+C51 COMPILER V9.56.0.0   MAIN                                                              12/13/2020 22:20:29 PAGE 2   
 
-  55   2              //     HIDValueHandle(); //该函数会一直等待串口接收一个字节
-  56   2              // }
-  57   2      
-  58   2              // if ((Ready) && (Ep2InKey == 0))
-  59   2              // {
-  60   2              //     Enp1IntIn(); //仅发送键盘键值“抬起”操作
-  61   2              //     mDelaymS(10);
-  62   2              // }
-  63   2              // mDelaymS(10); //模拟单片机做其它事
-  64   2          }
-  65   1      
-  66   1          //    for(i=0;i<128;i++){                                                        //循环写入128字节
-  67   1          //        len = WriteDataFlash(i,&i,1);                                          //向DataFlash区域�
+  55   2              // if ((Ready) && (Ep2InKey == 0))
+  56   2              // {
+  57   2              //     Enp1IntIn(); //仅发送键盘键值“抬起”操作
+  58   2              //     mDelaymS(10);
+  59   2              // }
+  60   2              // mDelaymS(10); //模拟单片机做其它事
+  61   2          }
+  62   1      
+  63   1          //    for(i=0;i<128;i++){                                                        //循环写入128字节
+  64   1          //        len = WriteDataFlash(i,&i,1);                                          //向DataFlash区域�
              -��移地址i写入i
-  68   1          //        if(len != 1){
-  69   1          //          printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
-  70   1          //        }
-  71   1          //      }
-  72   1          //      for(i=0;i<128;i++){                                                      //读DataFlash区域�
+  65   1          //        if(len != 1){
+  66   1          //          printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
+  67   1          //        }
+  68   1          //      }
+  69   1          //      for(i=0;i<128;i++){                                                      //读DataFlash区域�
              -��移地址i并校验
-  73   1          //        len = ReadDataFlash(i,1,&m);
-  74   1          //        if((len != 1) ||(m != i)){
-  75   1          //          printf("Read Err 次 = %02x, = %02x,addr =%02x ,值= %02x\n",j,(UINT16)(i*2),(UINT16)ROM_D
+  70   1          //        len = ReadDataFlash(i,1,&m);
+  71   1          //        if((len != 1) ||(m != i)){
+  72   1          //          printf("Read Err 次 = %02x, = %02x,addr =%02x ,值= %02x\n",j,(UINT16)(i*2),(UINT16)ROM_D
              -ATA_L,(UINT16)m);
-  76   1          //        }                                                                      //读校验出错打�
+  73   1          //        }                                                                      //读校验出错打�
              -��
-  77   1          //      }
-  78   1      }
+  74   1          //      }
+  75   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     55    ----
+   CODE SIZE        =     52    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

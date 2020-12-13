@@ -27,6 +27,8 @@ UINT8 SetupReq, SetupLen, Ready, Count, FLAG, UsbConfig;
 PUINT8 pDescr;             //USB配置标志
 USB_SETUP_REQ SetupReqBuf; //暂存Setup包
 // sbit Ep2InKey = P1 ^ 5;
+sbit CapsLED = P3 ^ 5;
+
 #define UsbSetupBuf ((PUSB_SETUP_REQ)Ep0Buffer)
 #define DEBUG 0
 #pragma NOAREGS
@@ -44,6 +46,15 @@ UINT8C CfgDesc[59] =
         0x09, 0x21, 0x10, 0x01, 0x00, 0x01, 0x22, 0x34, 0x00, //HID类描述符
         0x07, 0x05, 0x82, 0x03, 0x04, 0x00, 0x0a              //端点描述符
 };
+
+UINT8C MyProductIDInfo[] = {0x0A,0x03,'X',0,'S',0,'4',0,'0',0};
+/* 语言描述符 */
+UINT8C MyLangDescr[ ] = { 0x04, 0x03, 0x09, 0x04 };
+/* 厂家信息 */
+UINT8C MyManuInfo[ ] = { 0x0E, 0x03, 'w', 0, 'c', 0, 'h', 0, '.', 0, 'c', 0, 'n', 0 };
+/* 产品信息 */
+UINT8C MyProdInfo[ ] = { 0x0C, 0x03, 'C', 0, 'H', 0, '5', 0, '5', 0, '9', 0 };
+
 /*字符串描述符*/
 /*HID类报表描述符*/
 UINT8C KeyRepDesc[62] =
@@ -202,6 +213,30 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
                         case 2:               //配置描述符
                             pDescr = CfgDesc; //把设备描述符送到要发送的缓冲区
                             len = sizeof(CfgDesc);
+                            break;
+                        case 3:               // 字符串描述符
+                            switch( UsbSetupBuf->wValueL )
+                            {
+                            case 0:
+                                pDescr = (PUINT8)( &MyLangDescr[0] );
+                                len = sizeof( MyLangDescr );
+                                break;
+                            case 1:
+                                pDescr = (PUINT8)( &MyManuInfo[0] );
+                                len = sizeof( MyManuInfo );
+                                break;
+                            case 2:
+                                pDescr = (PUINT8)( &MyProdInfo[0] );
+                                len = sizeof( MyProdInfo );
+                                break;
+                            case 3:
+                                pDescr = (PUINT8)( &MyProductIDInfo[0] );
+                                len = sizeof( MyProductIDInfo );
+                                break;
+                            default:
+                                len = 0xFF;                                 // 不支持的字符串描述符
+                                break;
+                            }
                             break;
                         case 0x22:                         //报表描述符
                             if (UsbSetupBuf->wIndexL == 0) //接口0报表描述符
@@ -394,15 +429,22 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
             len = USB_RX_LEN;
             if (SetupReq == 0x09)
             {
-                if (Ep0Buffer[0])
+                if (Ep0Buffer[0] == 1)
                 {
+                    CapsLED = 0;
+
                     // printf("Light on Num Lock LED!\n");
                     // UART1SendByte(0xF1);
                 }
-                else if (Ep0Buffer[0] == 0)
+                if (Ep0Buffer[0] == 0)
                 {
                     // printf("Light off Num Lock LED!\n");
                     // UART1SendByte(0xf0);
+                }
+
+                if (Ep0Buffer[0] == 3)
+                {
+                    CapsLED = 1;
                 }
             }
             UEP0_CTRL ^= bUEP_R_TOG; //同步标志位翻转

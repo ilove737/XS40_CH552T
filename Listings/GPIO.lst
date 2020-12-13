@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   GPIO                                                              06/08/2020 21:50:10 PAGE 1   
+C51 COMPILER V9.56.0.0   GPIO                                                              12/13/2020 20:24:31 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE GPIO
@@ -62,7 +62,7 @@ line level    source
   51          
   52          /*******************************************************************************
   53          * Function Name  : Port3Cfg()
-C51 COMPILER V9.56.0.0   GPIO                                                              06/08/2020 21:50:10 PAGE 2   
+C51 COMPILER V9.56.0.0   GPIO                                                              12/13/2020 20:24:31 PAGE 2   
 
   54          * Description    : 端口3配置
   55          * Input          : Mode  0 = 浮空输入，无上拉
@@ -126,7 +126,7 @@ line level    source
  109          * Description    : GPIO 中断服务程序
  110          *******************************************************************************/
  111          void    GPIOInterrupt( void ) interrupt INT_NO_GPIO  using 1                      //GPIO中断服务程序,�
-C51 COMPILER V9.56.0.0   GPIO                                                              06/08/2020 21:50:10 PAGE 3   
+C51 COMPILER V9.56.0.0   GPIO                                                              12/13/2020 20:24:31 PAGE 3   
 
              -�用寄存器组1
  112          { 
