@@ -60,16 +60,4 @@ main()
         // mDelaymS(10); //模拟单片机做其它事
     }
 
-    //    for(i=0;i<128;i++){	                                                     //循环写入128字节
-    //        len = WriteDataFlash(i,&i,1);                                          //向DataFlash区域偏移地址i写入i
-    //        if(len != 1){
-    //          printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
-    //        }
-    //      }
-    //      for(i=0;i<128;i++){                                                      //读DataFlash区域偏移地址i并校验
-    //        len = ReadDataFlash(i,1,&m);
-    //        if((len != 1) ||(m != i)){
-    //          printf("Read Err 次 = %02x, = %02x,addr =%02x ,值= %02x\n",j,(UINT16)(i*2),(UINT16)ROM_DATA_L,(UINT16)m);
-    //        }                                                                      //读校验出错打印
-    //      }
 }

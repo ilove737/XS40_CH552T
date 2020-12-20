@@ -1,6 +1,7 @@
-#ifndef KEY_MAP
-#define KEY_MAP
+#ifndef __KEY_MAP_H__
+#define __KEY_MAP_H__
 
+#include "CH552.H"
 #include "scanKey.h"
 
 // #define KEY_MOD_LCTRL 0x01
@@ -11,20 +12,20 @@
 // 这个就是 左 键盘布局
 #if 1
 
-UINT8X keyMap[40][2]={
+UINT8X mainKeyMap[40][2]={
     {0,KEY_ESC}, {0,KEY_1}, {0,KEY_2}, {0,KEY_3}, {0,KEY_4}, {0,KEY_5}, {0,KEY_GRAVE}, {2,KEY_8}, 
     {0,KEY_TAB}, {0,KEY_Q}, {0,KEY_W}, {0,KEY_E}, {0,KEY_R}, {0,KEY_T}, {0,KEY_LEFTBRACE}, {0,KEY_RIGHTBRACE}, 
     {0,KEY_CAPSLOCK}, {0,KEY_A}, {0,KEY_S}, {0,KEY_D}, {0,KEY_F}, {0,KEY_G}, {2,KEY_9}, {2,KEY_0}, 
     {2,0}, {2,KEY_2}, {0,KEY_Z}, {0,KEY_X}, {0,KEY_C}, {0,KEY_V}, {2,KEY_7}, {2,KEY_3}, 
-    {0,KEY_Fn0}, {8,0}, {4,0}, {0,KEY_Fn0}, {0,KEY_SPACE}, {1,0}, {2,KEY_GRAVE}, {2,KEY_1},
+    {KEY_Fn0,0}, {8,0}, {4,0}, {KEY_Fn0,0}, {0,KEY_SPACE}, {1,0}, {2,KEY_GRAVE}, {2,KEY_1},
 };
 
 UINT8X Fn0_keyMap[40][2]={
-    {0,KEY_ESC}, {0,KEY_1}, {0,KEY_2}, {0,KEY_3}, {0,KEY_4}, {0,KEY_5}, {0,KEY_GRAVE}, {2,KEY_8}, 
-    {0,KEY_TAB}, {0,KEY_Q}, {0,KEY_W}, {0,KEY_E}, {0,KEY_R}, {0,KEY_T}, {0,KEY_LEFTBRACE}, {0,KEY_RIGHTBRACE}, 
+    {0,KEY_ESC}, {0,KEY_F1}, {0,KEY_F2}, {0,KEY_F3}, {0,KEY_F4}, {0,KEY_F5}, {0,KEY_GRAVE}, {2,KEY_8}, 
+    {0,KEY_TAB}, {0,KEY_F11}, {0,KEY_F12}, {0,KEY_E}, {0,KEY_R}, {0,KEY_T}, {0,KEY_LEFTBRACE}, {0,KEY_RIGHTBRACE}, 
     {0,KEY_CAPSLOCK}, {0,KEY_A}, {0,KEY_S}, {0,KEY_D}, {0,KEY_F}, {0,KEY_G}, {2,KEY_9}, {2,KEY_0}, 
     {2,0}, {2,KEY_2}, {0,KEY_Z}, {0,KEY_X}, {0,KEY_C}, {0,KEY_V}, {2,KEY_7}, {2,KEY_3}, 
-    {0,KEY_Fn0}, {8,0}, {4,0}, {0,KEY_Fn0}, {0,KEY_SPACE}, {1,0}, {2,KEY_GRAVE}, {2,KEY_1},
+    {KEY_Fn0,0}, {8,0}, {4,0}, {KEY_Fn0,0}, {0,KEY_SPACE}, {1,0}, {2,KEY_GRAVE}, {2,KEY_1},
 };
 
 #else

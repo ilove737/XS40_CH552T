@@ -69,18 +69,18 @@ void Port3Cfg(UINT8 Mode,UINT8 Pin)
       break;
     case 1:
       P3_MOD_OC = P3_MOD_OC & ~(1<<Pin);
-      P3_DIR_PU = P3_DIR_PU |	(1<<Pin);				
-      break;		
+      P3_DIR_PU = P3_DIR_PU |	(1<<Pin);
+      break;
     case 2:
       P3_MOD_OC = P3_MOD_OC | (1<<Pin);
-      P3_DIR_PU = P3_DIR_PU &	~(1<<Pin);				
-      break;		
+      P3_DIR_PU = P3_DIR_PU &	~(1<<Pin);
+      break;
     case 3:
       P3_MOD_OC = P3_MOD_OC | (1<<Pin);
-      P3_DIR_PU = P3_DIR_PU |	(1<<Pin);			
+      P3_DIR_PU = P3_DIR_PU |	(1<<Pin);
       break;
     default:
-      break;			
+      break;
   }
 }
 

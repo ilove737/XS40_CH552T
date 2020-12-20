@@ -23,11 +23,11 @@
 #define sumRow 8
 #define sumCol 5
 
-
 void initGPIO(void);
 void makeHIDFrames(void);
 void scanKeyChange(void);
 void readDataFlash(void);
+// void FnKey(int i, int j);
 
 /**
  * Modifier masks - used for the first byte in the HID report.
