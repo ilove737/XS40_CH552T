@@ -47,13 +47,13 @@ UINT8C CfgDesc[59] =
         0x07, 0x05, 0x82, 0x03, 0x04, 0x00, 0x0a              //端点描述符
 };
 
-UINT8C MyProductIDInfo[] = {0x0A,0x03,'X',0,'S',0,'4',0,'0',0};
-/* 语言描述符 */
-UINT8C MyLangDescr[ ] = { 0x04, 0x03, 0x09, 0x04 };
-/* 厂家信息 */
-UINT8C MyManuInfo[ ] = { 0x0E, 0x03, 'w', 0, 'c', 0, 'h', 0, '.', 0, 'c', 0, 'n', 0 };
-/* 产品信息 */
-UINT8C MyProdInfo[ ] = { 0x0C, 0x03, 'C', 0, 'H', 0, '5', 0, '5', 0, '9', 0 };
+// UINT8C MyProductIDInfo[] = {0x0A,0x03,'X',0,'S',0,'4',0,'0',0};
+// /* 语言描述符 */
+// UINT8C MyLangDescr[ ] = { 0x04, 0x03, 0x09, 0x04 };
+// /* 厂家信息 */
+// UINT8C MyManuInfo[ ] = { 0x0E, 0x03, 'w', 0, 'c', 0, 'h', 0, '.', 0, 'c', 0, 'n', 0 };
+// /* 产品信息 */
+// UINT8C MyProdInfo[ ] = { 0x0C, 0x03, 'C', 0, 'H', 0, '5', 0, '5', 0, '9', 0 };
 
 /*字符串描述符*/
 /*HID类报表描述符*/
@@ -129,6 +129,12 @@ void Enp1IntIn()
 {
     memcpy(Ep1Buffer, HIDKey, sizeof(HIDKey));               //加载上传数据
     UEP1_T_LEN = sizeof(HIDKey);                             //上传数据长度
+    UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_ACK; //有数据时上传数据并应答ACK
+}
+void Enp1IntInSend(UINT8 *HIDFrame)
+{
+    memcpy(Ep1Buffer, HIDFrame, 8);               //加载上传数据
+    UEP1_T_LEN = 8;                             //上传数据长度
     UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_ACK; //有数据时上传数据并应答ACK
 }
 /*******************************************************************************
@@ -215,28 +221,28 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
                             len = sizeof(CfgDesc);
                             break;
                         case 3:               // 字符串描述符
-                            switch( UsbSetupBuf->wValueL )
-                            {
-                            case 0:
-                                pDescr = (PUINT8)( &MyLangDescr[0] );
-                                len = sizeof( MyLangDescr );
-                                break;
-                            case 1:
-                                pDescr = (PUINT8)( &MyManuInfo[0] );
-                                len = sizeof( MyManuInfo );
-                                break;
-                            case 2:
-                                pDescr = (PUINT8)( &MyProdInfo[0] );
-                                len = sizeof( MyProdInfo );
-                                break;
-                            case 3:
-                                pDescr = (PUINT8)( &MyProductIDInfo[0] );
-                                len = sizeof( MyProductIDInfo );
-                                break;
-                            default:
-                                len = 0xFF;                                 // 不支持的字符串描述符
-                                break;
-                            }
+                            // switch( UsbSetupBuf->wValueL )
+                            // {
+                            // case 0:
+                            //     pDescr = (PUINT8)( &MyLangDescr[0] );
+                            //     len = sizeof( MyLangDescr );
+                            //     break;
+                            // case 1:
+                            //     pDescr = (PUINT8)( &MyManuInfo[0] );
+                            //     len = sizeof( MyManuInfo );
+                            //     break;
+                            // case 2:
+                            //     pDescr = (PUINT8)( &MyProdInfo[0] );
+                            //     len = sizeof( MyProdInfo );
+                            //     break;
+                            // case 3:
+                            //     pDescr = (PUINT8)( &MyProductIDInfo[0] );
+                            //     len = sizeof( MyProductIDInfo );
+                            //     break;
+                            // default:
+                            //     len = 0xFF;                                 // 不支持的字符串描述符
+                            //     break;
+                            // }
                             break;
                         case 0x22:                         //报表描述符
                             if (UsbSetupBuf->wIndexL == 0) //接口0报表描述符
@@ -550,20 +556,8 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,
 //     }
 // }
 
-void sendKeyHID(UINT8 *Frames)
-{
-    memcpy(HIDKey, Frames, 8);
-
-    if (Ready)
-    {
-        FLAG = 0;
-        Enp1IntIn();
-        // UIF_TRANSFER=1;
-        // while (FLAG == 0)
-        // {
-        //     ; /*等待上一包传输完成*/
-        // }
-        // UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-        // UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-    }
-}
+// void sendKeyHID(UINT8 *Frames)
+// {
+//     memcpy(HIDKey, Frames, 8);
+//     Enp1IntIn();
+// }

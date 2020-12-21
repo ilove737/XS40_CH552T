@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   SCANKEY                                                           12/20/2020 23:02:49 PAGE 1   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           12/21/2020 21:48:49 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE SCANKEY
@@ -29,8 +29,8 @@ line level    source
   19          UINT8 HIDFramesPointer = 2; // 从帧的第三个字节开始添加普通按键的KeyCode
   20          UINT8 HIDFrames0 = 0;
   21          
-  22          UINT8X Fn0_Status = 0;
-  23          UINT8X Fn1_Status = 0;
+  22          // UINT8X Fn0_Status = 0;
+  23          // UINT8X Fn1_Status = 0;
   24          
   25          // sbit col1 = P1 ^ 0;
   26          // sbit col2 = P1 ^ 1;
@@ -62,222 +62,252 @@ line level    source
   52   1              Port3Cfg(1, 3);
   53   1              Port3Cfg(1, 4);
   54   1              Port3Cfg(1, 5);
-C51 COMPILER V9.56.0.0   SCANKEY                                                           12/20/2020 23:02:49 PAGE 2   
+C51 COMPILER V9.56.0.0   SCANKEY                                                           12/21/2020 21:48:49 PAGE 2   
 
   55   1              Port3Cfg(1, 6);
   56   1              Port3Cfg(1, 7);
   57   1      }
   58          
-  59          void FnKey(UINT8 Index)
+  59          void AllKey(UINT8 Index)
   60          {
-  61   1              if (1 == Fn0_Status)
-  62   1          // if (PCON & GF0)
-  63   1              {
-  64   2                      if (Fn0_keyMap[Index][0] != 0xff)
-  65   2                              HIDFrames0 += Fn0_keyMap[Index][0];
-  66   2                      kCode = Fn0_keyMap[Index][1];
-  67   2                      HIDFrames[HIDFramesPointer] = kCode;
-  68   2                      if (HIDFramesPointer < 8 && kCode > 0)
-  69   2                              HIDFramesPointer++;
-  70   2              }
-  71   1              // else if (1 == Fn1_Status)
-  72   1              // // else if (PCON & GF1)
-  73   1              // {
-  74   1              //      if (Fn1_keyMap[Index][0] != 0xff)
-  75   1              //              HIDFrames0 += Fn1_keyMap[Index][0];
-  76   1              //      kCode = Fn1_keyMap[Index][1];
-  77   1              //      HIDFrames[HIDFramesPointer] = kCode;
-  78   1              //      if (HIDFramesPointer < 8 && kCode > 0)
-  79   1              //              HIDFramesPointer++;
-  80   1              // }
-  81   1              else
-  82   1              {
-  83   2                      if (Fn0_keyMap[Index][0] != 0xff)
-  84   2                              HIDFrames0 += mainKeyMap[Index][0];
-  85   2                      kCode = mainKeyMap[Index][1];
-  86   2                      HIDFrames[HIDFramesPointer] = kCode;
-  87   2                      if (HIDFramesPointer < 8 && kCode > 0)
-  88   2                              HIDFramesPointer++;
-  89   2              }
-  90   1      }
-  91          
-  92          void makeHIDFrames(void)
-  93          {
-  94   1              UINT8 i = 0;
-  95   1              UINT8 f = 0;
-  96   1              UINT8 Index;
-  97   1      
-  98   1              HIDFrames0 = 0;
-  99   1              HIDFramesPointer = 2;
- 100   1      
- 101   1              for (i = 0; i < 8; i++)
- 102   1              {
- 103   2                      HIDFrames[i] = 0;
- 104   2              }
- 105   1      
- 106   1              Fn0_Status = 0;
- 107   1              Fn1_Status = 0;
- 108   1      
- 109   1              // 用GF0和GF1表示Fn0和Fn1键的状态
- 110   1              // PCON &= (~GF0);
- 111   1              // PCON &= (~GF1);
- 112   1      
- 113   1              for (f = 0; f < 40; f++)
- 114   1              {
- 115   2                      if ((allKey[f / 8] >> (f % 8)) & 1)
- 116   2                      {
-C51 COMPILER V9.56.0.0   SCANKEY                                                           12/20/2020 23:02:49 PAGE 3   
+  61   1              if (PCON & GF0)
+  62   1              {
+  63   2                      if (Fn0_keyMap[Index][0] != 0xff)
+  64   2                              HIDFrames0 += Fn0_keyMap[Index][0];
+  65   2                      kCode = Fn0_keyMap[Index][1];
+  66   2                      HIDFrames[HIDFramesPointer] = kCode;
+  67   2                      if (HIDFramesPointer < 8 && kCode > 0)
+  68   2                              HIDFramesPointer++;
+  69   2              }
+  70   1              // else if (PCON & GF1)
+  71   1              // {
+  72   1              //      if (Fn1_keyMap[Index][0] != 0xff)
+  73   1              //              HIDFrames0 += Fn1_keyMap[Index][0];
+  74   1              //      kCode = Fn1_keyMap[Index][1];
+  75   1              //      HIDFrames[HIDFramesPointer] = kCode;
+  76   1              //      if (HIDFramesPointer < 8 && kCode > 0)
+  77   1              //              HIDFramesPointer++;
+  78   1              // }
+  79   1              else
+  80   1              {
+  81   2                      if (Fn0_keyMap[Index][0] != 0xff)
+  82   2                              HIDFrames0 += mainKeyMap[Index][0];
+  83   2                      kCode = mainKeyMap[Index][1];
+  84   2                      HIDFrames[HIDFramesPointer] = kCode;
+  85   2                      if (HIDFramesPointer < 8 && kCode > 0)
+  86   2                              HIDFramesPointer++;
+  87   2              }
+  88   1      }
+  89          
+  90          void FnKey(UINT8 Index)
+  91          {
+  92   1              if (mainKeyMap[Index][0] == 0xff)
+  93   1              {
+  94   2                      if (mainKeyMap[Index][1] == 0)
+  95   2                      {
+  96   3                              PCON |= GF0;
+  97   3                      }
+  98   2                      if (mainKeyMap[Index][1] == 1)
+  99   2                      {
+ 100   3                              PCON |= GF1;
+ 101   3                      }
+ 102   2              }
+ 103   1      }
+ 104          
+ 105          void makeHIDFrames(void)
+ 106          {
+ 107   1              UINT8 i = 0;
+ 108   1              UINT8 f = 0;
+ 109   1              UINT8 Index;
+ 110   1      
+ 111   1              HIDFrames0 = 0;
+ 112   1              HIDFramesPointer = 2;
+ 113   1      
+ 114   1              for (i = 0; i < 8; i++)
+ 115   1              {
+ 116   2                      HIDFrames[i] = 0;
+C51 COMPILER V9.56.0.0   SCANKEY                                                           12/21/2020 21:48:49 PAGE 3   
 
- 117   3                              if (mainKeyMap[f][0] == 0xff)
- 118   3                              {
- 119   4                                      if (mainKeyMap[f][1] == 0)
- 120   4                                      {
- 121   5                                              Fn0_Status = 1;
- 122   5                                              // PCON |= GF0;
- 123   5                                      }
- 124   4                                      if (mainKeyMap[f][1] == 1)
- 125   4                                      {
- 126   5                                              Fn1_Status = 1;
- 127   5                                              // PCON |= GF1;
- 128   5                                      }
- 129   4                              }
- 130   3                      }
- 131   2              }
- 132   1      
- 133   1              for (i = 0; i < 5; i++)
- 134   1              {
- 135   2                      if (allKey[i] & 1)
- 136   2                      {
- 137   3                              Index = i * 8 + 0;
- 138   3                              FnKey(Index);
- 139   3                      }
- 140   2                      if (allKey[i] & 2)
- 141   2                      {
- 142   3                              Index = i * 8 + 1;
- 143   3                              FnKey(Index);
- 144   3                      }
- 145   2                      if (allKey[i] & 4)
- 146   2                      {
- 147   3                              Index = i * 8 + 2;
- 148   3                              FnKey(Index);
- 149   3                      }
- 150   2                      if (allKey[i] & 8)
- 151   2                      {
- 152   3                              Index = i * 8 + 3;
- 153   3                              FnKey(Index);
- 154   3                      }
- 155   2                      if (allKey[i] & 16)
- 156   2                      {
- 157   3                              Index = i * 8 + 4;
- 158   3                              FnKey(Index);
- 159   3                      }
- 160   2                      if (allKey[i] & 32)
- 161   2                      {
- 162   3                              Index = i * 8 + 5;
- 163   3                              FnKey(Index);
- 164   3                      }
- 165   2                      if (allKey[i] & 64)
- 166   2                      {
- 167   3                              Index = i * 8 + 6;
- 168   3                              FnKey(Index);
- 169   3                      }
- 170   2                      if (allKey[i] & 128)
- 171   2                      {
- 172   3                              Index = i * 8 + 7;
- 173   3                              FnKey(Index);
- 174   3                      }
- 175   2              }
- 176   1      
- 177   1              HIDFrames[0] = HIDFrames0;
- 178   1              sendKeyHID(HIDFrames);
-C51 COMPILER V9.56.0.0   SCANKEY                                                           12/20/2020 23:02:49 PAGE 4   
+ 117   2              }
+ 118   1      
+ 119   1              // 用GF0和GF1表示Fn0和Fn1键的状态
+ 120   1              PCON &= (~GF0);
+ 121   1              PCON &= (~GF1);
+ 122   1              for (i = 0; i < 5; i++)
+ 123   1              {
+ 124   2                      if (allKey[i] & 1)
+ 125   2                      {
+ 126   3                              Index = i * 8 + 0;
+ 127   3                              FnKey(Index);
+ 128   3                      }
+ 129   2                      if (allKey[i] & 2)
+ 130   2                      {
+ 131   3                              Index = i * 8 + 1;
+ 132   3                              FnKey(Index);
+ 133   3                      }
+ 134   2                      if (allKey[i] & 4)
+ 135   2                      {
+ 136   3                              Index = i * 8 + 2;
+ 137   3                              FnKey(Index);
+ 138   3                      }
+ 139   2                      if (allKey[i] & 8)
+ 140   2                      {
+ 141   3                              Index = i * 8 + 3;
+ 142   3                              FnKey(Index);
+ 143   3                      }
+ 144   2                      if (allKey[i] & 16)
+ 145   2                      {
+ 146   3                              Index = i * 8 + 4;
+ 147   3                              FnKey(Index);
+ 148   3                      }
+ 149   2                      if (allKey[i] & 32)
+ 150   2                      {
+ 151   3                              Index = i * 8 + 5;
+ 152   3                              FnKey(Index);
+ 153   3                      }
+ 154   2                      if (allKey[i] & 64)
+ 155   2                      {
+ 156   3                              Index = i * 8 + 6;
+ 157   3                              FnKey(Index);
+ 158   3                      }
+ 159   2                      if (allKey[i] & 128)
+ 160   2                      {
+ 161   3                              Index = i * 8 + 7;
+ 162   3                              FnKey(Index);
+ 163   3                      }
+ 164   2              }
+ 165   1      
+ 166   1              for (i = 0; i < 5; i++)
+ 167   1              {
+ 168   2                      if (allKey[i] & 1)
+ 169   2                      {
+ 170   3                              Index = i * 8 + 0;
+ 171   3                              AllKey(Index);
+ 172   3                      }
+ 173   2                      if (allKey[i] & 2)
+ 174   2                      {
+ 175   3                              Index = i * 8 + 1;
+ 176   3                              AllKey(Index);
+ 177   3                      }
+ 178   2                      if (allKey[i] & 4)
+C51 COMPILER V9.56.0.0   SCANKEY                                                           12/21/2020 21:48:49 PAGE 4   
 
- 179   1      }
- 180          void scanKeyChange(void)
- 181          {
- 182   1              UINT8 i = 0;
- 183   1              for (i = 0; i < sumCol; i++)
- 184   1              {
- 185   2                      // row1 = 1;
- 186   2                      // row2 = 1;
- 187   2                      // row3 = 1;
- 188   2                      // row4 = 1;
- 189   2                      // row5 = 1;
- 190   2                      // 五行全部拉高（以上等效）
- 191   2                      P3 |= 0x1f;
- 192   2      
- 193   2                      if (i == 0)
- 194   2                              row1 = 0;
- 195   2                      if (i == 1)
- 196   2                              row2 = 0;
- 197   2                      if (i == 2)
- 198   2                              row3 = 0;
- 199   2                      if (i == 3)
- 200   2                              row4 = 0;
- 201   2                      if (i == 4)
- 202   2                              row5 = 0;
- 203   2                      // 逐行拉低（以上等效）
- 204   2                      // P3 &= (~(1 << i));
- 205   2      
- 206   2                      allKey[i] = 0;
- 207   2                      allKey[i] |= ~P1;
+ 179   2                      {
+ 180   3                              Index = i * 8 + 2;
+ 181   3                              AllKey(Index);
+ 182   3                      }
+ 183   2                      if (allKey[i] & 8)
+ 184   2                      {
+ 185   3                              Index = i * 8 + 3;
+ 186   3                              AllKey(Index);
+ 187   3                      }
+ 188   2                      if (allKey[i] & 16)
+ 189   2                      {
+ 190   3                              Index = i * 8 + 4;
+ 191   3                              AllKey(Index);
+ 192   3                      }
+ 193   2                      if (allKey[i] & 32)
+ 194   2                      {
+ 195   3                              Index = i * 8 + 5;
+ 196   3                              AllKey(Index);
+ 197   3                      }
+ 198   2                      if (allKey[i] & 64)
+ 199   2                      {
+ 200   3                              Index = i * 8 + 6;
+ 201   3                              AllKey(Index);
+ 202   3                      }
+ 203   2                      if (allKey[i] & 128)
+ 204   2                      {
+ 205   3                              Index = i * 8 + 7;
+ 206   3                              AllKey(Index);
+ 207   3                      }
  208   2              }
  209   1      
- 210   1              if (memcmp(beforeAllKey, allKey, 5) != 0)
- 211   1              {
- 212   2                      memcpy(beforeAllKey, allKey, 5);
- 213   2                      // 使用通用标志位 0 标识按键有变动
- 214   2                      // PCON |= GF0;
- 215   2                      makeHIDFrames();
- 216   2              }
- 217   1              else
- 218   1              {
- 219   2                      // 使用通用标志位 0 标识按键无变动
- 220   2                      // PCON &= (~GF0);
- 221   2              }
- 222   1      }
- 223          
- 224          void readDataFlash(void)
- 225          {
- 226   1              UINT8X i, j;
- 227   1      
- 228   1              // for (i = 0; i < 16; i++)
- 229   1              // {
- 230   1              //     for (j = 0; j < 2; j++)
- 231   1              //     {
- 232   1              //         len = WriteDataFlash(i*2+j, &keyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &k
-             -eyMap[i][j]
- 233   1              //         if (len != 1)
- 234   1              //         {
- 235   1              //             // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
- 236   1              //         }
- 237   1              //     }
- 238   1              // }
- 239   1      
-C51 COMPILER V9.56.0.0   SCANKEY                                                           12/20/2020 23:02:49 PAGE 5   
+ 210   1              HIDFrames[0] = HIDFrames0;
+ 211   1              if (memcmp(beforeAllKey, allKey, 5) != 0)
+ 212   1              {
+ 213   2                      Enp1IntInSend(HIDFrames);
+ 214   2                      // sendKeyHID(HIDFrames);
+ 215   2              }
+ 216   1      }
+ 217          void scanKeyChange(void)
+ 218          {
+ 219   1              UINT8 i = 0;
+ 220   1              for (i = 0; i < sumCol; i++)
+ 221   1              {
+ 222   2                      // row1 = 1;
+ 223   2                      // row2 = 1;
+ 224   2                      // row3 = 1;
+ 225   2                      // row4 = 1;
+ 226   2                      // row5 = 1;
+ 227   2                      // 五行全部拉高（以上等效）
+ 228   2                      P3 |= 0x1f;
+ 229   2      
+ 230   2                      if (i == 0)
+ 231   2                              row1 = 0;
+ 232   2                      if (i == 1)
+ 233   2                              row2 = 0;
+ 234   2                      if (i == 2)
+ 235   2                              row3 = 0;
+ 236   2                      if (i == 3)
+ 237   2                              row4 = 0;
+ 238   2                      if (i == 4)
+ 239   2                              row5 = 0;
+ 240   2                      // 逐行拉低（以上等效）
+C51 COMPILER V9.56.0.0   SCANKEY                                                           12/21/2020 21:48:49 PAGE 5   
 
- 240   1              for (i = 0; i < 40; i++)
- 241   1              {
- 242   2                      for (j = 0; j < 2; j++)
- 243   2                      {
- 244   3                              // len = WriteDataFlash(i*2+j, &keyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[
-             -i][j]
- 245   3                              len = ReadDataFlash(i * 2 + j, 1, &mainKeyMap[i][j]);
- 246   3                              if (len != 1)
- 247   3                              {
- 248   4                                      // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
- 249   4                              }
- 250   3                      }
+ 241   2                      // P3 &= (~(1 << i));
+ 242   2      
+ 243   2                      allKey[i] = 0;
+ 244   2                      allKey[i] |= ~P1;
+ 245   2              }
+ 246   1      
+ 247   1              if (memcmp(beforeAllKey, allKey, 5) != 0)
+ 248   1              {
+ 249   2                      makeHIDFrames();
+ 250   2                      memcpy(beforeAllKey, allKey, 5);
  251   2              }
  252   1      }
+ 253          
+ 254          void readDataFlash(void)
+ 255          {
+ 256   1              UINT8X i, j;
+ 257   1      
+ 258   1              for (i = 0; i < 40; i++)
+ 259   1              {
+ 260   2                  for (j = 0; j < 2; j++)
+ 261   2                  {
+ 262   3                      len = WriteDataFlash(i*2+j, &mainKeyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &
+             -keyMap[i][j]
+ 263   3                      if (len != 1)
+ 264   3                      {
+ 265   4                          // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
+ 266   4                      }
+ 267   3                  }
+ 268   2              }
+ 269   1      
+ 270   1              for (i = 0; i < 40; i++)
+ 271   1              {
+ 272   2                      for (j = 0; j < 2; j++)
+ 273   2                      {
+ 274   3                              // len = WriteDataFlash(i*2+j, &keyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[
+             -i][j]
+ 275   3                              len = ReadDataFlash(i * 2 + j, 1, &mainKeyMap[i][j]);
+ 276   3                              if (len != 1)
+ 277   3                              {
+ 278   4                                      // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
+ 279   4                              }
+ 280   3                      }
+ 281   2              }
+ 282   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    697    ----
+   CODE SIZE        =    932    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =    163       2
+   XDATA SIZE       =    161       2
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =     21       1
+   DATA SIZE        =     21       2
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

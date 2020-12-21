@@ -17,7 +17,7 @@ UINT8X mainKeyMap[40][2]={
     {0,KEY_TAB}, {0,KEY_Q}, {0,KEY_W}, {0,KEY_E}, {0,KEY_R}, {0,KEY_T}, {0,KEY_LEFTBRACE}, {0,KEY_RIGHTBRACE}, 
     {0,KEY_CAPSLOCK}, {0,KEY_A}, {0,KEY_S}, {0,KEY_D}, {0,KEY_F}, {0,KEY_G}, {2,KEY_9}, {2,KEY_0}, 
     {2,0}, {2,KEY_2}, {0,KEY_Z}, {0,KEY_X}, {0,KEY_C}, {0,KEY_V}, {2,KEY_7}, {2,KEY_3}, 
-    {KEY_Fn0,0}, {8,0}, {4,0}, {KEY_Fn0,0}, {0,KEY_SPACE}, {1,0}, {2,KEY_GRAVE}, {2,KEY_1},
+    {KEY_FnX,0}, {8,0}, {4,0}, {KEY_FnX,0}, {0,KEY_SPACE}, {1,0}, {2,KEY_GRAVE}, {2,KEY_1},
 };
 
 UINT8X Fn0_keyMap[40][2]={
@@ -25,7 +25,7 @@ UINT8X Fn0_keyMap[40][2]={
     {0,KEY_TAB}, {0,KEY_F11}, {0,KEY_F12}, {0,KEY_E}, {0,KEY_R}, {0,KEY_T}, {0,KEY_LEFTBRACE}, {0,KEY_RIGHTBRACE}, 
     {0,KEY_CAPSLOCK}, {0,KEY_A}, {0,KEY_S}, {0,KEY_D}, {0,KEY_F}, {0,KEY_G}, {2,KEY_9}, {2,KEY_0}, 
     {2,0}, {2,KEY_2}, {0,KEY_Z}, {0,KEY_X}, {0,KEY_C}, {0,KEY_V}, {2,KEY_7}, {2,KEY_3}, 
-    {KEY_Fn0,0}, {8,0}, {4,0}, {KEY_Fn0,0}, {0,KEY_SPACE}, {1,0}, {2,KEY_GRAVE}, {2,KEY_1},
+    {KEY_FnX,0}, {8,0}, {4,0}, {KEY_FnX,0}, {0,KEY_SPACE}, {1,0}, {2,KEY_GRAVE}, {2,KEY_1},
 };
 
 #else

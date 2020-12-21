@@ -45,6 +45,8 @@ main()
     FLAG = 0;
     // Ready = 0;
 
+    readDataFlash();
+
     while (1)
     {
         // if (Ready)

@@ -19,8 +19,8 @@ UINT8 HIDFrames[8];
 UINT8 HIDFramesPointer = 2; // 从帧的第三个字节开始添加普通按键的KeyCode
 UINT8 HIDFrames0 = 0;
 
-UINT8X Fn0_Status = 0;
-UINT8X Fn1_Status = 0;
+// UINT8X Fn0_Status = 0;
+// UINT8X Fn1_Status = 0;
 
 // sbit col1 = P1 ^ 0;
 // sbit col2 = P1 ^ 1;
@@ -56,10 +56,9 @@ void initGPIO(void)
 	Port3Cfg(1, 7);
 }
 
-void FnKey(UINT8 Index)
+void AllKey(UINT8 Index)
 {
-	if (1 == Fn0_Status)
-    // if (PCON & GF0)
+	if (PCON & GF0)
 	{
 		if (Fn0_keyMap[Index][0] != 0xff)
 			HIDFrames0 += Fn0_keyMap[Index][0];
@@ -68,8 +67,7 @@ void FnKey(UINT8 Index)
 		if (HIDFramesPointer < 8 && kCode > 0)
 			HIDFramesPointer++;
 	}
-	// else if (1 == Fn1_Status)
-	// // else if (PCON & GF1)
+	// else if (PCON & GF1)
 	// {
 	// 	if (Fn1_keyMap[Index][0] != 0xff)
 	// 		HIDFrames0 += Fn1_keyMap[Index][0];
@@ -89,6 +87,21 @@ void FnKey(UINT8 Index)
 	}
 }
 
+void FnKey(UINT8 Index)
+{
+	if (mainKeyMap[Index][0] == 0xff)
+	{
+		if (mainKeyMap[Index][1] == 0)
+		{
+			PCON |= GF0;
+		}
+		if (mainKeyMap[Index][1] == 1)
+		{
+			PCON |= GF1;
+		}
+	}
+}
+
 void makeHIDFrames(void)
 {
 	UINT8 i = 0;
@@ -103,33 +116,9 @@ void makeHIDFrames(void)
 		HIDFrames[i] = 0;
 	}
 
-	Fn0_Status = 0;
-	Fn1_Status = 0;
-
 	// 用GF0和GF1表示Fn0和Fn1键的状态
-	// PCON &= (~GF0);
-	// PCON &= (~GF1);
-
-	for (f = 0; f < 40; f++)
-	{
-		if ((allKey[f / 8] >> (f % 8)) & 1)
-		{
-			if (mainKeyMap[f][0] == 0xff)
-			{
-				if (mainKeyMap[f][1] == 0)
-				{
-					Fn0_Status = 1;
-					// PCON |= GF0;
-				}
-				if (mainKeyMap[f][1] == 1)
-				{
-					Fn1_Status = 1;
-					// PCON |= GF1;
-				}
-			}
-		}
-	}
-
+	PCON &= (~GF0);
+	PCON &= (~GF1);
 	for (i = 0; i < 5; i++)
 	{
 		if (allKey[i] & 1)
@@ -174,8 +163,56 @@ void makeHIDFrames(void)
 		}
 	}
 
+	for (i = 0; i < 5; i++)
+	{
+		if (allKey[i] & 1)
+		{
+			Index = i * 8 + 0;
+			AllKey(Index);
+		}
+		if (allKey[i] & 2)
+		{
+			Index = i * 8 + 1;
+			AllKey(Index);
+		}
+		if (allKey[i] & 4)
+		{
+			Index = i * 8 + 2;
+			AllKey(Index);
+		}
+		if (allKey[i] & 8)
+		{
+			Index = i * 8 + 3;
+			AllKey(Index);
+		}
+		if (allKey[i] & 16)
+		{
+			Index = i * 8 + 4;
+			AllKey(Index);
+		}
+		if (allKey[i] & 32)
+		{
+			Index = i * 8 + 5;
+			AllKey(Index);
+		}
+		if (allKey[i] & 64)
+		{
+			Index = i * 8 + 6;
+			AllKey(Index);
+		}
+		if (allKey[i] & 128)
+		{
+			Index = i * 8 + 7;
+			AllKey(Index);
+		}
+	}
+
 	HIDFrames[0] = HIDFrames0;
-	sendKeyHID(HIDFrames);
+	if (memcmp(beforeAllKey, allKey, 5) != 0)
+	{
+		Enp1IntInSend(HIDFrames);
+		// sendKeyHID(HIDFrames);
+	}
 }
 void scanKeyChange(void)
 {
@@ -209,15 +246,8 @@ void scanKeyChange(void)
 
 	if (memcmp(beforeAllKey, allKey, 5) != 0)
 	{
-		memcpy(beforeAllKey, allKey, 5);
-		// 使用通用标志位 0 标识按键有变动
-		// PCON |= GF0;
 		makeHIDFrames();
-	}
-	else
-	{
-		// 使用通用标志位 0 标识按键无变动
-		// PCON &= (~GF0);
+		memcpy(beforeAllKey, allKey, 5);
 	}
 }
 
@@ -225,17 +255,17 @@ void readDataFlash(void)
 {
 	UINT8X i, j;
 
-	// for (i = 0; i < 16; i++)
-	// {
-	//     for (j = 0; j < 2; j++)
-	//     {
-	//         len = WriteDataFlash(i*2+j, &keyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[i][j]
-	//         if (len != 1)
-	//         {
-	//             // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
-	//         }
-	//     }
-	// }
+	for (i = 0; i < 40; i++)
+	{
+	    for (j = 0; j < 2; j++)
+	    {
+	        len = WriteDataFlash(i*2+j, &mainKeyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[i][j]
+	        if (len != 1)
+	        {
+	            // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
+	        }
+	    }
+	}
 
 	for (i = 0; i < 40; i++)
 	{

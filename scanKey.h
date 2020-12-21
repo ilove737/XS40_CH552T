@@ -17,8 +17,7 @@
 #ifndef USB_HID_KEYS
 #define USB_HID_KEYS
 
-#define KEY_Fn0   0xFF
-#define KEY_Fn1   0xFE
+#define KEY_FnX   0xFF
 
 #define sumRow 8
 #define sumCol 5
