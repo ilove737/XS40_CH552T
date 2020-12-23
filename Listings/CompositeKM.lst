@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 1   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE COMPOSITEKM
@@ -62,7 +62,7 @@ line level    source
   49          
   50          // UINT8C MyProductIDInfo[] = {0x0A,0x03,'X',0,'S',0,'4',0,'0',0};
   51          // /* 语言描述符 */
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 2   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 2   
 
   52          // UINT8C MyLangDescr[ ] = { 0x04, 0x03, 0x09, 0x04 };
   53          // /* 厂家信息 */
@@ -126,7 +126,7 @@ line level    source
  110   1          UEP1_DMA = Ep1Buffer;                                   //端点1数据传输地址
  111   1          UEP4_1_MOD = UEP4_1_MOD & ~bUEP1_BUF_MOD | bUEP1_TX_EN; //端点1发送使能 64字节缓冲区
  112   1          UEP1_CTRL = bUEP_AUTO_TOG | UEP_T_RES_NAK;              //端点1自动翻转同步标志位，IN事�
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 3   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 3   
 
              -�返回NAK
  113   1      
@@ -190,7 +190,7 @@ line level    source
  169   3                  break;
  170   3              case UIS_TOKEN_IN | 1: //endpoint 1# 中断端点上传
  171   3                  UEP1_T_LEN = 0;    //预使用发送长度一定要清空
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 4   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 4   
 
  172   3                  // UEP2_CTRL ^= bUEP_T_TOG;                                 //如果不设置自动翻转则�
              -�要手动翻转
@@ -254,7 +254,7 @@ line level    source
  229   7                                  //     break;
  230   7                                  // case 1:
  231   7                                  //     pDescr = (PUINT8)( &MyManuInfo[0] );
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 5   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 5   
 
  232   7                                  //     len = sizeof( MyManuInfo );
  233   7                                  //     break;
@@ -318,7 +318,7 @@ line level    source
  288   6                              if (UsbConfig)
  289   6                              {
  290   7      #if DE_PRINTF
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 6   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 6   
 
                                           printf("SET CONFIG.\n");
               #endif
@@ -382,7 +382,7 @@ line level    source
  347   7                                  if ((((UINT16)UsbSetupBuf->wValueH << 8) | UsbSetupBuf->wValueL) == 0x00)
  348   7                                  {
  349   8                                      switch (((UINT16)UsbSetupBuf->wIndexH << 8) | UsbSetupBuf->wIndexL)
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 7   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 7   
 
  350   8                                      {
  351   9                                      case 0x82:
@@ -446,7 +446,7 @@ line level    source
              -ATA1，返回应答ACK
  406   4                  }
  407   3                  else
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 8   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 8   
 
  408   3                  {
  409   4                      UEP0_T_LEN = 0;                                                      //虽然尚未到状�
@@ -510,7 +510,7 @@ line level    source
  464   1          {
  465   2              UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
  466   2              UEP1_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK;
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 9   
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 9   
 
  467   2              UEP2_CTRL = bUEP_AUTO_TOG | UEP_R_RES_ACK | UEP_T_RES_NAK;
  468   2              USB_DEV_AD = 0x00;
@@ -574,7 +574,7 @@ line level    source
  524          //         while (FLAG == 0)
  525          //         {
  526          //             ; /*等待上一包传输完成*/
-C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/21/2020 21:53:09 PAGE 10  
+C51 COMPILER V9.56.0.0   COMPOSITEKM                                                       12/23/2020 22:19:19 PAGE 10  
 
  527          //         }
  528          //         Enp1IntIn();

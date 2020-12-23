@@ -255,17 +255,17 @@ void readDataFlash(void)
 {
 	UINT8X i, j;
 
-	for (i = 0; i < 40; i++)
-	{
-	    for (j = 0; j < 2; j++)
-	    {
-	        len = WriteDataFlash(i*2+j, &mainKeyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[i][j]
-	        if (len != 1)
-	        {
-	            // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
-	        }
-	    }
-	}
+	// for (i = 0; i < 40; i++)
+	// {
+	//     for (j = 0; j < 2; j++)
+	//     {
+	//         len = WriteDataFlash(i*2+j, &mainKeyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[i][j]
+	//         if (len != 1)
+	//         {
+	//             // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
+	//         }
+	//     }
+	// }
 
 	for (i = 0; i < 40; i++)
 	{

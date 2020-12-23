@@ -271,29 +271,29 @@ void readDataFlash(void);
 // 0xdd  Keypad Hexadecimal
 
 // shift��������
-#define SHIFT_1 0x1e + 0xa2 //  !
-#define SHIFT_2 0x1f + 0xa2 //  @
-#define SHIFT_3 0x20 + 0xa2 //  #
-#define SHIFT_4 0x21 + 0xa2 //  $
-#define SHIFT_5 0x22 + 0xa2 //  %
-#define SHIFT_6 0x23 + 0xa2 //  ^
-#define SHIFT_7 0x24 + 0xa2 //  &
-#define SHIFT_8 0x25 + 0xa2 //  *
-#define SHIFT_9 0x26 + 0xa2 //  (
-#define SHIFT_0 0x27 + 0xa2 //  )
+// #define SHIFT_1 0x1e + 0xa2 //  !
+// #define SHIFT_2 0x1f + 0xa2 //  @
+// #define SHIFT_3 0x20 + 0xa2 //  #
+// #define SHIFT_4 0x21 + 0xa2 //  $
+// #define SHIFT_5 0x22 + 0xa2 //  %
+// #define SHIFT_6 0x23 + 0xa2 //  ^
+// #define SHIFT_7 0x24 + 0xa2 //  &
+// #define SHIFT_8 0x25 + 0xa2 //  *
+// #define SHIFT_9 0x26 + 0xa2 //  (
+// #define SHIFT_0 0x27 + 0xa2 //  )
 
-#define SHIFT_MINUS 0x2d + 0xa2      // _
-#define SHIFT_EQUAL 0x2e + 0xa2      // +
-#define SHIFT_LEFTBRACE 0x2f + 0xa2  // {
-#define SHIFT_RIGHTBRACE 0x30 + 0xa2 // }
-#define SHIFT_BACKSLASH 0x31 + 0xa2  // |
-#define SHIFT_HASHTILDE 0x32 + 0xa2  // Non-US ~
-#define SHIFT_SEMICOLON 0x33 + 0xa2  // :
-#define SHIFT_APOSTROPHE 0x34 + 0xa2 // "
-#define SHIFT_GRAVE 0x35 + 0xa2      // ~
-#define SHIFT_COMMA 0x36 + 0xa2      // <
-#define SHIFT_DOT 0x37 + 0xa2        // >
-#define SHIFT_SLASH 0x38 + 0xa2      // ?
+// #define SHIFT_MINUS 0x2d + 0xa2      // _
+// #define SHIFT_EQUAL 0x2e + 0xa2      // +
+// #define SHIFT_LEFTBRACE 0x2f + 0xa2  // {
+// #define SHIFT_RIGHTBRACE 0x30 + 0xa2 // }
+// #define SHIFT_BACKSLASH 0x31 + 0xa2  // |
+// #define SHIFT_HASHTILDE 0x32 + 0xa2  // Non-US ~
+// #define SHIFT_SEMICOLON 0x33 + 0xa2  // :
+// #define SHIFT_APOSTROPHE 0x34 + 0xa2 // "
+// #define SHIFT_GRAVE 0x35 + 0xa2      // ~
+// #define SHIFT_COMMA 0x36 + 0xa2      // <
+// #define SHIFT_DOT 0x37 + 0xa2        // >
+// #define SHIFT_SLASH 0x38 + 0xa2      // ?
 
 // 0xd��ͷ������ctrl��������
 
