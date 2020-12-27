@@ -78,7 +78,7 @@ void AllKey(UINT8 Index)
 	// }
 	else
 	{
-		if (Fn0_keyMap[Index][0] != 0xff)
+		if (mainKeyMap[Index][0] != 0xff)
 			HIDFrames0 += mainKeyMap[Index][0];
 		kCode = mainKeyMap[Index][1];
 		HIDFrames[HIDFramesPointer] = kCode;
