@@ -107,17 +107,15 @@ void mTimer0Interrupt( void ) interrupt INT_NO_TMR0 using 1                //tim
 {                                                                           //方式3时，TH0使用Timer1的中断资源
     // SCK = ~SCK;
 
-    mTimer_x_SetData(0,60000);                                          //非自动重载方式需重新给TH0和TL0赋值
+    mTimer_x_SetData(0,2000);                                          //非自动重载方式需重新给TH0和TL0赋值
     
     scanKeyChange();
 
     // 使用通用标志位 0 标识按键有无变动
-    if (PCON & GF0)
-    {
+    // if (PCON & GF0)
+    // {
         // makeHIDFrames();
-    }
-
-
+    // }
 }
 #endif
 
