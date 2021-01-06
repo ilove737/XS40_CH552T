@@ -9,7 +9,6 @@
 *******************************************************************************/
 #include "CH552.H"                                                  
 #include "Debug.H"
-// #include "UART1.H"
 #include "Timer.H" 
 #include "scanKey.h"
 #include "stdio.h"
@@ -54,7 +53,7 @@ void mTimer_x_SetData(UINT8 x,UINT16 dat)
 		else if(x == 2){
       RCAP2L = TL2 = tmp & 0xff;                                               //16位自动重载定时器
       RCAP2H = TH2 = (tmp>>8) & 0xff;
-    }                                                 
+    }
 }
 
 /*******************************************************************************
@@ -68,15 +67,15 @@ void mTimer_x_SetData(UINT8 x,UINT16 dat)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void CAP2Init(UINT8 mode)
-{
-    RCLK = 0;
-    TCLK = 0;	
-    C_T2  = 0;
-    EXEN2 = 1; 
-    CP_RL2 = 1;                                                                //启动T2ex的捕捉功能
-    T2MOD |= mode << 2;                                                        //边沿捕捉模式选择
-}
+// void CAP2Init(UINT8 mode)
+// {
+//     RCLK = 0;
+//     TCLK = 0;
+//     C_T2  = 0;
+//     EXEN2 = 1;
+//     CP_RL2 = 1;                                                                //启动T2ex的捕捉功能
+//     T2MOD |= mode << 2;                                                        //边沿捕捉模式选择
+// }
 
 /*******************************************************************************
 * Function Name  : CAP1Init(UINT8 mode)
@@ -89,14 +88,14 @@ void CAP2Init(UINT8 mode)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void CAP1Init(UINT8 mode)
-{
-    RCLK = 0;
-    TCLK = 0;
-    CP_RL2 = 1;
-    C_T2 = 0;
-    T2MOD = T2MOD & ~T2OE | (mode << 2) | bT2_CAP1_EN;                         //使能T2引脚捕捉功能,边沿捕捉模式选择
-}
+// void CAP1Init(UINT8 mode)
+// {
+//     RCLK = 0;
+//     TCLK = 0;
+//     CP_RL2 = 1;
+//     C_T2 = 0;
+//     T2MOD = T2MOD & ~T2OE | (mode << 2) | bT2_CAP1_EN;                         //使能T2引脚捕捉功能,边沿捕捉模式选择
+// }
 
 #ifdef T0_INT
 /*******************************************************************************
@@ -108,14 +107,7 @@ void mTimer0Interrupt( void ) interrupt INT_NO_TMR0 using 1                //tim
     // SCK = ~SCK;
 
     mTimer_x_SetData(0,2000);                                          //非自动重载方式需重新给TH0和TL0赋值
-    
     scanKeyChange();
-
-    // 使用通用标志位 0 标识按键有无变动
-    // if (PCON & GF0)
-    // {
-        // makeHIDFrames();
-    // }
 }
 #endif
 
@@ -127,8 +119,7 @@ void mTimer0Interrupt( void ) interrupt INT_NO_TMR0 using 1                //tim
 void mTimer1Interrupt( void ) interrupt INT_NO_TMR1 using 2                //timer1中断服务程序,使用寄存器组2
 {                                                                           //方式3时，Timer1停止
     // SCK = ~SCK;
-    mTimer_x_SetData(1,2000);                                          //非自动重载方式需重新给TH1和TL1赋值      
-    scanKeyChange();
+    // mTimer_x_SetData(1,2000);                                          //非自动重载方式需重新给TH1和TL1赋值      
 }
 #endif
 

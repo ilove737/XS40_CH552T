@@ -125,12 +125,12 @@ void USBDeviceInit()
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void Enp1IntIn()
-{
-    memcpy(Ep1Buffer, HIDKey, sizeof(HIDKey));               //加载上传数据
-    UEP1_T_LEN = sizeof(HIDKey);                             //上传数据长度
-    UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_ACK; //有数据时上传数据并应答ACK
-}
+// void Enp1IntIn()
+// {
+//     memcpy(Ep1Buffer, HIDKey, sizeof(HIDKey));               //加载上传数据
+//     UEP1_T_LEN = sizeof(HIDKey);                             //上传数据长度
+//     UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_ACK; //有数据时上传数据并应答ACK
+// }
 void Enp1IntInSend(UINT8 *HIDFrame)
 {
     memcpy(Ep1Buffer, HIDFrame, 8);               //加载上传数据
@@ -144,12 +144,12 @@ void Enp1IntInSend(UINT8 *HIDFrame)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void Enp2IntIn()
-{
-    memcpy(Ep2Buffer, HIDMouse, sizeof(HIDMouse));           //加载上传数据
-    UEP2_T_LEN = sizeof(HIDMouse);                           //上传数据长度
-    UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_ACK; //有数据时上传数据并应答ACK
-}
+// void Enp2IntIn()
+// {
+//     memcpy(Ep2Buffer, HIDMouse, sizeof(HIDMouse));           //加载上传数据
+//     UEP2_T_LEN = sizeof(HIDMouse);                           //上传数据长度
+//     UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_ACK; //有数据时上传数据并应答ACK
+// }
 /*******************************************************************************
 * Function Name  : DeviceInterrupt()
 * Description    : CH559USB中断处理函数

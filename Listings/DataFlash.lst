@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   DATAFLASH                                                         12/20/2020 22:11:19 PAGE 1   
+C51 COMPILER V9.56.0.0   DATAFLASH                                                         01/06/2021 22:03:28 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE DATAFLASH
@@ -28,31 +28,32 @@ line level    source
   18          * Output         : None
   19          * Return         : UINT8 i 返回写入长度
   20          *******************************************************************************/
-  21          UINT8 WriteDataFlash(UINT8 Addr,PUINT8 buf,UINT8 len)
-  22          {
-  23   1          UINT8 i;
-  24   1          SAFE_MOD = 0x55;
-  25   1          SAFE_MOD = 0xAA;                                                           //进入安全模式
-  26   1          GLOBAL_CFG |= bDATA_WE;                                                    //使能DataFlash写
-  27   1          SAFE_MOD = 0;                                                              //退出安全模式     
-  28   1                      ROM_ADDR_H = DATA_FLASH_ADDR >> 8;
-  29   1          Addr <<= 1;
-  30   1          for(i=0;i<len;i++)
-  31   1                {
-  32   2              ROM_ADDR_L = Addr + i*2;
-  33   2              ROM_DATA_L = *(buf+i);                  
-  34   2              if ( ROM_STATUS & bROM_ADDR_OK ) {                                     // 操作地址有效
-  35   3                 ROM_CTRL = ROM_CMD_WRITE;                                           // 写入
-  36   3              }
-  37   2              if((ROM_STATUS ^ bROM_ADDR_OK) > 0) return i;                          // 返回状态,0x00=succes
-             -s,  0x02=unknown command(bROM_CMD_ERR)
-  38   2                }
-  39   1          SAFE_MOD = 0x55;
-  40   1          SAFE_MOD = 0xAA;                                                           //进入安全模式
-  41   1          GLOBAL_CFG &= ~bDATA_WE;                                                   //开启DataFlash写保护
-  42   1          SAFE_MOD = 0;                                                              //退出安全模式     
-  43   1          return i;           
-  44   1      }
+  21          // UINT8 WriteDataFlash(UINT8 Addr,PUINT8 buf,UINT8 len)
+  22          // {
+  23          //     UINT8 i;
+  24          //     SAFE_MOD = 0x55;
+  25          //     SAFE_MOD = 0xAA;                                                           //进入安全模式
+  26          //     GLOBAL_CFG |= bDATA_WE;                                                    //使能DataFlash写
+  27          //     SAFE_MOD = 0;                                                              //退出安全模式  
+  28          //              ROM_ADDR_H = DATA_FLASH_ADDR >> 8;
+  29          //     Addr <<= 1;
+  30          //     for(i=0;i<len;i++)
+  31          //        {
+  32          //         ROM_ADDR_L = Addr + i*2;
+  33          //         ROM_DATA_L = *(buf+i);                       
+  34          //         if ( ROM_STATUS & bROM_ADDR_OK ) {                                     // 操作地址有效
+  35          //            ROM_CTRL = ROM_CMD_WRITE;                                           // 写入
+  36          //         }
+  37          //         if((ROM_STATUS ^ bROM_ADDR_OK) > 0) return i;                          // 返回状态,0x00=suc
+             -cess,  0x02=unknown command(bROM_CMD_ERR)
+  38          //        }
+  39          //     SAFE_MOD = 0x55;
+  40          //     SAFE_MOD = 0xAA;                                                           //进入安全模式
+  41          //     GLOBAL_CFG &= ~bDATA_WE;                                                   //开启DataFlash写保�
+             -��
+  42          //     SAFE_MOD = 0;                                                              //退出安全模式  
+  43          //     return i;                
+  44          // }
   45          
   46          /*******************************************************************************
   47          * Function Name  : ReadDataFlash(UINT8 Addr,UINT8 len,PUINT8 buf)
@@ -61,9 +62,9 @@ line level    source
   50          * Output         : None
   51          * Return         : UINT8 i 返回写入长度
   52          *******************************************************************************/
-  53          UINT8 ReadDataFlash(UINT8 Addr,UINT8 len,PUINT8 buf)
-C51 COMPILER V9.56.0.0   DATAFLASH                                                         12/20/2020 22:11:19 PAGE 2   
+C51 COMPILER V9.56.0.0   DATAFLASH                                                         01/06/2021 22:03:28 PAGE 2   
 
+  53          UINT8 ReadDataFlash(UINT8 Addr,UINT8 len,PUINT8 buf)
   54          {
   55   1          UINT8 i;
   56   1          ROM_ADDR_H = DATA_FLASH_ADDR >> 8;
@@ -79,11 +80,11 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    144    ----
+   CODE SIZE        =     51    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----       8
+   DATA SIZE        =   ----       3
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

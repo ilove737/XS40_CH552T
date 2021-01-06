@@ -91,17 +91,17 @@ void Port3Cfg(UINT8 Mode,UINT8 Pin)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void GPIOInterruptCfg()
-{
-   GPIO_IE &= ~bIE_IO_EDGE;                                                    //高/低电平触发
-//    GPIO_IE |= bIE_IO_EDGE;                                                  //上升/下降触发  
-//    GPIO_IE |= bIE_RXD1_LO;                                                     //RXD1低电平或下降沿触发
-   GPIO_IE |= bIE_P1_5_LO | bIE_P1_4_LO | bIE_P1_3_LO | bIE_RST_HI;            
-   //P15\P14\P13低电平触发；RST高电平触发
-//    GPIO_IE |= bIE_P3_1_LO;                                                     //P31低电平或下降沿触发
-//    GPIO_IE |= bIE_RXD0_LO;                                                     //RXD0低电平或下降沿触发	
-   IE_GPIO  = 1;                                                               //GPIO中断开启
-}
+// void GPIOInterruptCfg()
+// {
+//    GPIO_IE &= ~bIE_IO_EDGE;                                                    //高/低电平触发
+// //    GPIO_IE |= bIE_IO_EDGE;                                                  //上升/下降触发  
+// //    GPIO_IE |= bIE_RXD1_LO;                                                     //RXD1低电平或下降沿触发
+//    GPIO_IE |= bIE_P1_5_LO | bIE_P1_4_LO | bIE_P1_3_LO | bIE_RST_HI;            
+//    //P15\P14\P13低电平触发；RST高电平触发
+// //    GPIO_IE |= bIE_P3_1_LO;                                                     //P31低电平或下降沿触发
+// //    GPIO_IE |= bIE_RXD0_LO;                                                     //RXD0低电平或下降沿触发	
+//    IE_GPIO  = 1;                                                               //GPIO中断开启
+// }
 
 #ifdef GPIO_INTERRUPT
 /*******************************************************************************

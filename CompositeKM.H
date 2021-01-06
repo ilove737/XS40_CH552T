@@ -7,8 +7,8 @@
 // extern HIDKey;
 
 void USBDeviceInit();
-void Enp1IntIn();
-void Enp2IntIn();
+// void Enp1IntIn();
+// void Enp2IntIn();
 // void HIDValueHandle();
 // void sendKeyHID(UINT8 *Frames);
 void Enp1IntInSend(UINT8 *HIDFrame);

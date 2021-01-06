@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   MAIN                                                              12/23/2020 22:19:20 PAGE 1   
+C51 COMPILER V9.56.0.0   MAIN                                                              01/06/2021 22:03:50 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
@@ -9,72 +9,63 @@ COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE 
 line level    source
 
    1          #include "CH552.H"
-   2          // #include "UART1.H"
-   3          #include "Timer.H"
-   4          #include "Debug.H"
-   5          #include "scanKey.h"
-   6          // #include "keyMap.h"
-   7          #include "CompositeKM.H"
-   8          #include <string.h>
-   9          #include <stdio.h>
-  10          
-  11          main()
-  12          {
-  13   1          CfgFsys();   //CH559时钟选择配置
-  14   1          mDelaymS(5); //修改主频等待内部晶振稳定,必加
-  15   1          // mInitSTDIO(); //串口0初始化
-  16   1      #ifdef DE_PRINTF
-  17   1          // printf("start ...\n");
-  18   1      #endif
-  19   1      
-  20   1          initGPIO();
-  21   1      
-  22   1          // readDataFlash();
-  23   1      
-  24   1          // UART1Init();
+   2          #include "Timer.H"
+   3          #include "Debug.H"
+   4          #include "scanKey.h"
+   5          #include "CompositeKM.H"
+   6          
+   7          main()
+   8          {
+   9   1          CfgFsys();   //CH559时钟选择配置
+  10   1          mDelaymS(5); //修改主频等待内部晶振稳定,必加
+  11   1          // mInitSTDIO(); //串口0初始化
+  12   1      
+  13   1          initGPIO();
+  14   1      
+  15   1          // readDataFlash();
+  16   1      
+  17   1          // UART1Init();
+  18   1      
+  19   1          mTimer0Clk12DivFsys();       //T0定时器时钟设置
+  20   1          mTimer_x_ModInit(0, 1);      //T0 定时器模式设置
+  21   1          mTimer_x_SetData(0, 0x5555); //T0定时器赋值
+  22   1          mTimer0RunCTL(1);            //T0定时器启动
+  23   1          ET0 = 1;                     //T0定时器中断开启
+  24   1          EA = 1;
   25   1      
-  26   1          // printf("T0 Test ...\n");
-  27   1          mTimer0Clk12DivFsys();       //T0定时器时钟设置
-  28   1          mTimer_x_ModInit(0, 1);      //T0 定时器模式设置
-  29   1          mTimer_x_SetData(0, 0x5555); //T0定时器赋值
-  30   1          mTimer0RunCTL(1);            //T0定时器启动
-  31   1          ET0 = 1;                     //T0定时器中断开启
-  32   1          EA = 1;
-  33   1      
-  34   1      //读取芯片唯一ID号
-  35   1      #if DE_PRINTF
+  26   1      //读取芯片唯一ID号
+  27   1      #if DE_PRINTF
                   printf("ID0 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFA), (UINT16) * (PUINT8C)(0x3FFB));
                   printf("ID1 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFC), (UINT16) * (PUINT8C)(0x3FFD));
                   printf("ID2 = %02x %02x \n", (UINT16) * (PUINT8C)(0x3FFE), (UINT16) * (PUINT8C)(0x3FFF));
               #endif
+  32   1      
+  33   1          USBDeviceInit(); //USB设备模式初始化
+  34   1          EA = 1;          //允许单片机中断
+  35   1          UEP1_T_LEN = 0;  //预使用发送长度一定要清空
+  36   1          UEP2_T_LEN = 0;  //预使用发送长度一定要清空
+  37   1          FLAG = 0;
+  38   1      
+  39   1          readDataFlash();
   40   1      
-  41   1          USBDeviceInit(); //USB设备模式初始化
-  42   1          EA = 1;          //允许单片机中断
-  43   1          UEP1_T_LEN = 0;  //预使用发送长度一定要清空
-  44   1          UEP2_T_LEN = 0;  //预使用发送长度一定要清空
-  45   1          FLAG = 0;
-  46   1          // Ready = 0;
-  47   1      
-  48   1          readDataFlash();
-  49   1      
-  50   1          while (1)
-  51   1          {
-  52   2              // if (Ready)
-  53   2              // {
-  54   2              //     HIDValueHandle(); //该函数会一直等待串口接收一个字节
-C51 COMPILER V9.56.0.0   MAIN                                                              12/23/2020 22:19:20 PAGE 2   
+  41   1          while (1)
+  42   1          {
+  43   2              // if (Ready)
+  44   2              // {
+  45   2              //     HIDValueHandle(); //该函数会一直等待串口接收一个字节
+  46   2              // }
+  47   2      
+  48   2              // if ((Ready) && (Ep2InKey == 0))
+  49   2              // {
+  50   2              //     Enp1IntIn(); //仅发送键盘键值“抬起”操作
+  51   2              //     mDelaymS(10);
+  52   2              // }
+  53   2              // mDelaymS(10); //模拟单片机做其它事
+  54   2          }
+C51 COMPILER V9.56.0.0   MAIN                                                              01/06/2021 22:03:50 PAGE 2   
 
-  55   2              // }
-  56   2      
-  57   2              // if ((Ready) && (Ep2InKey == 0))
-  58   2              // {
-  59   2              //     Enp1IntIn(); //仅发送键盘键值“抬起”操作
-  60   2              //     mDelaymS(10);
-  61   2              // }
-  62   2              // mDelaymS(10); //模拟单片机做其它事
-  63   2          }
-  64   1      
-  65   1      }
+  55   1      
+  56   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE

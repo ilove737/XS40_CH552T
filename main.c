@@ -1,21 +1,14 @@
 #include "CH552.H"
-// #include "UART1.H"
 #include "Timer.H"
 #include "Debug.H"
 #include "scanKey.h"
-// #include "keyMap.h"
 #include "CompositeKM.H"
-#include <string.h>
-#include <stdio.h>
 
 main()
 {
     CfgFsys();   //CH559时钟选择配置
     mDelaymS(5); //修改主频等待内部晶振稳定,必加
     // mInitSTDIO(); //串口0初始化
-#ifdef DE_PRINTF
-    // printf("start ...\n");
-#endif
 
     initGPIO();
 
@@ -23,7 +16,6 @@ main()
 
     // UART1Init();
 
-    // printf("T0 Test ...\n");
     mTimer0Clk12DivFsys();       //T0定时器时钟设置
     mTimer_x_ModInit(0, 1);      //T0 定时器模式设置
     mTimer_x_SetData(0, 0x5555); //T0定时器赋值
@@ -43,7 +35,6 @@ main()
     UEP1_T_LEN = 0;  //预使用发送长度一定要清空
     UEP2_T_LEN = 0;  //预使用发送长度一定要清空
     FLAG = 0;
-    // Ready = 0;
 
     readDataFlash();
 
