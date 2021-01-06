@@ -15,7 +15,6 @@
 
 // #include "CompositeKM.H"
 #include <string.h>
-#include <stdio.h>
 
 //#define Fullspeed
 #define THIS_ENDP0_SIZE DEFAULT_ENDP0_SIZE

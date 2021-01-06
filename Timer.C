@@ -11,7 +11,6 @@
 #include "Debug.H"
 #include "Timer.H" 
 #include "scanKey.h"
-#include "stdio.h"
 
 #pragma  NOAREGS
 

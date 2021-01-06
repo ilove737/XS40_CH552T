@@ -7,7 +7,6 @@
 #include "CompositeKM.H"
 
 #include <string.h>
-#include <stdio.h>
 
 UINT8X len = 0;
 

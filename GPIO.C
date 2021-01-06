@@ -10,7 +10,6 @@
 #include "CH552.H"                                                          
 #include "Debug.H"
 #include "GPIO.H"
-#include "stdio.h"
 
 #pragma  NOAREGS
 
