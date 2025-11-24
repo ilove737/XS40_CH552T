@@ -6,6 +6,7 @@
         "GPIO.C": "cpp",
         "UART1.C": "cpp",
         "DataFlash.C": "cpp",
-        "UART1__.C": "cpp"
+        "UART1__.C": "cpp",
+        "*.bk": "cpp"
     }
 }

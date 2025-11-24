@@ -11,7 +11,7 @@
 // #include "UART1.H"
 #include "Timer.H"
 #include "Debug.H"
-#include "scanKey.H"
+#include "scanKey.h"
 
 // #include "CompositeKM.H"
 #include <string.h>
@@ -19,18 +19,18 @@
 //#define Fullspeed
 #define THIS_ENDP0_SIZE DEFAULT_ENDP0_SIZE
 
-UINT8X Ep0Buffer[8 > (THIS_ENDP0_SIZE + 2) ? 8 : (THIS_ENDP0_SIZE + 2)] _at_ 0x0000;   //端点0 OUT&IN缓冲区，必须是偶地址
-UINT8X Ep1Buffer[64 > (MAX_PACKET_SIZE + 2) ? 64 : (MAX_PACKET_SIZE + 2)] _at_ 0x000a; //端点1 IN缓冲区,必须是偶地址
-UINT8X Ep2Buffer[64 > (MAX_PACKET_SIZE + 2) ? 64 : (MAX_PACKET_SIZE + 2)] _at_ 0x0050; //端点2 IN缓冲区,必须是偶地址
+UINT8X __at (0x0000) Ep0Buffer[8 > (THIS_ENDP0_SIZE + 2) ? 8 : (THIS_ENDP0_SIZE + 2)];   //端点0 OUT&IN缓冲区，必须是偶地址
+UINT8X __at (0x000a) Ep1Buffer[64 > (MAX_PACKET_SIZE + 2) ? 64 : (MAX_PACKET_SIZE + 2)]; //端点1 IN缓冲区,必须是偶地址
+UINT8X __at (0x0050) Ep2Buffer[64 > (MAX_PACKET_SIZE + 2) ? 64 : (MAX_PACKET_SIZE + 2)]; //端点2 IN缓冲区,必须是偶地址
 UINT8 SetupReq, SetupLen, Ready, Count, FLAG, UsbConfig;
 PUINT8 pDescr;             //USB配置标志
 USB_SETUP_REQ SetupReqBuf; //暂存Setup包
 // sbit Ep2InKey = P1 ^ 5;
-sbit CapsLED = P3 ^ 5;
+__sbit __at (0xB5) CapsLED;
 
 #define UsbSetupBuf ((PUSB_SETUP_REQ)Ep0Buffer)
 #define DEBUG 0
-#pragma NOAREGS
+// #pragma NOAREGS  // SDCC may not support this pragma
 /*设备描述符*/
 UINT8C DevDesc[18] = {0x12, 0x01, 0x10, 0x01, 0x00, 0x00, 0x00, THIS_ENDP0_SIZE,
                       0x3d, 0x41, 0x07, 0x21, 0x00, 0x00, 0x00, 0x00,
@@ -100,13 +100,13 @@ void USBDeviceInit()
     USB_CTRL &= ~bUC_LOW_SPEED;
 #endif
 
-    UEP2_DMA = Ep2Buffer;                                   //端点2数据传输地址
+    UEP2_DMA = (UINT16)Ep2Buffer;                           //端点2数据传输地址
     UEP2_3_MOD = UEP2_3_MOD & ~bUEP2_BUF_MOD | bUEP2_TX_EN; //端点2发送使能 64字节缓冲区
     UEP2_CTRL = bUEP_AUTO_TOG | UEP_T_RES_NAK;              //端点2自动翻转同步标志位，IN事务返回NAK
-    UEP0_DMA = Ep0Buffer;                                   //端点0数据传输地址
+    UEP0_DMA = (UINT16)Ep0Buffer;                           //端点0数据传输地址
     UEP4_1_MOD &= ~(bUEP4_RX_EN | bUEP4_TX_EN);             //端点0单64字节收发缓冲区
     UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;              //OUT事务返回ACK，IN事务返回NAK
-    UEP1_DMA = Ep1Buffer;                                   //端点1数据传输地址
+    UEP1_DMA = (UINT16)Ep1Buffer;                           //端点1数据传输地址
     UEP4_1_MOD = UEP4_1_MOD & ~bUEP1_BUF_MOD | bUEP1_TX_EN; //端点1发送使能 64字节缓冲区
     UEP1_CTRL = bUEP_AUTO_TOG | UEP_T_RES_NAK;              //端点1自动翻转同步标志位，IN事务返回NAK
 
@@ -153,7 +153,7 @@ void Enp1IntInSend(UINT8 *HIDFrame)
 * Function Name  : DeviceInterrupt()
 * Description    : CH559USB中断处理函数
 *******************************************************************************/
-void DeviceInterrupt(void) interrupt INT_NO_USB using 1 //USB中断服务程序,使用寄存器组1
+void DeviceInterrupt(void) __interrupt(INT_NO_USB) __using(1) //USB中断服务程序,使用寄存器组1
 {
     UINT8 len = 0;
     // UART1SendByte(0xaa);

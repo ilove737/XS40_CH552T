@@ -30,11 +30,11 @@ UINT8 HIDFrames0 = 0;
 // sbit col7 = P1 ^ 6;
 // sbit col8 = P1 ^ 7;
 
-sbit row1 = P3 ^ 0;
-sbit row2 = P3 ^ 1;
-sbit row3 = P3 ^ 2;
-sbit row4 = P3 ^ 3;
-sbit row5 = P3 ^ 4;
+__sbit __at (0xB0) row1;
+__sbit __at (0xB1) row2;
+__sbit __at (0xB2) row3;
+__sbit __at (0xB3) row4;
+__sbit __at (0xB4) row5;
 
 void initGPIO(void)
 {

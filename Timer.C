@@ -12,7 +12,7 @@
 #include "Timer.H" 
 #include "scanKey.h"
 
-#pragma  NOAREGS
+// #pragma  NOAREGS  // SDCC may not support this pragma
 
 /*******************************************************************************
 * Function Name  : mTimer_x_ModInit(UINT8 x ,UINT8 mode)
@@ -101,7 +101,7 @@ void mTimer_x_SetData(UINT8 x,UINT16 dat)
 * Function Name  : mTimer0Interrupt()
 * Description    : CH554定时计数器0定时计数器中断处理函数
 *******************************************************************************/
-void mTimer0Interrupt( void ) interrupt INT_NO_TMR0 using 1                //timer0中断服务程序,使用寄存器组1
+void mTimer0Interrupt( void ) __interrupt(INT_NO_TMR0) __using(1)                //timer0中断服务程序,使用寄存器组1
 {                                                                           //方式3时，TH0使用Timer1的中断资源
     // SCK = ~SCK;
 

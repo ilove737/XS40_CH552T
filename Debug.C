@@ -22,7 +22,7 @@
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void CfgFsys()
+void CfgFsys(void)
 {
 #if OSC_EN_XT
     SAFE_MOD = 0x55;

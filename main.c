@@ -4,7 +4,7 @@
 #include "scanKey.h"
 #include "CompositeKM.H"
 
-main()
+void main()
 {
     CfgFsys();   //CH559时钟选择配置
     mDelaymS(5); //修改主频等待内部晶振稳定,必加

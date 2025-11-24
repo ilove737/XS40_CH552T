@@ -4,7 +4,7 @@
 * Author             : WCH
 * Version            : V1.0
 * Date               : 2018/07/25
-* Description        : CH554 ´®¿Ú1ÊÕ·¢  
+* Description        : CH554 ï¿½ï¿½ï¿½ï¿½1ï¿½Õ·ï¿½  
 *******************************************************************************/
 
 #include "CH552.H"                                                          
@@ -16,51 +16,51 @@
 
 /*******************************************************************************
 * Function Name  : UART1Setup()
-* Description    : CH554´®¿Ú1³õÊ¼»¯
+* Description    : CH554ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½Ê¼ï¿½ï¿½
 * Input          : None
 * Output         : None
 * Return         : None
 *******************************************************************************/
 void UART1Init( )
 {
-	U1SM0 = 0;                                                                   //UART1Ñ¡Ôñ8Î»Êý¾ÝÎ»
-	U1SMOD = 1;                                                                  //¿ìËÙÄ£Ê½
-	U1REN = 1;                                                                   //Ê¹ÄÜ½ÓÊÕ
+	U1SM0 = 0;                                                                   //UART1Ñ¡ï¿½ï¿½8Î»ï¿½ï¿½ï¿½ï¿½Î»
+	U1SMOD = 1;                                                                  //ï¿½ï¿½ï¿½ï¿½Ä£Ê½
+	U1REN = 1;                                                                   //Ê¹ï¿½Ü½ï¿½ï¿½ï¿½
 	SBAUD1 = 0 - FREQ_SYS/16/UART1_BUAD;
 	U1TI = 0;
 #if UART1_PINMAP	
-    PIN_FUNC |= bUART1_PIN_X;                                                   //Ó³Éäµ½P34(R)¡¢P32(T)
+    PIN_FUNC |= bUART1_PIN_X;                                                   //Ó³ï¿½äµ½P34(R)ï¿½ï¿½P32(T)
 #endif
 
-#if UART1_INTERRUPT                                                            //¿ªÆôÖÐ¶ÏÊ¹ÄÜ
+#if UART1_INTERRUPT                                                            //ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½Ê¹ï¿½ï¿½
 	IE_UART1 = 1;	
 	EA = 1;
 #endif	
 }
 /*******************************************************************************
 * Function Name  : CH554UART1RcvByte()
-* Description    : CH554UART1½ÓÊÕÒ»¸ö×Ö½Ú
+* Description    : CH554UART1ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö½ï¿½
 * Input          : None
 * Output         : None
 * Return         : SBUF
 *******************************************************************************/
 UINT8 UART1RcvByte( )
 {
-    while(U1RI == 0);                                                           //²éÑ¯½ÓÊÕ£¬ÖÐ¶Ï·½Ê½¿É²»ÓÃ
+    while(U1RI == 0);                                                           //ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½Õ£ï¿½ï¿½Ð¶Ï·ï¿½Ê½ï¿½É²ï¿½ï¿½ï¿½
     U1RI = 0;
     return SBUF1;
 }
 
 /*******************************************************************************
 * Function Name  : CH554UART1SendByte(UINT8 SendDat)
-* Description    : CH554UART1·¢ËÍÒ»¸ö×Ö½Ú
-* Input          : UINT8 SendDat£»Òª·¢ËÍµÄÊý¾Ý
+* Description    : CH554UART1ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö½ï¿½
+* Input          : UINT8 SendDatï¿½ï¿½Òªï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½
 * Output         : None
 * Return         : None
 *******************************************************************************/
 void UART1SendByte(UINT8 SendDat)
 {
-	SBUF1 = SendDat;                                                             //²éÑ¯·¢ËÍ£¬ÖÐ¶Ï·½Ê½¿É²»ÓÃÏÂÃæ2ÌõÓï¾ä,µ«·¢ËÍÇ°ÐèTI=0
+	SBUF1 = SendDat;                                                             //ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½Í£ï¿½ï¿½Ð¶Ï·ï¿½Ê½ï¿½É²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½TI=0
 	while(U1TI ==0);
 	U1TI = 0;
 }
@@ -69,9 +69,9 @@ void UART1SendByte(UINT8 SendDat)
 #if UART1_INTERRUPT
 /*******************************************************************************
 * Function Name  : UART1Interrupt(void)
-* Description    : UART1 ÖÐ¶Ï·þÎñ³ÌÐò
+* Description    : UART1 ï¿½Ð¶Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 *******************************************************************************/
-void UART1Interrupt( void ) interrupt INT_NO_UART1 using 1                       //´®¿Ú1ÖÐ¶Ï·þÎñ³ÌÐò,Ê¹ÓÃ¼Ä´æÆ÷×é1
+void UART1Interrupt( void ) interrupt INT_NO_UART1 using 1                       //ï¿½ï¿½ï¿½ï¿½1ï¿½Ð¶Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,Ê¹ï¿½Ã¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½1
 {
 	UINT8 dat;
 	if(U1RI)

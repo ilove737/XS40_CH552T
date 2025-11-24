@@ -11,7 +11,7 @@
 #include "Debug.H"
 #include "GPIO.H"
 
-#pragma  NOAREGS
+// #pragma  NOAREGS  // SDCC may not support this pragma
 
 /*******************************************************************************
 * Function Name  : Port1Cfg()
