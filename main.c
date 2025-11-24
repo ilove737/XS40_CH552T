@@ -1,20 +1,21 @@
 #include "CH552.H"
 #include "Timer.H"
+#include "UART1.H"
 #include "Debug.H"
 #include "scanKey.h"
 #include "CompositeKM.H"
 
-void main()
+void main(void)
 {
     CfgFsys();   //CH559时钟选择配置
     mDelaymS(5); //修改主频等待内部晶振稳定,必加
-    // mInitSTDIO(); //串口0初始化
+    mInitSTDIO(); //串口0初始化
 
     initGPIO();
 
     // readDataFlash();
 
-    // UART1Init();
+    UART1Init();
 
     mTimer0Clk12DivFsys();       //T0定时器时钟设置
     mTimer_x_ModInit(0, 1);      //T0 定时器模式设置

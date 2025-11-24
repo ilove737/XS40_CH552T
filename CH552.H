@@ -233,7 +233,28 @@ __sbit __at (0x8A) IT1;
 __sbit __at (0x89) IE0;
 __sbit __at (0x88) IT0;
 
-__sfr __at (0x89) TMOD;
+__sfr __at (0x89) TMOD;             // timer 0/1 mode
+#define bT1_GATE          0x80      // gate control of timer1: 0=timer1 run enable while TR1=1, 1=timer1 run enable while P3.3 (INT1) pin is high and TR1=1
+#define bT1_CT            0x40      // counter or timer mode selection for timer1: 0=timer, use internal clock, 1=counter, use P3.5 (T1) pin falling edge as clock
+#define bT1_M1            0x20      // timer1 mode high bit
+#define bT1_M0            0x10      // timer1 mode low bit
+#define MASK_T1_MOD       0x30      // bit mask of timer1 mode
+// bT1_M1 & bT1_M0: timer1 mode
+//   00: mode 0, 13-bit timer or counter by cascaded TH1 and lower 5 bits of TL1, the upper 3 bits of TL1 are ignored
+//   01: mode 1, 16-bit timer or counter by cascaded TH1 and TL1
+//   10: mode 2, TL1 operates as 8-bit timer or counter, and TH1 provide initial value for TL1 auto-reload
+//   11: mode 3, stop timer1
+#define bT0_GATE          0x08      // gate control of timer0: 0=timer0 run enable while TR0=1, 1=timer0 run enable while P3.2 (INT0) pin is high and TR0=1
+#define bT0_CT            0x04      // counter or timer mode selection for timer0: 0=timer, use internal clock, 1=counter, use P3.4 (T0) pin falling edge as clock
+#define bT0_M1            0x02      // timer0 mode high bit
+#define bT0_M0            0x01      // timer0 mode low bit
+#define MASK_T0_MOD       0x03      // bit mask of timer0 mode
+// bT0_M1 & bT0_M0: timer0 mode
+//   00: mode 0, 13-bit timer or counter by cascaded TH0 and lower 5 bits of TL0, the upper 3 bits of TL0 are ignored
+//   01: mode 1, 16-bit timer or counter by cascaded TH0 and TL0
+//   10: mode 2, TL0 operates as 8-bit timer or counter, and TH0 provide initial value for TL0 auto-reload
+//   11: mode 3, TL0 is 8-bit timer or counter controlled by standard timer0 bits, TH0 is 8-bit timer using TF1 and controlled by TR1, timer1 run enable if it is not mode 3
+
 __sfr __at (0x8A) TL0;
 __sfr __at (0x8B) TL1;
 __sfr __at (0x8C) TH0;
@@ -249,8 +270,20 @@ __sbit __at (0x9B) TB8;
 __sbit __at (0x9A) RB8;
 __sbit __at (0x99) TI;
 __sbit __at (0x98) RI;
-
 __sfr __at (0x99) SBUF;
+
+// UART1 Registers
+__sfr __at (0xC0) SCON1;
+__sbit __at (0xCF) U1SM0;
+__sbit __at (0xCD) U1SMOD;
+__sbit __at (0xCC) U1REN;
+__sbit __at (0xCB) U1TB8;
+__sbit __at (0xCA) U1RB8;
+__sbit __at (0xC9) U1TI;
+__sbit __at (0xC8) U1RI;
+__sfr __at (0xC1) SBUF1;
+__sfr __at (0xC2) SBAUD1;
+
 
 // Timer2/Capture2 Registers
 __sfr __at (0xC8) T2CON;
@@ -412,8 +445,8 @@ __sfr __at (0xE3) USB_DEV_AD;
 #define bUDA_GP_BIT         0x80
 #define MASK_USB_ADDR     0x7F      // bit mask for USB device address
 
-__sfr16 __at (0xE4) UEP2_DMA;
-__sfr16 __at (0xE6) UEP3_DMA;
+__sfr __at (0xE4) UEP2_DMA;
+__sfr __at (0xE6) UEP3_DMA;
 
 __sfr __at (0xEA) UEP4_1_MOD;       // endpoint 4/1 mode
 #define bUEP1_RX_EN       0x80      // enable USB endpoint 1 receiving (OUT)
@@ -445,8 +478,8 @@ __sfr __at (0xEB) UEP2_3_MOD;
 #define bUEP2_TX_EN       0x04      // enable USB endpoint 2 transmittal (IN)
 #define bUEP2_BUF_MOD     0x01      // buffer mode of USB endpoint 2
 
-__sfr16 __at (0xEC) UEP0_DMA;
-__sfr16 __at (0xEE) UEP1_DMA;
+__sfr __at (0xEC) UEP0_DMA;
+__sfr __at (0xEE) UEP1_DMA;
 
 /*----- XDATA: xRAM ------------------------------------------*/
 

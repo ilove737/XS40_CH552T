@@ -14,13 +14,10 @@ PACKIHX = packihx
 MCU = CH552
 
 # Compiler flags
-CFLAGS = -mmcs51 --model-small --opt-code-size
-CFLAGS += --code-loc 0x0000 --code-size 0x8000
-CFLAGS += --xram-loc 0x0100 --xram-size 0x0300
+CFLAGS = -mmcs51
+CFLAGS += --xram-loc 0x0000 --xram-size 0x0400 --code-size 0x3800
 CFLAGS += --iram-size 256
-CFLAGS += --no-xinit-opt --xram-movc
-CFLAGS += -D__SDCC__ -DINT_NO_USB=8 -DDEFAULT_ENDP0_SIZE=8 -DMAX_PACKET_SIZE=64 -DDE_PRINTF=0
-# CFLAGS += -D_at_="__at"
+# CFLAGS += --no-xinit-opt --xram-movc
 
 # Source files
 SOURCES_C := main.c \
@@ -28,6 +25,7 @@ SOURCES_C := main.c \
              Debug.C \
              Timer.C \
              GPIO.C \
+			 UART1.C \
              DataFlash.C \
              scanKey.c
 

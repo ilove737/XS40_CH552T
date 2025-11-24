@@ -23,7 +23,7 @@ UINT8X __at (0x0000) Ep0Buffer[8 > (THIS_ENDP0_SIZE + 2) ? 8 : (THIS_ENDP0_SIZE 
 UINT8X __at (0x000a) Ep1Buffer[64 > (MAX_PACKET_SIZE + 2) ? 64 : (MAX_PACKET_SIZE + 2)]; //端点1 IN缓冲区,必须是偶地址
 UINT8X __at (0x0050) Ep2Buffer[64 > (MAX_PACKET_SIZE + 2) ? 64 : (MAX_PACKET_SIZE + 2)]; //端点2 IN缓冲区,必须是偶地址
 UINT8 SetupReq, SetupLen, Ready, Count, FLAG, UsbConfig;
-PUINT8 pDescr;             //USB配置标志
+PUINT8C pDescr;             //USB配置标志
 USB_SETUP_REQ SetupReqBuf; //暂存Setup包
 // sbit Ep2InKey = P1 ^ 5;
 __sbit __at (0xB5) CapsLED;
@@ -87,7 +87,7 @@ extern UINT8 HIDKey[8] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void USBDeviceInit()
+void USBDeviceInit(void)
 {
     IE_USB = 0;
     USB_CTRL = 0x00;        // 先设定USB设备模式

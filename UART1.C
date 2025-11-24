@@ -4,7 +4,7 @@
 * Author             : WCH
 * Version            : V1.0
 * Date               : 2018/07/25
-* Description        : CH554 ����1�շ�  
+* Description        : CH554 串口1收发  
 *******************************************************************************/
 
 #include "CH552.H"                                                          
@@ -12,55 +12,55 @@
 #include "UART1.H"
 #include "stdio.h"
 
-#pragma  NOAREGS
+// #pragma  NOAREGS
 
 /*******************************************************************************
 * Function Name  : UART1Setup()
-* Description    : CH554����1��ʼ��
+* Description    : CH554串口1初始化
 * Input          : None
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void UART1Init( )
+void UART1Init(void)
 {
-	U1SM0 = 0;                                                                   //UART1ѡ��8λ����λ
-	U1SMOD = 1;                                                                  //����ģʽ
-	U1REN = 1;                                                                   //ʹ�ܽ���
-	SBAUD1 = 0 - FREQ_SYS/16/UART1_BUAD;
+	U1SM0 = 0;                                                                   //UART1选择8位数据位
+	U1SMOD = 1;                                                                  //快速模式
+	U1REN = 1;                                                                   //使能接收
+	SBAUD1 = (UINT8)(256 - FREQ_SYS/16/UART1_BUAD);
 	U1TI = 0;
 #if UART1_PINMAP	
-    PIN_FUNC |= bUART1_PIN_X;                                                   //ӳ�䵽P34(R)��P32(T)
+    PIN_FUNC |= bUART1_PIN_X;                                                   //映射到P34(R)、P32(T)
 #endif
 
-#if UART1_INTERRUPT                                                            //�����ж�ʹ��
+#if UART1_INTERRUPT                                                            //开启中断使能
 	IE_UART1 = 1;	
 	EA = 1;
 #endif	
 }
 /*******************************************************************************
 * Function Name  : CH554UART1RcvByte()
-* Description    : CH554UART1����һ���ֽ�
+* Description    : CH554UART1接收一个字节
 * Input          : None
 * Output         : None
 * Return         : SBUF
 *******************************************************************************/
-UINT8 UART1RcvByte( )
+UINT8 UART1RcvByte(void)
 {
-    while(U1RI == 0);                                                           //��ѯ���գ��жϷ�ʽ�ɲ���
+    while(U1RI == 0);                                                           //查询接收，中断方式可不用
     U1RI = 0;
     return SBUF1;
 }
 
 /*******************************************************************************
 * Function Name  : CH554UART1SendByte(UINT8 SendDat)
-* Description    : CH554UART1����һ���ֽ�
-* Input          : UINT8 SendDat��Ҫ���͵�����
+* Description    : CH554UART1发送一个字节
+* Input          : UINT8 SendDat；要发送的数据
 * Output         : None
 * Return         : None
 *******************************************************************************/
 void UART1SendByte(UINT8 SendDat)
 {
-	SBUF1 = SendDat;                                                             //��ѯ���ͣ��жϷ�ʽ�ɲ�������2�����,������ǰ��TI=0
+	SBUF1 = SendDat;                                                             //查询发送，中断方式可不用下面2条语句,但发送前需TI=0
 	while(U1TI ==0);
 	U1TI = 0;
 }
@@ -69,9 +69,9 @@ void UART1SendByte(UINT8 SendDat)
 #if UART1_INTERRUPT
 /*******************************************************************************
 * Function Name  : UART1Interrupt(void)
-* Description    : UART1 �жϷ������
+* Description    : UART1 中断服务程序
 *******************************************************************************/
-void UART1Interrupt( void ) interrupt INT_NO_UART1 using 1                       //����1�жϷ������,ʹ�üĴ�����1
+void UART1Interrupt( void ) interrupt INT_NO_UART1 using 1                       //串口1中断服务程序,使用寄存器组1
 {
 	UINT8 dat;
 	if(U1RI)

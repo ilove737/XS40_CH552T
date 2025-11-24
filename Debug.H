@@ -34,7 +34,7 @@ void	CfgFsys(void);                        //CH554时钟选择和配置
 void	mDelayuS(UINT16 n);              // 以uS为单位延时
 void	mDelaymS(UINT16 n);              // 以mS为单位延时
 //void    CH554UART0Alter();                 //CH554串口0引脚映射到P1.2/P1.3
-//void    mInitSTDIO( );                      //T1作为波特率发生器
+void    mInitSTDIO(void);                      //T1作为波特率发生器
 //UINT8   CH554UART0RcvByte( );              //CH554 UART0查询方式接收一个字节
 //void    CH554UART0SendByte(UINT8 SendDat); //CH554UART0发送一个字节
 
