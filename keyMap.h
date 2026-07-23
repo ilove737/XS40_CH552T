@@ -9,8 +9,12 @@
 // #define KEY_MOD_LALT 0x04
 // #define KEY_MOD_LMETA 0x08
 
-// 这个就是 左 键盘默认布局
-#if 0
+// 默认左手布局
+#ifndef KEYBOARD_LAYOUT
+#define KEYBOARD_LAYOUT 0
+#endif
+
+#if KEYBOARD_LAYOUT == 0
 
 UINT8X mainKeyMap[40][2]={
     {0,KEY_ESC}, {0,KEY_1}, {0,KEY_2}, {0,KEY_3}, {0,KEY_4}, {0,KEY_5}, {0,KEY_GRAVE}, {2,KEY_8}, 
@@ -29,7 +33,7 @@ UINT8X Fn0_keyMap[40][2]={
 };
 
 #else
-// 这个就是 右 键盘默认布局
+// 右手布局
 
 UINT8X mainKeyMap[40][2]={
     {2,KEY_MINUS}, {2,KEY_EQUAL}, {0,KEY_6}, {0,KEY_7}, {0,KEY_8}, {0,KEY_9}, {0,KEY_0}, {0,KEY_BACKSPACE}, 

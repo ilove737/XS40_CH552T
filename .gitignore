@@ -52,3 +52,5 @@ Mkfile.old
 dkms.conf
 
 out/
+out_left/
+out_right/
