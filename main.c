@@ -37,8 +37,6 @@ void main(void)
     UEP2_T_LEN = 0;  //预使用发送长度一定要清空
     FLAG = 0;
 
-    readDataFlash();
-
     while (1)
     {
         // if (Ready)

@@ -2,13 +2,10 @@
 #include "scanKey.h"
 #include "Debug.H"
 #include "GPIO.H"
-#include "DataFlash.H"
 #include "keyMap.h"
 #include "CompositeKM.H"
 
 #include <string.h>
-
-UINT8X len = 0;
 
 UINT8 beforeAllKey[5]; // 40个位，保存上一次所有40个建的状态
 UINT8 allKey[5];	   // 40个位，保存当前所有40个建的状态
@@ -247,35 +244,5 @@ void scanKeyChange(void)
 	{
 		makeHIDFrames();
 		memcpy(beforeAllKey, allKey, 5);
-	}
-}
-
-void readDataFlash(void)
-{
-	UINT8X i, j;
-
-	// for (i = 0; i < 40; i++)
-	// {
-	//     for (j = 0; j < 2; j++)
-	//     {
-	//         len = WriteDataFlash(i*2+j, &mainKeyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[i][j]
-	//         if (len != 1)
-	//         {
-	//             // printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
-	//         }
-	//     }
-	// }
-
-	for (i = 0; i < 40; i++)
-	{
-		for (j = 0; j < 2; j++)
-		{
-			// len = WriteDataFlash(i*2+j, &keyMap[i][j], 1); //向DataFlash区域偏移地址i写入i     &keyMap[i][j]
-			len = ReadDataFlash(i * 2 + j, 1, &mainKeyMap[i][j]);
-			if (len != 1)
-			{
-				// printf("Write Err 次 = %02x,m = %02x\n",j,(UINT16)m);                //写出错打印
-			}
-		}
 	}
 }

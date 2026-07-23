@@ -25,7 +25,6 @@
 void initGPIO(void);
 void makeHIDFrames(void);
 void scanKeyChange(void);
-void readDataFlash(void);
 // void FnKey(int i, int j);
 
 /**
