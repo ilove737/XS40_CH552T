@@ -29,6 +29,7 @@ SOURCES_C := main.c \
              GPIO.C \
              UART1.C \
              DataFlash.C \
+             FlashWrite.c \
              scanKey.c
 
 # 目标文件列表（不含目录路径）

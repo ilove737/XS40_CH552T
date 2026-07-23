@@ -15,6 +15,7 @@
 
 // #include "CompositeKM.H"
 #include <string.h>
+#include "FlashWrite.h"
 
 //#define Fullspeed
 #define THIS_ENDP0_SIZE DEFAULT_ENDP0_SIZE
@@ -25,6 +26,12 @@ UINT8X __at (0x0050) Ep2Buffer[64 > (MAX_PACKET_SIZE + 2) ? 64 : (MAX_PACKET_SIZ
 UINT8 SetupReq, SetupLen, Ready, Count, FLAG, UsbConfig;
 PUINT8C pDescr;             //USB配置标志
 USB_SETUP_REQ SetupReqBuf; //暂存Setup包
+
+// 厂商自定义请求：接收键位映射
+#define VENDOR_SET_KEYMAP  0x91
+UINT8X __at (0x0090) KeymapRxBuf[KEYMAP_WORD_CNT * 4]; // 160字节接收缓冲
+volatile UINT8 keymapRxPending;  // 1=正在接收键位数据
+volatile UINT8 keymapRxOffset;   // 已接收字节数
 // sbit Ep2InKey = P1 ^ 5;
 __sbit __at (0xB5) CapsLED;
 
@@ -198,6 +205,18 @@ void DeviceInterrupt(void) __interrupt(INT_NO_USB) __using(1) //USB中断服务�
                     case 0x0A: //SetIdle
                         break;
                     case 0x0B: //SetProtocol
+                        break;
+                    case VENDOR_SET_KEYMAP: // 厂商：设置键位映射
+                        if (UsbSetupBuf->wLengthL == KEYMAP_WORD_CNT * 4)
+                        {
+                            keymapRxPending = 1;
+                            keymapRxOffset = 0;
+                            len = 0; // 成功，准备接收数据阶段
+                        }
+                        else
+                        {
+                            len = 0xFF; // 长度不对
+                        }
                         break;
                     default:
                         len = 0xFF; /*命令不支持*/
@@ -425,6 +444,10 @@ void DeviceInterrupt(void) __interrupt(INT_NO_USB) __using(1) //USB中断服务�
                 UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
                 break;
             default:
+                if (SetupReq == VENDOR_SET_KEYMAP)
+                {
+                    keymapRxPending = 0; // 状态阶段完成，清理
+                }
                 UEP0_T_LEN = 0; //状态阶段完成中断或者是强制上传0长度数据包结束控制传输
                 UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
                 break;
@@ -450,6 +473,20 @@ void DeviceInterrupt(void) __interrupt(INT_NO_USB) __using(1) //USB中断服务�
                 if (Ep0Buffer[0] == 3)
                 {
                     CapsLED = 1;
+                }
+            }
+            else if (SetupReq == VENDOR_SET_KEYMAP)
+            {
+                UINT8 i;
+                for (i = 0; i < len; i++)
+                {
+                    KeymapRxBuf[keymapRxOffset++] = Ep0Buffer[i];
+                }
+                if (keymapRxOffset >= KEYMAP_WORD_CNT * 4)
+                {
+                    // 所有数据接收完毕，写入 Flash
+                    writeKeymapToFlash(KeymapRxBuf);
+                    keymapRxPending = 0;
                 }
             }
             UEP0_CTRL ^= bUEP_R_TOG; //同步标志位翻转

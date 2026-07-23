@@ -16,7 +16,7 @@
 
 #if KEYBOARD_LAYOUT == 0
 
-UINT8C __at(0x3800) mainKeyMap[40][2] = {
+UINT8C __at(0x3600) mainKeyMap[40][2] = {
     {0,KEY_ESC}, {0,KEY_1}, {0,KEY_2}, {0,KEY_3}, {0,KEY_4}, {0,KEY_5}, {0,KEY_GRAVE}, {2,KEY_8}, 
     {0,KEY_TAB}, {0,KEY_Q}, {0,KEY_W}, {0,KEY_E}, {0,KEY_R}, {0,KEY_T}, {0,KEY_LEFTBRACE}, {0,KEY_RIGHTBRACE}, 
     {0,KEY_CAPSLOCK}, {0,KEY_A}, {0,KEY_S}, {0,KEY_D}, {0,KEY_F}, {0,KEY_G}, {2,KEY_9}, {2,KEY_0}, 
@@ -24,7 +24,7 @@ UINT8C __at(0x3800) mainKeyMap[40][2] = {
     {KEY_FnX,0}, {8,0}, {4,0}, {KEY_FnX,0}, {0,KEY_SPACE}, {1,0}, {1,KEY_C}, {1,KEY_V},
 };
 
-UINT8C __at(0x3850) Fn0_keyMap[40][2] = {
+UINT8C __at(0x3650) Fn0_keyMap[40][2] = {
     {0,KEY_ESC}, {0,KEY_F1}, {0,KEY_F2}, {0,KEY_F3}, {0,KEY_F4}, {0,KEY_F5}, {0,KEY_GRAVE}, {2,KEY_8}, 
     {0,KEY_TAB}, {0,KEY_F11}, {0,KEY_F12}, {0,KEY_E}, {0,KEY_R}, {0,KEY_T}, {0,KEY_LEFTBRACE}, {0,KEY_RIGHTBRACE}, 
     {0,KEY_CAPSLOCK}, {0,KEY_A}, {0,KEY_S}, {0,KEY_D}, {0,KEY_F}, {0,KEY_G}, {2,KEY_9}, {2,KEY_0}, 
@@ -35,7 +35,7 @@ UINT8C __at(0x3850) Fn0_keyMap[40][2] = {
 #else
 // 右手布局
 
-UINT8C __at(0x3800) mainKeyMap[40][2] = {
+UINT8C __at(0x3600) mainKeyMap[40][2] = {
     {2,KEY_MINUS}, {2,KEY_EQUAL}, {0,KEY_6}, {0,KEY_7}, {0,KEY_8}, {0,KEY_9}, {0,KEY_0}, {0,KEY_BACKSPACE}, 
     {0,KEY_EQUAL}, {0,KEY_BACKSLASH}, {0,KEY_Y}, {0,KEY_U}, {0,KEY_I}, {0,KEY_O}, {0,KEY_P}, {0,KEY_DELETE}, 
     {0,KEY_SEMICOLON}, {0,KEY_COMMA}, {0,KEY_H}, {0,KEY_J}, {0,KEY_K}, {0,KEY_L}, {0,KEY_MINUS}, {0,KEY_ENTER}, 
@@ -43,7 +43,7 @@ UINT8C __at(0x3800) mainKeyMap[40][2] = {
     {2,KEY_5}, {0,KEY_SLASH}, {0,KEY_SPACE}, {0,KEY_SPACE}, {KEY_FnX,0}, {0,KEY_LEFT}, {0,KEY_DOWN}, {0,KEY_RIGHT},
 };
 
-UINT8C __at(0x3850) Fn0_keyMap[40][2] = {
+UINT8C __at(0x3650) Fn0_keyMap[40][2] = {
     {2,KEY_MINUS}, {2,KEY_EQUAL}, {0,KEY_F6}, {0,KEY_F7}, {0,KEY_F8}, {0,KEY_F9}, {0,KEY_F10}, {0,KEY_BACKSPACE}, 
     {0,KEY_EQUAL}, {0,KEY_BACKSLASH}, {0,KEY_Y}, {0,KEY_U}, {0,KEY_I}, {0,KEY_O}, {0,KEY_P}, {0,KEY_DELETE}, 
     {0,KEY_SEMICOLON}, {0,KEY_COMMA}, {0,KEY_H}, {2,KEY_APOSTROPHE}, {2,KEY_SEMICOLON}, {0,KEY_L}, {0,KEY_MINUS}, {0,KEY_ENTER}, 
