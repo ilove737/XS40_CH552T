@@ -51,9 +51,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-out/
-out_left/
-out_right/
+# 构建产物目录（build/left、build/right）
+build/
 
 # Python
 __pycache__/

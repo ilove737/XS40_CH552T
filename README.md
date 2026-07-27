@@ -36,7 +36,7 @@
    - 最终固件：`out/XS40_CH552T.hex`
 
 ## 项目结构
-- `main.c` - 主程序入口
+- `src/main.c` - 主程序入口
 - `CompositeKM.C` - USB键盘鼠标复合设备实现
 - `CH552_SDCC.H` - SDCC兼容的CH552头文件
 - `Debug.C/Debug.H` - 调试和延时函数

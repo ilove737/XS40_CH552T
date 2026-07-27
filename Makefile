@@ -2,9 +2,12 @@
 # 使用 SDCC (Small Device C Compiler) 在 Linux 下编译
 # 生成两个变体：左手布局和右手布局
 
+# 默认目标为 all（因下方 $(eval) 会先于 all 定义 left/right 目标）
+.DEFAULT_GOAL := all
+
 # 输出目录
-OUTDIR_LEFT  = out_left
-OUTDIR_RIGHT = out_right
+OUTDIR_LEFT  = build/left
+OUTDIR_RIGHT = build/right
 
 # 编译器设置
 CC      = sdcc
@@ -21,7 +24,7 @@ CFLAGS_BASE  = -mmcs51
 CFLAGS_BASE += --xram-loc 0x0000 --xram-size 0x0400 --code-size 0x3600
 CFLAGS_BASE += --iram-size 256
 
-# 源文件
+# 源文件（位于 src/ 目录）
 SOURCES_C := main.c \
              CompositeKM.C \
              Debug.C \
@@ -43,16 +46,16 @@ OBJECTS_C := $(OBJECTS_C:.C=.rel)
 # ============================================================================
 define BUILD_VARIANT
 
-OUTDIR_$(1)  = out_$(1)
+OUTDIR_$(1)  = build/$(1)
 CFLAGS_$(1)  = $$(CFLAGS_BASE) -DKEYBOARD_LAYOUT=$(2)
 OBJECTS_$(1) = $$(addprefix $$(OUTDIR_$(1))/,$(OBJECTS_C))
 
-# 编译 .c 文件
-$$(OUTDIR_$(1))/%.rel: %.c | $$(OUTDIR_$(1))
+# 编译 .c 文件（源位于 src/）
+$$(OUTDIR_$(1))/%.rel: src/%.c | $$(OUTDIR_$(1))
 	$$(CC) $$(CFLAGS_$(1)) -c $$< -o $$@
 
-# 编译 .C 文件（大写扩展名）
-$$(OUTDIR_$(1))/%.rel: %.C | $$(OUTDIR_$(1))
+# 编译 .C 文件（大写扩展名，源位于 src/）
+$$(OUTDIR_$(1))/%.rel: src/%.C | $$(OUTDIR_$(1))
 	$$(CC) $$(CFLAGS_$(1)) -c $$< -o $$@
 
 # 链接生成 hex 固件
