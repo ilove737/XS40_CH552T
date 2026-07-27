@@ -8,7 +8,7 @@
 #ifndef __CH552_SDCC_H__
 #define __CH552_SDCC_H__
 
-#include <8051.h>
+// #include <8051.h>  // 移除，SDCC 自带 <8051.h> 与 CH552 自定义 SFR 定义重复
 
 #define DE_PRINTF           0
 
@@ -89,6 +89,10 @@ __sfr __at (0xB1) GLOBAL_CFG;
 
 // Power Control Register
 __sfr __at (0x87) PCON;
+#define SMOD              0x80      // baud rate selection for UART0 mode 1/2/3
+#define GF1               0x08      // general purpose flag bit 1
+#define GF0               0x04      // general purpose flag bit 0
+#define PD                0x02      // power-down enable bit
 
 // Clock and Sleep Registers
 __sfr __at (0xB9) CLOCK_CFG;
@@ -220,6 +224,7 @@ __sbit __at (0xB0) RXD;
 __sfr __at (0x96) P3_MOD_OC;
 __sfr __at (0x97) P3_DIR_PU;
 __sfr __at (0xC6) PIN_FUNC;
+#define bUSB_IO_EN        0x80      // USB UDP/UDM I/O pin enable: 0=P3.6/P3.7 as GPIO, 1=P3.6/P3.7 as USB
 __sfr __at (0xA2) XBUS_AUX;
 
 // Timer0/1 Registers

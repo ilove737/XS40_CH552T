@@ -5,6 +5,11 @@
 #include "scanKey.h"
 #include "CompositeKM.H"
 
+// 中断函数声明 — 告知 SDCC 链接器生成中断向量表
+// 必须放在 main() 所在文件，否则多文件链接时向量表不会生成
+void mTimer0Interrupt(void) __interrupt(INT_NO_TMR0);
+void DeviceInterrupt(void) __interrupt(INT_NO_USB);
+
 void main(void)
 {
     CfgFsys();   //CH559时钟选择配置
