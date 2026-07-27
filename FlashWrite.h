@@ -8,5 +8,6 @@
 #define KEYMAP_WORD_CNT   40    // 每个映射 40 个字（80 字节）
 
 void writeKeymapToFlash(UINT8 __xdata *data);
+void readKeymapFromFlash(UINT8 __xdata *buf);
 
 #endif

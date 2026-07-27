@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 XS40_CH552T 键位映射配置工具 - GUI 版
-依赖: python3-gi (GTK3), pyusb
+依赖: python3-gi (GTK3), hidapi
 """
 
 import sys
@@ -411,9 +411,15 @@ class KeymapGUI(Gtk.Window):
         # 设备操作
         btn_write = Gtk.ToolButton.new_from_stock(Gtk.STOCK_MEDIA_RECORD)
         btn_write.set_label('写入设备')
-        btn_write.set_tooltip_text('将当前映射写入键盘 Flash（需 sudo/udev）')
+        btn_write.set_tooltip_text('将当前映射写入键盘 Flash（需 udev 权限）')
         btn_write.connect('clicked', self.on_write_device)
         toolbar.add(btn_write)
+
+        btn_read = Gtk.ToolButton.new_from_stock(Gtk.STOCK_REFRESH)
+        btn_read.set_label('读取')
+        btn_read.set_tooltip_text('从键盘读取当前键位映射')
+        btn_read.connect('clicked', self.on_read_device)
+        toolbar.add(btn_read)
 
         btn_reset = Gtk.ToolButton.new_from_stock(Gtk.STOCK_CLEAR)
         btn_reset.set_label('默认')
@@ -649,6 +655,25 @@ class KeymapGUI(Gtk.Window):
             t.start()
         except Exception as e:
             self.set_status(f'写入失败: {e}')
+
+    def on_read_device(self, btn):
+        try:
+            self.set_status('正在读取设备...')
+            import threading
+
+            def do_read():
+                try:
+                    data = km.read_keymap()
+                    self.data = bytearray(data)
+                    GLib.idle_add(self.update_all)
+                    GLib.idle_add(self.set_status, '读取成功')
+                except Exception as e:
+                    GLib.idle_add(self.set_status, f'读取失败: {e}')
+
+            t = threading.Thread(target=do_read, daemon=True)
+            t.start()
+        except Exception as e:
+            self.set_status(f'读取失败: {e}')
 
     def on_reset(self, btn):
         dialog = Gtk.MessageDialog(

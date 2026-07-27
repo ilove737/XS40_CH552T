@@ -55,3 +55,18 @@ void writeKeymapToFlash(UINT8 __xdata *data)
 
     EA = 1;  // 开中断
 }
+
+/*******************************************************************************
+* Function Name  : readKeymapFromFlash
+* Description    : 从 Flash 0x3600 读取 160 字节键位映射到 buf
+*                  mainKeyMap(80B) @ 0x3600 + Fn0_keyMap(80B) @ 0x3650 连续存储
+*******************************************************************************/
+void readKeymapFromFlash(UINT8 __xdata *buf)
+{
+    PUINT8C src = (PUINT8C)KEYMAP_MAIN_ADDR;   // 代码区 Flash 起始地址
+    UINT8 i;
+    for (i = 0; i < KEYMAP_WORD_CNT * 4; i++)
+    {
+        buf[i] = src[i];
+    }
+}

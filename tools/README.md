@@ -5,11 +5,11 @@
 ## 依赖
 
 ```bash
-# 安装 pyusb（libusb Python 封装）
-pip3 install --user --break-system-packages pyusb
+# 安装 hidapi（Python 封装，跨平台，Linux/Windows 通用，wheel 自带底层库）
+pip3 install --user --break-system-packages hidapi
 
-# libusb 通常系统已自带
-dpkg -l | grep libusb-1.0
+# 注意：不要装名为 "hid" 的包——它只是 ctypes 封装，
+# 还需要系统库 libhidapi-hidraw0，而 "hidapi" 包开箱即用。
 ```
 
 ## 权限
@@ -24,7 +24,7 @@ sudo ./set_keymap.py write keymap.txt
 
 ```bash
 # /etc/udev/rules.d/99-xs40-keyboard.rules
-SUBSYSTEM=="usb", ATTR{idVendor}=="413d", ATTR{idProduct}=="2107", MODE="0666"
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="413d", ATTRS{idProduct}=="2107", MODE="0666"
 ```
 
 然后重新插拔键盘。
@@ -90,18 +90,25 @@ sudo ./set_keymap.py write mylayout.txt
 
 ## 工作原理
 
-主机通过 USB 控制传输发送厂商自定义请求：
+主机通过标准 HID Feature Report 与键盘通信（无需 libusb，跨平台通用）：
 
 ```
-bmRequestType = 0x41  (厂商, 主机→设备, 设备)
-bRequest      = 0x91  (自定义: 设置键位映射)
-wValue        = 0x0000
-wIndex        = 0x0000
-wLength       = 160
-Data          = 160 字节键位数据
+写入（SET_REPORT）:
+  bmRequestType = 0x21   (类, 主机→设备, 接口)
+  bRequest      = 0x09   (SET_REPORT)
+  wValue        = 0x0301 (ReportType=Feature<<8 | ReportID=1)
+  wIndex        = 0x0000 (接口 0)
+  wLength       = 161    (1 字节 Report ID + 160 字节键位数据)
+  Data          = 160 字节键位数据
+
+读取（GET_REPORT）:
+  bRequest      = 0x01   (GET_REPORT)，其余相同，返回 161 字节
 ```
 
 键盘固件收到后关中断，将数据写入 Flash 地址 0x3600（mainKeyMap）和 0x3650（Fn0_keyMap），然后开中断。写入完成后立即生效，无需重启。
+
+> 说明：采用标准 HID Feature Report 后，Linux 走 `hidraw`、Windows 走原生 HID 栈，
+> 不再依赖 libusb，也不会与系统 HID 驱动抢占接口，因此 Windows 上也可直接读写，无需用 Zadig 换驱动。
 
 ## 注意事项
 

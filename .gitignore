@@ -54,3 +54,7 @@ dkms.conf
 out/
 out_left/
 out_right/
+
+# Python
+__pycache__/
+*.pyc

@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """
 XS40_CH552T 键位映射配置工具 - CLI
-通过 USB 厂商自定义请求（0x91）向键盘发送键位映射数据。
+通过标准 HID Feature Report（Report ID=1）向键盘发送/读取键位映射数据。
 
 用法:
   ./set_keymap.py template                  # 生成默认模板文件
   ./set_keymap.py write keymap.txt           # 写入键位映射到设备
   ./set_keymap.py write keymap.bin --binary  # 写入二进制映射文件
   ./set_keymap.py check keymap.txt           # 检查映射文件格式
+  ./set_keymap.py dump  keymap.txt           # 从设备读取当前映射
+  ./set_keymap.py dump  keymap.bin --binary  # 读取为二进制
   ./set_keymap_gui.py                        # 启动图形界面
 
-依赖: pyusb, libusb-1.0
-需要 root 权限或 udev 规则访问 USB 设备。
+依赖: hidapi (pip install hidapi)
+跨平台: Linux 走 hidraw，Windows 走原生 HID 栈，无需 libusb，
+        也不会与系统 HID 驱动冲突。需要 udev 规则（Linux）或无需额外驱动（Windows）。
 """
 
 import argparse
@@ -66,7 +69,7 @@ RESET = '\033[0m'
 
 VID = 0x413D
 PID = 0x2107
-VENDOR_SET_KEYMAP = 0x91
+KEYMAP_REPORT_ID = 0x01   # 厂商 Feature 报告 ID（固件报表描述符中定义）
 KEYMAP_SIZE = 160
 KEY_ENTRIES = 40
 
@@ -218,25 +221,78 @@ def write_template(path):
     print(f'{GREEN}已生成模板{RESET} {path}')
 
 
-def send_keymap(data):
-    import usb.core
-    import usb.util
-    dev = usb.core.find(idVendor=VID, idProduct=PID)
-    if dev is None:
-        raise RuntimeError('未找到设备')
+def _open_device():
+    """打开键盘接口（interface 0，Feature 报告所在接口）。
+    设备有键盘(0)/鼠标(1)两个 HID 接口，hid.device().open(VID,PID)
+    可能打开错误的接口，因此先枚举再按接口号选择。"""
+    import hid
+    dev = hid.device()
+    target = None
+    for d in hid.enumerate(VID, PID):
+        if d.get('interface_number', -1) == 0:
+            target = d['path']
+            break
+    if target:
+        dev.open_path(target)
+    else:
+        dev.open(VID, PID)  # 枚举不到接口号时回退
+    return dev
+
+
+def _feature_report(dev, report_id, payload):
+    """发送 HID Feature Report，兼容不同版本的 hid 库。
+    payload: 不含 report id 的纯数据。返回发送的字节数（含 report id）。"""
     try:
-        # 设备插上后内核已把它设到默认配置 #1（usbhid 也会认领接口 0/1）。
-        # 本次写入是“设备级”厂商控制请求(bmRequestType=0x41, recipient=DEVICE)，
-        # 走端点 0，无需 claim 任何 interface，也无需重新 set_configuration。
-        # 否则内核会重新绑定 usbhid 到接口 1，导致 set_configuration 报
-        # "Resource busy" / "interface 1 claimed by usbhid"。
-        ret = dev.ctrl_transfer(0x41, VENDOR_SET_KEYMAP, 0, 0, data, timeout=5000)
-        if ret != len(data):
-            raise RuntimeError(f'写入失败 (返回 {ret} 字节, 期望 {len(data)} 字节)')
-    except usb.core.USBError as e:
-        raise RuntimeError(f'USB 错误: {e}')
+        # 新版 hid：send_feature_report(data, report_id)
+        return dev.send_feature_report(list(payload), report_id)
+    except TypeError:
+        # 旧版 hid：首字节即 report id
+        return dev.send_feature_report(bytes([report_id]) + bytes(payload))
+
+
+def _get_feature_report(dev, report_id, max_len):
+    """读取 HID Feature Report，兼容不同版本的 hid 库。
+    返回含 report id 的列表（首字节为 report id）。"""
+    try:
+        return dev.get_feature_report(report_id, max_len)
+    except TypeError:
+        return dev.get_feature_report(max_len)
+
+
+def send_keymap(data):
+    """通过 HID Feature Report (Report ID=KEYMAP_REPORT_ID) 写入键位映射。
+    使用 hidapi，跨平台（Linux hidraw / Windows 原生 HID 栈），
+    不依赖 libusb，也不会与系统 HID 驱动冲突。"""
+    if len(data) != KEYMAP_SIZE:
+        raise RuntimeError(f'数据长度错误: {len(data)}B, 期望 {KEYMAP_SIZE}B')
+    dev = _open_device()
+    try:
+        # 首字节为 report id，后跟 160 字节键位数据
+        res = _feature_report(dev, KEYMAP_REPORT_ID, bytes(data))
+        # 返回值可能为 160（不含 report id）或 161（含 report id），取决于库版本
+        if res < KEYMAP_SIZE:
+            raise RuntimeError(f'写入失败 (返回 {res}, 期望 >= {KEYMAP_SIZE} 字节)。'
+                               f'请确认固件已更新且权限足够（udev/sudo）')
     finally:
-        usb.util.dispose_resources(dev)
+        dev.close()
+
+
+def read_keymap():
+    """通过 HID Feature Report (Report ID=KEYMAP_REPORT_ID) 读取当前键位映射。
+    返回 160 字节键位数据（不含 report id）。"""
+    dev = _open_device()
+    try:
+        buf = _get_feature_report(dev, KEYMAP_REPORT_ID, KEYMAP_SIZE + 1)
+        # 不同库版本返回可能含或不含 report id 前缀
+        if buf and len(buf) >= KEYMAP_SIZE + 1 and buf[0] == KEYMAP_REPORT_ID:
+            buf = buf[1:]  # 去掉 report id
+        if not buf or len(buf) < KEYMAP_SIZE:
+            got = len(buf) if buf else 0
+            raise RuntimeError(f'读取失败 (返回 {got} 字节, 期望 {KEYMAP_SIZE})。'
+                               f'请确认固件已更新且权限足够（udev/sudo）')
+        return bytes(buf[:KEYMAP_SIZE])
+    finally:
+        dev.close()
 
 
 # =========================================================================
@@ -247,8 +303,8 @@ def main():
     parser = argparse.ArgumentParser(
         description='XS40_CH552T 键位映射配置工具')
     parser.add_argument('action', nargs='?',
-                        choices=['template', 'write', 'check'],
-                        help='操作: template(生成模板), write(写入), check(检查)')
+                        choices=['template', 'write', 'check', 'dump'],
+                        help='操作: template(生成模板), write(写入), check(检查), dump(读取)')
     parser.add_argument('file', nargs='?', help='文件名')
     parser.add_argument('--binary', action='store_true',
                         help='以二进制格式读写文件')
@@ -281,12 +337,37 @@ def main():
             data = read_keymap_file(args.file)
         print(f'查找设备 {VID:04X}:{PID:04X}...')
         try:
-            import usb.core
             send_keymap(data)
             print(f'{GREEN}写入成功{RESET}')
-        except (RuntimeError, usb.core.USBError) as e:
+        except (RuntimeError, ImportError) as e:
             print(f'{RED}{e}{RESET}')
             sys.exit(1)
+
+    elif args.action == 'dump':
+        if not args.file:
+            print(f'{RED}请指定输出文件{RESET}')
+            sys.exit(1)
+        print(f'查找设备 {VID:04X}:{PID:04X}...')
+        try:
+            data = read_keymap()
+        except (RuntimeError, ImportError) as e:
+            print(f'{RED}{e}{RESET}')
+            sys.exit(1)
+        if args.binary:
+            with open(args.file, 'wb') as f:
+                f.write(data)
+        else:
+            main = data[:KEYMAP_SIZE // 2]
+            fn0 = data[KEYMAP_SIZE // 2:]
+            with open(args.file, 'w') as f:
+                f.write('# XS40_CH552T 键位映射（从设备读取）\n')
+                f.write('# 索引 修饰符 键码\n\n# mainKeyMap\n')
+                for i in range(KEY_ENTRIES):
+                    f.write(f'{i:2d}    0x{main[i*2]:02x}   0x{main[i*2+1]:02x}\n')
+                f.write('\n# Fn0_keyMap\n')
+                for i in range(KEY_ENTRIES):
+                    f.write(f'{i+KEY_ENTRIES:2d}    0x{fn0[i*2]:02x}   0x{fn0[i*2+1]:02x}\n')
+        print(f'{GREEN}读取成功{RESET} -> {args.file}')
 
 
 if __name__ == '__main__':
