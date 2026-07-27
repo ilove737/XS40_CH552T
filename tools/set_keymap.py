@@ -223,19 +223,18 @@ def send_keymap(data):
     import usb.util
     dev = usb.core.find(idVendor=VID, idProduct=PID)
     if dev is None:
-        print(f'{RED}未找到设备{RESET}')
-        sys.exit(1)
-    if dev.is_kernel_driver_active(0):
-        dev.detach_kernel_driver(0)
+        raise RuntimeError('未找到设备')
     try:
-        dev.set_configuration()
+        # 设备插上后内核已把它设到默认配置 #1（usbhid 也会认领接口 0/1）。
+        # 本次写入是“设备级”厂商控制请求(bmRequestType=0x41, recipient=DEVICE)，
+        # 走端点 0，无需 claim 任何 interface，也无需重新 set_configuration。
+        # 否则内核会重新绑定 usbhid 到接口 1，导致 set_configuration 报
+        # "Resource busy" / "interface 1 claimed by usbhid"。
         ret = dev.ctrl_transfer(0x41, VENDOR_SET_KEYMAP, 0, 0, data, timeout=5000)
-        if ret == len(data):
-            print(f'{GREEN}写入成功{RESET} ({ret} 字节)')
-        else:
-            print(f'{RED}写入失败{RESET}')
+        if ret != len(data):
+            raise RuntimeError(f'写入失败 (返回 {ret} 字节, 期望 {len(data)} 字节)')
     except usb.core.USBError as e:
-        print(f'{RED}USB 错误{RESET}: {e}')
+        raise RuntimeError(f'USB 错误: {e}')
     finally:
         usb.util.dispose_resources(dev)
 
@@ -281,7 +280,13 @@ def main():
         else:
             data = read_keymap_file(args.file)
         print(f'查找设备 {VID:04X}:{PID:04X}...')
-        send_keymap(data)
+        try:
+            import usb.core
+            send_keymap(data)
+            print(f'{GREEN}写入成功{RESET}')
+        except (RuntimeError, usb.core.USBError) as e:
+            print(f'{RED}{e}{RESET}')
+            sys.exit(1)
 
 
 if __name__ == '__main__':
