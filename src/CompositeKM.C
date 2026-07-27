@@ -17,7 +17,7 @@
 #include <string.h>
 #include "FlashWrite.h"
 
-//#define Fullspeed
+#define Fullspeed
 #define THIS_ENDP0_SIZE DEFAULT_ENDP0_SIZE
 
 UINT8X __at (0x0000) Ep0Buffer[8 > (THIS_ENDP0_SIZE + 2) ? 8 : (THIS_ENDP0_SIZE + 2)];   //端点0 OUT&IN缓冲区，必须是偶地址
@@ -42,7 +42,7 @@ __sbit __at (0xB5) CapsLED;
 // #pragma NOAREGS  // SDCC may not support this pragma
 /*设备描述符*/
 UINT8C DevDesc[18] = {0x12, 0x01, 0x10, 0x01, 0x00, 0x00, 0x00, THIS_ENDP0_SIZE,
-                      0x3d, 0x41, 0x07, 0x21, 0x00, 0x00, 0x00, 0x00,
+                      0x3d, 0x41, 0x07, 0x21, 0x00, 0x00, 0x01, 0x03,
                       0x00, 0x01};
 UINT8C CfgDesc[59] =
     {
@@ -55,13 +55,17 @@ UINT8C CfgDesc[59] =
         0x07, 0x05, 0x82, 0x03, 0x04, 0x00, 0x0a              //端点描述符
 };
 
-// UINT8C MyProductIDInfo[] = {0x0A,0x03,'X',0,'S',0,'4',0,'0',0};
-// /* 语言描述符 */
-// UINT8C MyLangDescr[ ] = { 0x04, 0x03, 0x09, 0x04 };
-// /* 厂家信息 */
-// UINT8C MyManuInfo[ ] = { 0x0E, 0x03, 'w', 0, 'c', 0, 'h', 0, '.', 0, 'c', 0, 'n', 0 };
-// /* 产品信息 */
-// UINT8C MyProdInfo[ ] = { 0x0C, 0x03, 'C', 0, 'H', 0, '5', 0, '5', 0, '9', 0 };
+#if KEYBOARD_LAYOUT == 0
+UINT8C MyProductIDInfo[] = {0x20,0x03,'X',0,'S',0,'4',0,'0',0,' ',0,'L',0,' ',0,'K',0,'e',0,'y',0,'b',0,'o',0,'a',0,'r',0,'d',0}; // 左手产品信息字符串描述符
+#else
+UINT8C MyProductIDInfo[] = {0x20,0x03,'X',0,'S',0,'4',0,'0',0,' ',0,'R',0,' ',0,'K',0,'e',0,'y',0,'b',0,'o',0,'a',0,'r',0,'d',0}; // 右手产品信息字符串描述符
+#endif
+/* 语言描述符 */
+UINT8C MyLangDescr[ ] = { 0x04, 0x03, 0x09, 0x04 };
+/* 厂家信息 */
+UINT8C MyManuInfo[ ] = { 0x0C, 0x03, 'N', 0, 'i', 0, 'u', 0, 'e', 0, 'r', 0 };
+/* 产品信息 */
+UINT8C MyProdInfo[ ] = { 0x0C, 0x03, 'C', 0, 'H', 0, '5', 0, '5', 0, '2', 0 };
 
 /*字符串描述符*/
 /*HID类报表描述符*/
@@ -280,28 +284,28 @@ void DeviceInterrupt(void) __interrupt(INT_NO_USB) __using(1) //USB中断服务�
                             len = sizeof(CfgDesc);
                             break;
                         case 3:               // 字符串描述符
-                            // switch( UsbSetupBuf->wValueL )
-                            // {
-                            // case 0:
-                            //     pDescr = (PUINT8)( &MyLangDescr[0] );
-                            //     len = sizeof( MyLangDescr );
-                            //     break;
-                            // case 1:
-                            //     pDescr = (PUINT8)( &MyManuInfo[0] );
-                            //     len = sizeof( MyManuInfo );
-                            //     break;
-                            // case 2:
-                            //     pDescr = (PUINT8)( &MyProdInfo[0] );
-                            //     len = sizeof( MyProdInfo );
-                            //     break;
-                            // case 3:
-                            //     pDescr = (PUINT8)( &MyProductIDInfo[0] );
-                            //     len = sizeof( MyProductIDInfo );
-                            //     break;
-                            // default:
-                            //     len = 0xFF;                                 // 不支持的字符串描述符
-                            //     break;
-                            // }
+                            switch( UsbSetupBuf->wValueL )
+                            {
+                            case 0:
+                                pDescr = (PUINT8)( &MyLangDescr[0] );
+                                len = sizeof( MyLangDescr );
+                                break;
+                            case 1:
+                                pDescr = (PUINT8)( &MyManuInfo[0] );
+                                len = sizeof( MyManuInfo );
+                                break;
+                            case 2:
+                                pDescr = (PUINT8)( &MyProdInfo[0] );
+                                len = sizeof( MyProdInfo );
+                                break;
+                            case 3:
+                                pDescr = (PUINT8)( &MyProductIDInfo[0] );
+                                len = sizeof( MyProductIDInfo );
+                                break;
+                            default:
+                                len = 0xFF;                                 // 不支持的字符串描述符
+                                break;
+                            }
                             break;
                         case 0x22:                         //报表描述符
                             if (UsbSetupBuf->wIndexL == 0) //接口0报表描述符

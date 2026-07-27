@@ -63,7 +63,7 @@ def short_name(code):
 
 
 def mod_prefix(mod):
-    """修饰符前缀"""
+    """修饰符前缀（每个修饰符一行，用换行分隔，不用 '+'）"""
     parts = []
     if mod & 0x01: parts.append('LCtrl')
     if mod & 0x02: parts.append('LShift')
@@ -73,7 +73,7 @@ def mod_prefix(mod):
     if mod & 0x20: parts.append('RShift')
     if mod & 0x40: parts.append('RAlt')
     if mod & 0x80: parts.append('RWin')
-    return ''.join(parts) if parts else ''
+    return '\n'.join(parts) if parts else ''
 
 
 # =========================================================================
@@ -446,7 +446,7 @@ class KeymapGUI(Gtk.Window):
             for col in range(COLS):
                 btn = Gtk.Button(label='', width_request=76, height_request=76)
                 btn.get_child().set_ellipsize(Pango.EllipsizeMode.END)
-                btn.get_child().set_max_width_chars(4)
+                btn.get_child().set_max_width_chars(8)
                 btn.get_child().set_alignment(0.5, 0.5)
                 btn.connect('clicked', self.on_key_clicked, row * COLS + col)
                 self.grid.attach(btn, col, row, 1, 1)
@@ -697,7 +697,7 @@ CSS = b"""
 .key-normal, .key-mod, .key-fn, .key-none {
     min-width: 72px;
     min-height: 72px;
-    font-size: 14px;
+    font-size: 12px;
     padding: 0;
     border-radius: 8px;
 }
