@@ -221,12 +221,15 @@ def write_template(path):
     print(f'{GREEN}已生成模板{RESET} {path}')
 
 
-def _open_device():
+def _open_device(path=None):
     """打开键盘接口（interface 0，Feature 报告所在接口）。
-    设备有键盘(0)/鼠标(1)两个 HID 接口，hid.device().open(VID,PID)
-    可能打开错误的接口，因此先枚举再按接口号选择。"""
+    path 指定则直接打开该接口（多键盘切换时使用）；否则枚举第一个
+    interface 0 的设备，找不到接口号时回退到 VID/PID 打开。"""
     import hid
     dev = hid.device()
+    if path is not None:
+        dev.open_path(path)
+        return dev
     target = None
     for d in hid.enumerate(VID, PID):
         if d.get('interface_number', -1) == 0:
@@ -237,6 +240,48 @@ def _open_device():
     else:
         dev.open(VID, PID)  # 枚举不到接口号时回退
     return dev
+
+
+def enumerate_devices():
+    """返回所有 XS40 键盘设备（interface 0）的信息列表。
+    每项: {'path','product_string','manufacturer_string',
+           'serial_number','interface_number'}。多键盘插拔时用于切换。"""
+    import hid
+    out = []
+    for d in hid.enumerate(VID, PID):
+        if d.get('interface_number', -1) != 0:
+            continue  # 只保留键盘接口，跳过鼠标接口
+        out.append({
+            'path': d.get('path'),
+            'product_string': d.get('product_string'),
+            'manufacturer_string': d.get('manufacturer_string'),
+            'serial_number': d.get('serial_number'),
+            'interface_number': d.get('interface_number'),
+        })
+    return out
+
+
+def detect_hand_from_string(product_string):
+    """从产品字符串解析左右手: 'XS40 R Keyboard' -> 'R'。
+    返回 'L' / 'R' / None（无 L/R 标记）。"""
+    import re
+    ps = (product_string or '').upper()
+    m = re.search(r'XS40\s+([LR])\b', ps)
+    return m.group(1) if m else None
+
+
+def get_device_info():
+    """返回第一个 interface 0 设备的信息字典（单设备场景/CLI 用）。"""
+    infos = enumerate_devices()
+    return infos[0] if infos else None
+
+
+def detect_hand():
+    """根据第一个设备的产品字符串判断左右手，返回 'L'/'R'/None。"""
+    info = get_device_info()
+    if not info:
+        return None
+    return detect_hand_from_string(info.get('product_string'))
 
 
 def _feature_report(dev, report_id, payload):
@@ -259,13 +304,14 @@ def _get_feature_report(dev, report_id, max_len):
         return dev.get_feature_report(max_len)
 
 
-def send_keymap(data):
+def send_keymap(data, path=None):
     """通过 HID Feature Report (Report ID=KEYMAP_REPORT_ID) 写入键位映射。
+    path 指定目标设备（多键盘切换时使用），为 None 时自动选第一个。
     使用 hidapi，跨平台（Linux hidraw / Windows 原生 HID 栈），
     不依赖 libusb，也不会与系统 HID 驱动冲突。"""
     if len(data) != KEYMAP_SIZE:
         raise RuntimeError(f'数据长度错误: {len(data)}B, 期望 {KEYMAP_SIZE}B')
-    dev = _open_device()
+    dev = _open_device(path)
     try:
         # 首字节为 report id，后跟 160 字节键位数据
         res = _feature_report(dev, KEYMAP_REPORT_ID, bytes(data))
@@ -277,10 +323,11 @@ def send_keymap(data):
         dev.close()
 
 
-def read_keymap():
+def read_keymap(path=None):
     """通过 HID Feature Report (Report ID=KEYMAP_REPORT_ID) 读取当前键位映射。
+    path 指定目标设备（多键盘切换时使用），为 None 时自动选第一个。
     返回 160 字节键位数据（不含 report id）。"""
-    dev = _open_device()
+    dev = _open_device(path)
     try:
         buf = _get_feature_report(dev, KEYMAP_REPORT_ID, KEYMAP_SIZE + 1)
         # 不同库版本返回可能含或不含 report id 前缀
@@ -303,8 +350,8 @@ def main():
     parser = argparse.ArgumentParser(
         description='XS40_CH552T 键位映射配置工具')
     parser.add_argument('action', nargs='?',
-                        choices=['template', 'write', 'check', 'dump'],
-                        help='操作: template(生成模板), write(写入), check(检查), dump(读取)')
+                        choices=['template', 'write', 'check', 'dump', 'hand'],
+                        help='操作: template(生成模板), write(写入), check(检查), dump(读取), hand(检测左右手)')
     parser.add_argument('file', nargs='?', help='文件名')
     parser.add_argument('--binary', action='store_true',
                         help='以二进制格式读写文件')
@@ -368,6 +415,20 @@ def main():
                 for i in range(KEY_ENTRIES):
                     f.write(f'{i+KEY_ENTRIES:2d}    0x{fn0[i*2]:02x}   0x{fn0[i*2+1]:02x}\n')
         print(f'{GREEN}读取成功{RESET} -> {args.file}')
+
+    elif args.action == 'hand':
+        info = get_device_info()
+        if not info:
+            print(f'{RED}未找到设备{RESET} {VID:04X}:{PID:04X}')
+            sys.exit(1)
+        hand = detect_hand()
+        ps = info.get('product_string', '')
+        if hand == 'L':
+            print(f'{GREEN}左手 (L){RESET}  产品串: {ps}')
+        elif hand == 'R':
+            print(f'{GREEN}右手 (R){RESET}  产品串: {ps}')
+        else:
+            print(f'{YELLOW}已连接但无法判断左右手{RESET}  产品串: {ps}')
 
 
 if __name__ == '__main__':

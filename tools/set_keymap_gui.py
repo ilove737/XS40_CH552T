@@ -353,7 +353,7 @@ class KeyEditDialog(Gtk.Dialog):
 class KeymapGUI(Gtk.Window):
     def __init__(self):
         super().__init__(title='XS40_CH552T 键位映射编辑器')
-        self.set_default_size(700, 500)
+        self.set_default_size(875, 500)
         self.set_border_width(6)
 
         # 数据: 160 字节
@@ -361,31 +361,42 @@ class KeymapGUI(Gtk.Window):
         self.current_layer = 0  # 0=mainKeyMap, 1=Fn0_keyMap
         self.file_path = None
 
+        # 多键盘管理
+        self.devices = []           # 枚举到的设备列表
+        self.current_device = None  # 当前选中的设备 path
+        self.device_data = {}       # path -> bytearray(160) 各键盘配置缓存
+
         # 主布局
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        self.add(vbox)
+        # 主布局：左侧键盘树 + 右侧配置区
+        paned = Gtk.Paned.new(Gtk.Orientation.HORIZONTAL)
+        self.add(paned)
+
+        # 左侧：键盘/层树形列表
+        left_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        left_box.set_size_request(220, -1)
+        tl = Gtk.Label(label='设备 / 层')
+        tl.set_xalign(0)
+        tl.set_margin_top(2)
+        left_box.pack_start(tl, False, False, 2)
+        self.tree_store = Gtk.TreeStore(str, object)
+        self.tree_view = Gtk.TreeView(model=self.tree_store)
+        self.tree_view.append_column(
+            Gtk.TreeViewColumn('', Gtk.CellRendererText(), text=0))
+        self.tree_view.set_headers_visible(False)
+        self.tree_view.set_enable_tree_lines(True)
+        self.tree_selection = self.tree_view.get_selection()
+        self.tree_selection.connect('changed', self.on_tree_select)
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.add(self.tree_view)
+        left_box.pack_start(scrolled, True, True, 0)
+        paned.add1(left_box)
+        paned.add2(vbox)
 
         # 工具栏
         toolbar = Gtk.Toolbar()
         toolbar.set_style(Gtk.ToolbarStyle.ICONS)
         vbox.add(toolbar)
-
-        # 图层切换
-        self.layer_btn = Gtk.ToggleToolButton()
-        self.layer_btn.set_label('Layer')
-        self.layer_btn.set_active(False)
-        self.layer_btn.set_tooltip_text('切换 mainKeyMap / Fn0_keyMap 图层')
-        self.layer_btn.connect('toggled', self.on_layer_toggle)
-        toolbar.add(self.layer_btn)
-
-        self.layer_label = Gtk.ToolItem()
-        lbl = Gtk.Label(label='  mainKeyMap  ')
-        lbl.set_markup('<b>mainKeyMap</b>')
-        self.layer_label_icon = lbl
-        self.layer_label.add(lbl)
-        toolbar.add(self.layer_label)
-
-        toolbar.add(Gtk.SeparatorToolItem())
 
         # 文件操作
         btn_load = Gtk.ToolButton.new_from_stock(Gtk.STOCK_OPEN)
@@ -427,6 +438,27 @@ class KeymapGUI(Gtk.Window):
         btn_reset.connect('clicked', self.on_reset)
         toolbar.add(btn_reset)
 
+        btn_refresh = Gtk.ToolButton.new_from_stock(Gtk.STOCK_REFRESH)
+        btn_refresh.set_label('刷新')
+        btn_refresh.set_tooltip_text('重新枚举已插入的键盘')
+        btn_refresh.connect('clicked', self.on_refresh)
+        toolbar.add(btn_refresh)
+
+        toolbar.add(Gtk.SeparatorToolItem())
+
+        # 左右手检测
+        self.hand_item = Gtk.ToolItem()
+        self.hand_label = Gtk.Label(label='  ?  未检测  ')
+        self.hand_label.set_tooltip_text('当前选中键盘的左右手（基于 USB 产品字符串）')
+        self.hand_item.add(self.hand_label)
+        toolbar.add(self.hand_item)
+
+        btn_detect = Gtk.ToolButton.new_from_stock(Gtk.STOCK_INFO)
+        btn_detect.set_label('检测')
+        btn_detect.set_tooltip_text('重新识别当前键盘是左手(L)还是右手(R)')
+        btn_detect.connect('clicked', self.on_detect)
+        toolbar.add(btn_detect)
+
         # 键盘网格
         grid_frame = Gtk.Frame(label=' 键盘布局 ')
         vbox.add(grid_frame)
@@ -464,6 +496,9 @@ class KeymapGUI(Gtk.Window):
 
         self.update_all()
         self.set_status('就绪')
+
+        # 启动时自动枚举并读取已插入键盘的配置
+        self.refresh_devices()
 
         self.show_all()
 
@@ -519,19 +554,10 @@ class KeymapGUI(Gtk.Window):
                 else:
                     style.add_class('key-normal')
 
-        # 图层标签
-        name = 'mainKeyMap' if self.current_layer == 0 else 'Fn0_keyMap'
-        self.layer_label_icon.set_markup(f'<b>{name}</b>')
-
     def set_status(self, msg):
         self.statusbar.push(self.status_ctx, msg)
 
     # ---- 事件处理 ----
-    def on_layer_toggle(self, btn):
-        self.current_layer = 1 if btn.get_active() else 0
-        self.update_all()
-        self.set_status(f'切换到 {"Fn0_keyMap" if self.current_layer else "mainKeyMap"}')
-
     def on_key_clicked(self, btn, idx):
         mod, key = self.get_key(self.current_layer, idx)
         layer_name = 'Fn0_keyMap' if self.current_layer else 'mainKeyMap'
@@ -646,7 +672,9 @@ class KeymapGUI(Gtk.Window):
 
             def do_write():
                 try:
-                    km.send_keymap(bytes(self.data))
+                    GLib.idle_add(self._update_hand_label,
+                                  km.detect_hand_from_string(self._current_prod()))
+                    km.send_keymap(bytes(self.data), path=self.current_device)
                     GLib.idle_add(self.set_status, '写入成功')
                 except Exception as e:
                     GLib.idle_add(self.set_status, f'写入失败: {e}')
@@ -663,8 +691,11 @@ class KeymapGUI(Gtk.Window):
 
             def do_read():
                 try:
-                    data = km.read_keymap()
+                    GLib.idle_add(self._update_hand_label,
+                                  km.detect_hand_from_string(self._current_prod()))
+                    data = km.read_keymap(path=self.current_device)
                     self.data = bytearray(data)
+                    self.device_data[self.current_device] = bytearray(data)
                     GLib.idle_add(self.update_all)
                     GLib.idle_add(self.set_status, '读取成功')
                 except Exception as e:
@@ -684,9 +715,149 @@ class KeymapGUI(Gtk.Window):
         dialog.format_secondary_text('当前修改将丢失。')
         if dialog.run() == Gtk.ResponseType.YES:
             self.data = bytearray(km.make_default_keymap())
+            if self.current_device is not None:
+                self.device_data[self.current_device] = bytearray(self.data)
             self.update_all()
             self.set_status('已恢复默认')
         dialog.destroy()
+
+    # ---- 多键盘 / 树形管理 ----
+    def _prod_of(self, path):
+        """按 path 返回设备产品串"""
+        for d in self.devices:
+            if d['path'] == path:
+                return d.get('product_string')
+        return None
+
+    def _current_prod(self):
+        """返回当前选中键盘的产品串，未选中返回 None"""
+        if self.current_device is None:
+            return None
+        return self._prod_of(self.current_device)
+
+    def refresh_devices(self):
+        """枚举所有已插入的 XS40 键盘，以树形列出（设备→层），
+        并自动载入当前选中的键盘配置。"""
+        try:
+            self.devices = km.enumerate_devices()
+        except Exception as e:
+            self.devices = []
+            self.set_status(f'枚举设备失败: {e}')
+
+        self.tree_store.clear()
+        if not self.devices:
+            self.tree_store.append(None, ['（未检测到键盘，点“刷新”）', ('none', None, -1)])
+            self.current_device = None
+            self.device_data.clear()
+            self._update_hand_label(None)
+            self.set_status('未检测到键盘，请插入后点“刷新”')
+            return
+
+        keep_path = self.current_device
+        keep_layer = self.current_layer
+        select_iter = None
+        for d in self.devices:
+            hand = km.detect_hand_from_string(d.get('product_string'))
+            hl = '左手(L)' if hand == 'L' else ('右手(R)' if hand == 'R' else '未知')
+            dev_iter = self.tree_store.append(
+                None, [f'{hl}  {d.get("product_string") or "(无产品名)"}',
+                       ('dev', d['path'], -1)])
+            it0 = self.tree_store.append(
+                dev_iter, ['  mainKeyMap (主层)', ('layer', d['path'], 0)])
+            it1 = self.tree_store.append(
+                dev_iter, ['  Fn0_keyMap (Fn层)', ('layer', d['path'], 1)])
+            if d['path'] == keep_path:
+                select_iter = it0 if keep_layer == 0 else it1
+
+        self.tree_view.expand_all()
+        if select_iter is None:
+            first = self.tree_store.get_iter_first()
+            if first is not None:
+                select_iter = self.tree_store.iter_children(first)
+        if select_iter is not None:
+            self.tree_selection.select_iter(select_iter)
+        # select_iter 会触发 on_tree_select -> select_device（按需读取设备）
+
+    def on_refresh(self, btn):
+        """重新枚举已插入的键盘"""
+        self.refresh_devices()
+
+    def on_tree_select(self, selection):
+        """树节点选中：设备节点载入该键盘，层节点切换到对应层"""
+        model, it = selection.get_selected()
+        if it is None:
+            return
+        kind, path, layer = model.get_value(it, 1)
+        if kind == 'dev':
+            self.select_device(path, layer=0)
+        elif kind == 'layer':
+            self.select_device(path, layer=layer)
+        # 'none' 节点忽略
+
+    def select_device(self, path, layer=0):
+        """切换当前键盘/层：保存上一键盘编辑、载入目标缓存，
+        必要时从设备读取，并刷新网格与左右手标签。"""
+        # 保存上一键盘的编辑结果
+        if (self.current_device is not None
+                and self.current_device in self.device_data):
+            self.device_data[self.current_device] = bytearray(self.data)
+
+        self.current_device = path
+        self.current_layer = layer
+
+        if path in self.device_data:
+            # 已有缓存，直接显示（层切换或回切不重新读取）
+            self.data = bytearray(self.device_data[path])
+            self._update_hand_label(km.detect_hand_from_string(self._prod_of(path)))
+            self.update_all()
+            self.set_status(f'已载入 {self._prod_of(path)} 的'
+                            f'{"Fn0" if layer else "主"}层')
+            return
+
+        # 未在缓存：从设备读取
+        prod = self._prod_of(path)
+        self.set_status(f'正在读取 {prod}...')
+        import threading
+
+        def do_read():
+            try:
+                data = km.read_keymap(path=path)
+                self.device_data[path] = bytearray(data)
+                self.data = bytearray(data)
+                self.current_layer = layer
+                self.current_device = path
+                GLib.idle_add(self._update_hand_label,
+                              km.detect_hand_from_string(prod))
+                GLib.idle_add(self.update_all)
+                GLib.idle_add(self.set_status, f'已读取 {prod}')
+            except Exception as e:
+                GLib.idle_add(self.set_status, f'读取失败: {e}')
+
+        threading.Thread(target=do_read, daemon=True).start()
+
+    def _update_hand_label(self, hand):
+        """刷新工具栏左右手标签，hand 为 'L'/'R'/其他"""
+        if hand == 'L':
+            self.hand_label.set_text('  L  左手  ')
+        elif hand == 'R':
+            self.hand_label.set_text('  R  右手  ')
+        else:
+            self.hand_label.set_text('  ?  未知  ')
+
+    def on_detect(self, btn):
+        """重新识别当前选中键盘的左右手"""
+        if not self.devices or self.current_device is None:
+            self.set_status('当前未选择键盘，无法检测')
+            return
+        hand = km.detect_hand_from_string(self._current_prod())
+        self._update_hand_label(hand)
+        if hand == 'L':
+            msg = '已识别: 左手 (L)'
+        elif hand == 'R':
+            msg = '已识别: 右手 (R)'
+        else:
+            msg = '无法判断左右手（产品串中无 L/R 标记）'
+        self.set_status(msg)
 
 
 # =========================================================================
