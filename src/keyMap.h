@@ -4,11 +4,6 @@
 #include "CH552.H"
 #include "scanKey.h"
 
-// #define KEY_MOD_LCTRL 0x01
-// #define KEY_MOD_LSHIFT 0x02
-// #define KEY_MOD_LALT 0x04
-// #define KEY_MOD_LMETA 0x08
-
 // 默认左手布局
 #ifndef KEYBOARD_LAYOUT
 #define KEYBOARD_LAYOUT 0
@@ -16,6 +11,7 @@
 
 #if KEYBOARD_LAYOUT == 0
 
+// 左手布局 键位映射表
 UINT8C __at(0x3600) mainKeyMap[40][2] = {
     {0,KEY_ESC}, {0,KEY_1}, {0,KEY_2}, {0,KEY_3}, {0,KEY_4}, {0,KEY_5}, {0,KEY_GRAVE}, {2,KEY_8}, 
     {0,KEY_TAB}, {0,KEY_Q}, {0,KEY_W}, {0,KEY_E}, {0,KEY_R}, {0,KEY_T}, {0,KEY_LEFTBRACE}, {0,KEY_RIGHTBRACE}, 
@@ -24,6 +20,7 @@ UINT8C __at(0x3600) mainKeyMap[40][2] = {
     {KEY_FnX,0}, {8,0}, {4,0}, {KEY_FnX,0}, {0,KEY_SPACE}, {1,0}, {1,KEY_C}, {1,KEY_V},
 };
 
+// 左手布局 Fn0 键位映射表
 UINT8C __at(0x3650) Fn0_keyMap[40][2] = {
     {0,KEY_ESC}, {0,KEY_F1}, {0,KEY_F2}, {0,KEY_F3}, {0,KEY_F4}, {0,KEY_F5}, {0,KEY_GRAVE}, {2,KEY_8}, 
     {0,KEY_TAB}, {0,KEY_F11}, {0,KEY_F12}, {0,KEY_E}, {0,KEY_R}, {0,KEY_T}, {0,KEY_LEFTBRACE}, {0,KEY_RIGHTBRACE}, 

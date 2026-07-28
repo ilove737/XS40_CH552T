@@ -19,8 +19,14 @@
 
 #define KEY_FnX   0xFF
 
-#define sumRow 8
-#define sumCol 5
+/*
+ * 按键防抖阈值
+ * 定时器 T0 每 2ms 中断一次并调用 scanKeyChange() 扫描矩阵键盘。
+ * DEBOUNCE_THRESHOLD 表示连续多少次采样结果一致，才认为按键状态稳定。
+ * 例如：阈值 = 3，则连续 3 次采样一致（约 6ms）后确认状态变化。
+ * 机械按键的触点弹跳通常持续 5~20ms，阈值设为 3~5 较为合适。
+ */
+#define DEBOUNCE_THRESHOLD  3
 
 void initGPIO(void);
 void makeHIDFrames(void);

@@ -581,67 +581,6 @@ void DeviceInterrupt(void) __interrupt(INT_NO_USB) __using(1) //USB中断服务�
     }
 }
 
-// void HIDValueHandle()
-// {
-//     UINT8 i;
-
-//     i = getkey();
-//     // printf("%c", (UINT8)i);
-//     // i = 'A';
-//     switch (i)
-//     {
-//         //鼠标数据上传示例
-//     case 'L': //左键
-//         HIDMouse[0] = 0x01;
-//         Enp2IntIn();
-//         HIDMouse[0] = 0;
-//         break;
-//     case 'R': //右键
-//         HIDMouse[0] = 0x02;
-//         Enp2IntIn();
-//         HIDMouse[0] = 0;
-//         break;
-//         //键盘数据上传示例
-//     case 'A': //A键
-//         FLAG = 0;
-//         HIDKey[2] = 0x1d; //按键开始
-//         Enp1IntIn();
-//         HIDKey[2] = 0; //按键结束
-//         while (FLAG == 0)
-//         {
-//             ; /*等待上一包传输完成*/
-//         }
-//         Enp1IntIn();
-//         break;
-//     case 'P': //P键
-//         FLAG = 0;
-//         HIDKey[2] = 0x38;
-//         Enp1IntIn();
-//         HIDKey[2] = 0; //按键结束
-//         while (FLAG == 0)
-//         {
-//             ; /*等待上一包传输完成*/
-//         }
-//         Enp1IntIn();
-//         break;
-//     case 'Q': //Num Lock键
-//         FLAG = 0;
-//         HIDKey[2] = 0x39;
-//         Enp1IntIn();
-//         HIDKey[2] = 0; //按键结束
-//         while (FLAG == 0)
-//         {
-//             ; /*等待上一包传输完成*/
-//         }
-//         Enp1IntIn();
-//         break;
-//     default:                                                     //其他
-//         UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-//         UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
-//         break;
-//     }
-// }
-
 // void sendKeyHID(UINT8 *Frames)
 // {
 //     memcpy(HIDKey, Frames, 8);
