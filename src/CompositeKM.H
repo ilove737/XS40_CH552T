@@ -12,6 +12,7 @@ void USBDeviceInit(void);
 // void HIDValueHandle(void);
 // void sendKeyHID(UINT8 *Frames);
 void Enp1IntInSend(UINT8 *HIDFrame);
+void Enp2IntInSend(UINT8 *HIDFrame);
 extern UINT8 HIDKey[8];
 extern UINT8 HIDMouse[4];
 

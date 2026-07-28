@@ -174,6 +174,18 @@ void Enp1IntInSend(UINT8 *HIDFrame)
 //     UEP2_T_LEN = sizeof(HIDMouse);                           //上传数据长度
 //     UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_ACK; //有数据时上传数据并应答ACK
 // }
+
+/*
+ * Function Name  : Enp2IntInSend()
+ * Description    : USB设备模式端点2的中断上传（鼠标报告）
+ * Input          : UINT8 *HIDFrame - 4字节鼠标报告 [buttons, X, Y, wheel]
+*/
+void Enp2IntInSend(UINT8 *HIDFrame)
+{
+    memcpy(Ep2Buffer, HIDFrame, 4);               //加载上传数据
+    UEP2_T_LEN = 4;                                //上传数据长度（4字节）
+    UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_ACK; //有数据时上传数据并应答ACK
+}
 /*******************************************************************************
 * Function Name  : DeviceInterrupt()
 * Description    : CH559USB中断处理函数
@@ -188,12 +200,12 @@ void DeviceInterrupt(void) __interrupt(INT_NO_USB) __using(1) //USB中断服务�
         {
         case UIS_TOKEN_IN | 2: //endpoint 2# 中断端点上传
             UEP2_T_LEN = 0;    //预使用发送长度一定要清空
-            // UEP1_CTRL ^= bUEP_T_TOG;                                          //如果不设置自动翻转则需要手动翻转
+            // UEP2_CTRL ^= bUEP_T_TOG;     //如果不设置自动翻转则需要手动翻转
             UEP2_CTRL = UEP2_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
             break;
         case UIS_TOKEN_IN | 1: //endpoint 1# 中断端点上传
             UEP1_T_LEN = 0;    //预使用发送长度一定要清空
-            // UEP2_CTRL ^= bUEP_T_TOG;                                 //如果不设置自动翻转则需要手动翻转
+            // UEP2_CTRL ^= bUEP_T_TOG;     //如果不设置自动翻转则需要手动翻转
             UEP1_CTRL = UEP1_CTRL & ~MASK_UEP_T_RES | UEP_T_RES_NAK; //默认应答NAK
             FLAG = 1; /*传输完成标志*/
             break;
@@ -220,7 +232,7 @@ void DeviceInterrupt(void) __interrupt(INT_NO_USB) __using(1) //USB中断服务�
                             // 编号报告：数据阶段首字节必须为 Report ID
                             KeymapTxBuf[0] = KEYMAP_REPORT_ID;
                             readKeymapFromFlash((UINT8 __xdata *)(KeymapTxBuf + 1));
-                            SetupLen = KEYMAP_WORD_CNT * 4 + 1;  // 161，覆盖 SETUP 处的 0x7F 限制
+                            SetupLen = (UINT8)(KEYMAP_WORD_CNT * 4 + 1);
                             len = SetupLen >= THIS_ENDP0_SIZE ? THIS_ENDP0_SIZE : SetupLen;
                             memcpy(Ep0Buffer, KeymapTxBuf, len);
                             SetupLen -= len;

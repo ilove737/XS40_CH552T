@@ -13,6 +13,19 @@ UINT8 HIDFrames[8];
 UINT8 HIDFramesPointer = 2; // 从帧的第三个字节开始添加普通按键的KeyCode
 UINT8 HIDFrames0 = 0;
 
+UINT8 mouseBtnDown = 0;  // 鼠标按钮按下状态，0=未按下，1=已按下
+
+/*
+ * 鼠标连续移动状态变量
+ * mouseDX/mouseDY/mouseDW 存储当前按下的移动/滚轮键的位移量，
+ * mouseMoveCnt 是发送节拍计数器，每 MOUSE_MOVE_INTERVAL 个 tick 发送一次。
+ * 这些变量在 makeHIDFrames() 中设置，在 scanKeyChange() 中持续发送。
+ */
+UINT8 mouseDX = 0;       // 鼠标 X 轴位移量（0 = 无移动）
+UINT8 mouseDY = 0;       // 鼠标 Y 轴位移量
+UINT8 mouseDW = 0;       // 鼠标滚轮位移量
+UINT8 mouseMoveCnt = 0;  // 连续移动发送计数器
+
 // 将变量映射到指定的位地址。0xB0~0xB4 对应 P3 口的第 0~4 位（P3.0~P3.4）
 __sbit __at (0xB0) row1;
 __sbit __at (0xB1) row2;
@@ -109,12 +122,21 @@ void makeHIDFrames(void)
      * 步骤 3：处理普通按键
      * 根据当前 Fn 层状态（PCON.GF0/GF1），从对应的键位映射表中
      * 查出 HID 键码和修饰键，填入 HIDFrames。
+     *
+     * 特殊约定：修饰键字节 = 0xFE 表示该键触发鼠标动作，
+     * 此时填充 HIDMouse[4] 并通过端点 2 发送鼠标报告。
      */
     {
         UINT8C (*keyMap)[2];  // 指向当前选中的键位映射表（Flash 地址）
         UINT8 index;          // 按键索引（0~39）
-        UINT8 mod;            // 修饰键位值
-        UINT8 code;           // 按键键码
+        UINT8 mod;            // 修饰键位值（0xFE=鼠标动作, KEY_FnX=功能键, 其他=修饰键）
+        UINT8 code;           // 按键键码（或鼠标动作码）
+        UINT8 mouseClickPressed = 0;  // 本轮扫描是否有鼠标点击键按下
+
+        // 每轮扫描开始时清零连续移动量，之后由按键处理重新赋值
+        mouseDX = 0;
+        mouseDY = 0;
+        mouseDW = 0;
 
         // 根据 Fn 层状态选择键位映射表
         if (PCON & GF0)
@@ -134,17 +156,98 @@ void makeHIDFrames(void)
                         mod = keyMap[index][0];
                         code = keyMap[index][1];
 
-                        if (mod != KEY_FnX)	// 修饰键位累加（KEY_FnX 表示该键不是修饰键）
-                            HIDFrames0 += mod;
-
-                        if (HIDFramesPointer < 8 && code > 0)	// 写入普通键码，最多 6 个（HIDFrames[2] ~ HIDFrames[7]）
+                        if (mod == 0xFE)
                         {
-                            HIDFrames[HIDFramesPointer] = code;
-                            HIDFramesPointer++;
+                            /*
+                             * 鼠标动作处理分支
+                             * 修饰键字节 0xFE 表示该键位映射为鼠标操作，
+                             * 键码字节指定具体动作（点击/移动/滚轮）。
+                             *
+                             * 点击类动作（MOUSE_LCLICK/RCLICK/MCLICK）：
+                             *   按下时发送按下报告，松开时发送释放报告，
+                             *   确保两次报告分属不同的 USB 帧（主机轮询间隔 10ms）。
+                             * 移动/滚轮动作：
+                             *   每次触发立即发送一次位移报告。
+                             */
+                            UINT8 mouseFrame[4] = {0, 0, 0, 0};
+
+                            switch (code)
+                            {
+                                case MOUSE_LCLICK: mouseFrame[0] |= 0x01; break;
+                                case MOUSE_RCLICK: mouseFrame[0] |= 0x02; break;
+                                case MOUSE_MCLICK: mouseFrame[0] |= 0x04; break;
+                                case MOUSE_UP:     mouseFrame[2] = (UINT8)-5; break;
+                                case MOUSE_DOWN:   mouseFrame[2] = 5;    break;
+                                case MOUSE_LEFT:   mouseFrame[1] = (UINT8)-5; break;
+                                case MOUSE_RIGHT:  mouseFrame[1] = 5;    break;
+                                case MOUSE_WHEEL_UP:   mouseFrame[3] = 1;  break;
+                                case MOUSE_WHEEL_DN:   mouseFrame[3] = (UINT8)-1; break;
+                            }
+
+                            if (code <= MOUSE_MCLICK)
+                            {
+                                // 点击类动作：只在未按下时发送按下报告
+                                mouseClickPressed = 1;
+                                if (!mouseBtnDown)
+                                {
+                                    mouseBtnDown = 1;
+                                    Enp2IntInSend(mouseFrame);
+                                }
+                            }
+                            else
+                            {
+                                /*
+                                 * 移动/滚轮动作：将位移量存入全局变量，
+                                 * 由 scanKeyChange() 持续发送。
+                                 * mouseDX/mouseDY/mouseDW 在每轮循环开始时已清零，
+                                 * 此处赋值后将在循环结束后的连续移动逻辑中发送第一帧。
+                                 */
+                                mouseDX = mouseFrame[1];
+                                mouseDY = mouseFrame[2];
+                                mouseDW = mouseFrame[3];
+                            }
+                        }
+                        else
+                        {
+                            // 普通键盘按键处理：修饰键累加 + 键码写入
+                            if (mod != KEY_FnX)
+                                HIDFrames0 += mod;
+
+                            if (HIDFramesPointer < 8 && code > 0)
+                            {
+                                HIDFrames[HIDFramesPointer] = code;
+                                HIDFramesPointer++;
+                            }
                         }
                     }
                 }
             }
+        }
+
+        /*
+         * 鼠标点击释放处理
+         * 如果 mouseBtnDown 已置位但本轮没有点击键按下，
+         * 说明用户已松开按键，发送释放报告并清除状态。
+         * 按下和释放之间至少间隔 6ms 防抖时间 + 按键保持时间，
+         * 远超主机 10ms 轮询间隔，确保按下报告能被主机正确接收。
+         */
+        if (mouseBtnDown && !mouseClickPressed)
+        {
+            UINT8 releaseFrame[4] = {0, 0, 0, 0};
+            Enp2IntInSend(releaseFrame);
+            mouseBtnDown = 0;
+        }
+
+        /*
+         * 鼠标连续移动第一帧发送
+         * 当检测到新的移动/滚轮按键按下时（mouseDX/DY/DW 非零），
+         * 立即发送第一帧以确保即时响应，同时设置计数器为后续的节拍发送做准备。
+         */
+        if (mouseDX || mouseDY || mouseDW)
+        {
+            UINT8 moveFrame[4] = {0, mouseDX, mouseDY, mouseDW};
+            Enp2IntInSend(moveFrame);
+            mouseMoveCnt = MOUSE_MOVE_INTERVAL;
         }
     }
 
@@ -237,4 +340,27 @@ void scanKeyChange(void)
      */
     if (changed)
         makeHIDFrames();
+
+    /*
+     * 步骤 4：鼠标连续移动
+     * 当 mouseDX/mouseDY/mouseDW 有非零值时（由 makeHIDFrames() 设置），
+     * 每 MOUSE_MOVE_INTERVAL 个 tick 发送一次移动报告，实现按住键持续移动效果。
+     *
+     * 计数器递减到 0 时发送，然后重置计数器。
+     * 当按键松开时，makeHIDFrames() 会将 mouseDX/DY/DW 清零，
+     * 此处自然停止发送。
+     */
+    if (mouseDX || mouseDY || mouseDW)
+    {
+        if (mouseMoveCnt == 0)
+        {
+            UINT8 moveFrame[4] = {0, mouseDX, mouseDY, mouseDW};
+            Enp2IntInSend(moveFrame);
+            mouseMoveCnt = MOUSE_MOVE_INTERVAL;
+        }
+        else
+        {
+            mouseMoveCnt--;
+        }
+    }
 }

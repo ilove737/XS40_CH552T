@@ -28,6 +28,13 @@
  */
 #define DEBOUNCE_THRESHOLD  3
 
+/*
+ * 鼠标连续移动发送间隔（单位：定时器 tick 数）
+ * 定时器每 2ms 中断一次，MOUSE_MOVE_INTERVAL = 5 表示每 10ms 发送一次鼠标移动报告。
+ * 该间隔与 USB 鼠标端点轮询间隔（10ms）匹配，避免发送过快导致数据被丢弃。
+ */
+#define MOUSE_MOVE_INTERVAL  5
+
 void initGPIO(void);
 void makeHIDFrames(void);
 void scanKeyChange(void);
@@ -331,5 +338,20 @@ void scanKeyChange(void);
 // #define KEY_MEDIA_COFFEE 0xf9
 // #define KEY_MEDIA_REFRESH 0xfa
 // #define KEY_MEDIA_CALC 0xfb
+
+/*
+ * 鼠标动作码
+ * 在 Fn0 层中，将修饰键字节设为 0xFE 表示该键位触发鼠标动作，
+ * 键码字节使用以下枚举值指定具体鼠标操作。
+ */
+#define MOUSE_LCLICK    1   // 左键点击
+#define MOUSE_RCLICK    2   // 右键点击
+#define MOUSE_MCLICK    3   // 中键点击
+#define MOUSE_UP        4   // 光标上移
+#define MOUSE_DOWN      5   // 光标下移
+#define MOUSE_LEFT      6   // 光标左移
+#define MOUSE_RIGHT     7   // 光标右移
+#define MOUSE_WHEEL_UP  8   // 滚轮上滚
+#define MOUSE_WHEEL_DN  9   // 滚轮下滚
 
 #endif // USB_HID_KEYS
