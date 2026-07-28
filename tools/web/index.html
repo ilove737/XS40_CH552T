@@ -49,11 +49,29 @@
     <div class="modal">
       <div class="modal-header" id="modalTitle">编辑键位</div>
       <div class="modal-body">
-        <fieldset class="mod-fieldset">
+        <div class="mode-toggle">
+          <label><input type="radio" name="editMode" value="keyboard" checked> 键盘按键</label>
+          <label><input type="radio" name="editMode" value="mouse"> 鼠标动作</label>
+        </div>
+        <fieldset class="mod-fieldset" id="modFieldset">
           <legend>修饰符</legend>
           <div class="mod-grid" id="modGrid"></div>
         </fieldset>
-        <fieldset>
+        <fieldset id="mouseFieldset" hidden>
+          <legend>鼠标动作</legend>
+          <select id="mouseSelect" class="mouse-select">
+            <option value="1">MOUSE_LCLICK — 左键点击</option>
+            <option value="2">MOUSE_RCLICK — 右键点击</option>
+            <option value="3">MOUSE_MCLICK — 中键点击</option>
+            <option value="4">MOUSE_UP — 光标上移</option>
+            <option value="5">MOUSE_DOWN — 光标下移</option>
+            <option value="6">MOUSE_LEFT — 光标左移</option>
+            <option value="7">MOUSE_RIGHT — 光标右移</option>
+            <option value="8">MOUSE_WHEEL_UP — 滚轮上滚</option>
+            <option value="9">MOUSE_WHEEL_DN — 滚轮下滚</option>
+          </select>
+        </fieldset>
+        <fieldset id="keycodeFieldset">
           <legend>键码</legend>
           <div class="keycode-row">
             <label>十六进制</label>

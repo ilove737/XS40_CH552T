@@ -60,6 +60,11 @@ function buildKeynameDatalist() {
     opt.value = name;
     dl.append(opt);
   }
+  for (const name of Object.keys(km.MOUSE_NAMES)) {
+    const opt = document.createElement('option');
+    opt.value = name;
+    dl.append(opt);
+  }
 }
 
 // 设备稳定标识（按厂商/产品/序列号/名称/用途，过滤掉多余接口导致的重复）
@@ -262,6 +267,10 @@ function updateHandLabel() {
 // ---- 网格渲染 ----
 function keyDisplay(mod, key) {
   if (mod === 0xff && key === 0x00) return { text: 'Fn0', cls: 'key-fn' };
+  if (km.isMouseAction(mod)) {
+    const name = km.mouseShortName(key);
+    return { text: '🖱' + (name ? '\n' + name : ''), cls: 'key-mouse' };
+  }
   const prefix = km.modPrefix(mod);
   const name = km.shortName(key);
   let text;
@@ -293,17 +302,47 @@ function renderGrid() {
 }
 
 // ---- 编辑弹窗 ----
+function switchEditMode(mode) {
+  const isMouse = mode === 'mouse';
+  $('mouseFieldset').hidden = !isMouse;
+  $('modFieldset').hidden = isMouse;
+  $('keycodeFieldset').hidden = isMouse;
+  $('btnCapture').hidden = isMouse;
+}
+
 function openEdit(idx) {
   state.editIdx = idx;
   const [mod, key] = km.getKey(state.data, state.currentLayer, idx);
   const layerName = state.currentLayer ? 'Fn0_keyMap' : 'mainKeyMap';
   $('modalTitle').textContent =
     `编辑键位 ${idx} (${layerName}, 行${Math.floor(idx / COLS)} 列${idx % COLS})`;
-  for (const [name] of km.MOD_LIST) {
-    $('mod_' + name).checked = !!(mod & km.MOD[name]);
+
+  const isMouse = km.isMouseAction(mod);
+  // 设置 radio 选中状态
+  document.querySelector('input[name="editMode"][value="' + (isMouse ? 'mouse' : 'keyboard') + '"]').checked = true;
+  switchEditMode(isMouse ? 'mouse' : 'keyboard');
+
+  if (isMouse) {
+    // 鼠标动作模式：设置下拉框选中项
+    const sel = $('mouseSelect');
+    let found = false;
+    for (const opt of sel.options) {
+      if (parseInt(opt.value, 0) === key) {
+        sel.value = opt.value;
+        found = true;
+        break;
+      }
+    }
+    if (!found) sel.value = '1';
+  } else {
+    // 普通键盘模式：设置修饰符复选框和键码输入
+    for (const [name] of km.MOD_LIST) {
+      $('mod_' + name).checked = !!(mod & km.MOD[name]);
+    }
+    $('hexInput').value = '0x' + key.toString(16).padStart(2, '0');
+    $('nameInput').value = keyNameOf(key);
   }
-  $('hexInput').value = '0x' + key.toString(16).padStart(2, '0');
-  $('nameInput').value = keyNameOf(key);
+
   $('captureLabel').textContent = '点击「捕获按键」后按目标键…';
   $('captureLabel').className = 'capture-label';
   $('modal').hidden = false;
@@ -316,6 +355,9 @@ function closeEdit() {
 }
 
 function collectMod() {
+  // 鼠标动作模式：返回 0xFE
+  if (document.querySelector('input[name="editMode"]:checked').value === 'mouse')
+    return 0xFE;
   let mod = 0;
   for (const [name, val] of km.MOD_LIST) {
     if ($('mod_' + name).checked) mod |= val;
@@ -324,6 +366,9 @@ function collectMod() {
 }
 
 function collectKey() {
+  // 鼠标动作模式：从下拉框取值
+  if (document.querySelector('input[name="editMode"]:checked').value === 'mouse')
+    return parseInt($('mouseSelect').value, 0) & 0xff;
   const name = $('nameInput').value.trim().toUpperCase();
   if (name) {
     const k = km.parseKey(name);
@@ -472,6 +517,13 @@ function bindEvents() {
   $('btnCapture').onclick = onCaptureStart;
   $('btnCancel').onclick = closeEdit;
   $('btnOk').onclick = onOk;
+
+  // 编辑模式切换（键盘/鼠标）
+  document.querySelectorAll('input[name="editMode"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+      if (radio.checked) switchEditMode(radio.value);
+    });
+  });
 
   // 点击弹窗背景不关闭，避免误丢编辑；仅取消/确定生效
   window.addEventListener('keydown', (e) => {

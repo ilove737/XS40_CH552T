@@ -51,6 +51,20 @@ export const MOD = {
   RCTRL: 0x10, RSHIFT: 0x20, RALT: 0x40, RMETA: 0x80,
 };
 
+// 鼠标动作码（与固件 src/scanKey.h 中的 MOUSE_* 保持一致）
+// 修饰符字节 0xFE 表示该键触发鼠标动作，键码字节使用以下值
+export const MOUSE_NAMES = {
+  MOUSE_LCLICK: 1, MOUSE_RCLICK: 2, MOUSE_MCLICK: 3,
+  MOUSE_UP: 4, MOUSE_DOWN: 5, MOUSE_LEFT: 6, MOUSE_RIGHT: 7,
+  MOUSE_WHEEL_UP: 8, MOUSE_WHEEL_DN: 9,
+};
+
+// 鼠标动作短名（用于网格显示）
+const MOUSE_SHORT_NAMES = {
+  1: '左键', 2: '右键', 3: '中键',
+  4: '↑', 5: '↓', 6: '←', 7: '→', 8: '滚↑', 9: '滚↓',
+};
+
 // 修饰符顺序（用于复选框布局）
 export const MOD_LIST = [
   ['LCTRL', 0x01], ['LSHIFT', 0x02], ['LALT', 0x04], ['LMETA', 0x08],
@@ -85,6 +99,7 @@ export function parseKey(name) {
   if (name.startsWith('KEY_')) name = name.slice(4);
   if (name.startsWith('0X')) return parseInt(name, 16);
   if (name in KEY_NAMES) return KEY_NAMES[name];
+  if (name in MOUSE_NAMES) return MOUSE_NAMES[name];  // 鼠标动作码
   // 单个字符（如 'A'）
   if (name.length === 1 && name in KEY_NAMES) return KEY_NAMES[name];
   try {
@@ -151,7 +166,26 @@ export function modPrefix(mod) {
   return parts.join('\n');
 }
 
+// 判断是否为鼠标动作修饰符（0xFE）
+export function isMouseAction(mod) {
+  return mod === 0xFE;
+}
+
+// 鼠标动作码 → 名称（如 'MOUSE_LCLICK'），找不到返回 null
+export function mouseName(code) {
+  for (const [name, val] of Object.entries(MOUSE_NAMES)) {
+    if (val === code) return name;
+  }
+  return null;
+}
+
+// 鼠标动作码 → 短名（如 '左键'），找不到返回空字符串
+export function mouseShortName(code) {
+  return MOUSE_SHORT_NAMES[code] || '';
+}
+
 // 默认键位（main + Fn0），返回 Uint8Array(160)
+// 与固件 src/keyMap.h 左手布局保持一致（含鼠标动作键位）
 export function makeDefaultKeymap() {
   const main = [
     [0, 0x29], [0, 0x1e], [0, 0x1f], [0, 0x20], [0, 0x21], [0, 0x22], [0, 0x35], [2, 0x25],
@@ -163,8 +197,8 @@ export function makeDefaultKeymap() {
   const fn0 = [
     [0, 0x29], [0, 0x3a], [0, 0x3b], [0, 0x3c], [0, 0x3d], [0, 0x3e], [0, 0x35], [2, 0x25],
     [0, 0x2b], [0, 0x44], [0, 0x45], [0, 0x08], [0, 0x15], [0, 0x17], [0, 0x2f], [0, 0x30],
-    [0, 0x39], [0, 0x04], [0, 0x16], [0, 0x07], [0, 0x09], [0, 0x0a], [2, 0x26], [2, 0x27],
-    [2, 0x00], [2, 0x1f], [0, 0x1d], [0, 0x1b], [0, 0x06], [0, 0x19], [2, 0x24], [2, 0x20],
+    [0, 0x39], [0xfe, 1], [0xfe, 4], [0xfe, 2], [0, 0x09], [0, 0x0a], [2, 0x26], [2, 0x27],
+    [2, 0x00], [0xfe, 6], [0xfe, 5], [0xfe, 7], [0, 0x06], [0, 0x19], [2, 0x24], [2, 0x20],
     [0xff, 0x00], [8, 0x00], [4, 0x00], [0xff, 0x00], [0, 0x2c], [1, 0x00], [2, 0x35], [2, 0x1e],
   ];
   const raw = new Uint8Array(KEYMAP_SIZE);
@@ -216,8 +250,7 @@ export function formatKeymapText(data) {
   out += '# 格式: 索引 修饰符 键码  [# 注释]\n';
   out += `# 索引 0-${KEY_ENTRIES - 1} mainKeyMap, ${KEY_ENTRIES}-${KEY_ENTRIES * 2 - 1} Fn0_keyMap\n`;
   out += '# 修饰符: 0=无, 1=LCTRL, 2=LSHIFT, 4=LALT, 8=LMETA, 0x10=RCTRL, 0x20=RSHIFT, 0x40=RALT, 0x80=RMETA\n';
-  out += '# 键码: 见 USB HID Usage Table，或用 KEY_ 名称\n';
-  out += '# 0xFF修饰符+0x00键码 = Fn 切换键\n\n';
+  out += '# 0xFE修饰符 = 鼠标动作（键码见 MOUSE_* 宏），0xFF修饰符+0x00键码 = Fn 切换键\n\n';
   out += '# ===== mainKeyMap =====\n';
   for (let i = 0; i < KEY_ENTRIES; i++) {
     const m = main[i * 2];

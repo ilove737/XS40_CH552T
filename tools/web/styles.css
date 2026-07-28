@@ -160,9 +160,19 @@ main {
 .key-btn.key-normal { background: #f0f0f0; }
 .key-btn.key-mod { background: #c8e6ff; }
 .key-btn.key-fn { background: #ffe0b0; }
+.key-btn.key-mouse { background: #c8e6c9; }
 .key-btn.key-none { background: #e6e6e6; color: #999; }
 .key-btn:hover { background: #b0d0ff; }
 .grid-hint { font-size: 12px; color: #999; margin-top: 12px; }
+
+.mouse-select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #cfd4da;
+  border-radius: 5px;
+  font-size: 13px;
+  background: #fff;
+}
 
 .statusbar {
   padding: 6px 16px;
@@ -198,6 +208,18 @@ main {
   font-weight: 600;
 }
 .modal-body { padding: 14px 16px; }
+.mode-toggle {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+.mode-toggle label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 .modal-body fieldset {
   border: 1px solid #e1e4e8;
   border-radius: 8px;
