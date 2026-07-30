@@ -129,13 +129,21 @@ export function keycodeName(code) {
   return `0x${(code & 0xff).toString(16).padStart(2, '0')}`;
 }
 
-// 修饰符位 → 名称串（如 'LCTRL+LSHIFT'，0 返回 '0'）
+// 修饰符位 → 显示名称
+const MOD_DISPLAY = {
+  0x01: 'Ctrl', 0x02: 'Shift', 0x04: 'Alt', 0x08: 'Win',
+  0x10: 'Ctrl', 0x20: 'Shift', 0x40: 'Alt', 0x80: 'Win',
+};
+
+// 修饰符位 → 名称串（如 'Ctrl+Shift'，0 返回 '0'）
 export function modName(mod) {
+  if (mod === 0xff) return 'Fn';
+  if (mod === 0xfe) return 'MOUSE';
   const parts = [];
-  for (const [name, val] of Object.entries(MOD)) {
+  for (const [val, name] of Object.entries(MOD_DISPLAY)) {
     if (mod & val) parts.push(name);
   }
-  return parts.length ? parts.join('+') : '0';
+  return parts.length ? [...new Set(parts)].join('+') : '0';
 }
 
 // 键码 → 短名（用于网格显示）
@@ -155,14 +163,14 @@ export function shortName(code) {
 // 修饰符位 → 前缀（每个修饰符一行，用换行分隔）
 export function modPrefix(mod) {
   const parts = [];
-  if (mod & 0x01) parts.push('LCtrl');
-  if (mod & 0x02) parts.push('LShift');
-  if (mod & 0x04) parts.push('LAlt');
-  if (mod & 0x08) parts.push('LWin');
-  if (mod & 0x10) parts.push('RCtrl');
-  if (mod & 0x20) parts.push('RShift');
-  if (mod & 0x40) parts.push('RAlt');
-  if (mod & 0x80) parts.push('RWin');
+  if (mod & 0x01) parts.push('Ctrl');
+  if (mod & 0x02) parts.push('Shift');
+  if (mod & 0x04) parts.push('Alt');
+  if (mod & 0x08) parts.push('Win');
+  if (mod & 0x10) parts.push('Ctrl');
+  if (mod & 0x20) parts.push('Shift');
+  if (mod & 0x40) parts.push('Alt');
+  if (mod & 0x80) parts.push('Win');
   return parts.join('\n');
 }
 
@@ -241,29 +249,68 @@ export function readKeymapText(text) {
   return raw;
 }
 
-// 生成文本映射文件（与 set_keymap.py write_template 兼容）
+// Shift 组合键 → 最终字符映射
+const SHIFTED_CHARS = {
+  0x1e: '!', 0x1f: '@', 0x20: '#', 0x21: '$', 0x22: '%',
+  0x23: '^', 0x24: '&', 0x25: '*', 0x26: '(', 0x27: ')',
+  0x2d: '_', 0x2e: '+',
+  0x2f: '{', 0x30: '}', 0x31: '|',
+  0x33: ':', 0x34: '"',
+  0x36: '<', 0x37: '>', 0x38: '?',
+  0x35: '~',
+};
+const MOUSE_LABELS = {1:'🖱左键', 2:'🖱右键', 3:'🖱中键', 4:'🖱↑', 5:'🖱↓', 6:'🖱←', 7:'🖱→', 8:'🖱滚↑', 9:'🖱滚↓'};
+
+function formatKeyCell(mod, key) {
+  if (mod === 0xff && key === 0x00) return 'Fn0';
+  if (mod === 0xfe) return MOUSE_LABELS[key] || '🖱?';
+  if ((mod & (0x02 | 0x20)) && key in SHIFTED_CHARS) return SHIFTED_CHARS[key];
+  const prefix = modName(mod);
+  if (prefix !== '0') {
+    if (key === 0) return prefix;
+    const name = shortName(key) || keycodeName(key);
+    return prefix + '+' + name;
+  }
+  return shortName(key) || keycodeName(key);
+}
+
+// 生成文本映射文件（矩阵排布格式 + 可导入旧格式）
 export function formatKeymapText(data) {
   const main = data.slice(0, LAYER_SIZE);
   const fn0 = data.slice(LAYER_SIZE);
   let out = '';
-  out += '# XS40_CH552T 键位映射配置文件\n';
-  out += '# 格式: 索引 修饰符 键码  [# 注释]\n';
-  out += `# 索引 0-${KEY_ENTRIES - 1} mainKeyMap, ${KEY_ENTRIES}-${KEY_ENTRIES * 2 - 1} Fn0_keyMap\n`;
+  out += '# XS40_CH552T 键位映射配置文件\n\n';
   out += '# 修饰符: 0=无, 1=LCTRL, 2=LSHIFT, 4=LALT, 8=LMETA, 0x10=RCTRL, 0x20=RSHIFT, 0x40=RALT, 0x80=RMETA\n';
-  out += '# 0xFE修饰符 = 鼠标动作（键码见 MOUSE_* 宏），0xFF修饰符+0x00键码 = Fn 切换键\n\n';
+  out += '# 0xFE修饰符 = 鼠标动作, 0xFF修饰符+0x00键码 = Fn切换键\n\n';
+
+  for (const [layerName, layerData] of [['mainKeyMap', main], ['Fn0_keyMap', fn0]]) {
+    out += `# ===== ${layerName} =====\n`;
+    for (let row = 0; row < 5; row++) {
+      const cells = [];
+      for (let col = 0; col < 8; col++) {
+        const idx = row * 8 + col;
+        const m = layerData[idx * 2];
+        const k = layerData[idx * 2 + 1];
+        cells.push(formatKeyCell(m, k).padEnd(12, ' '));
+      }
+      out += `# 行${row}:  ${cells.join('')}\n`;
+    }
+    out += '\n';
+  }
+
+  // 旧格式（可导入）
+  out += '# ===== 可导入格式（索引 修饰符 键码） =====\n';
   out += '# ===== mainKeyMap =====\n';
   for (let i = 0; i < KEY_ENTRIES; i++) {
     const m = main[i * 2];
     const k = main[i * 2 + 1];
-    out += `${String(i).padStart(2, ' ')}    0x${m.toString(16).padStart(2, '0')}   ` +
-           `${keycodeName(k).padEnd(12, ' ')}  # (${modName(m)})\n`;
+    out += `${String(i).padStart(2, ' ')}    0x${m.toString(16).padStart(2, '0')}   0x${k.toString(16).padStart(2, '0')}  # ${modName(m)}, ${m === 0xfe ? (MOUSE_LABELS[k] || '?') : (shortName(k) || keycodeName(k))}\n`;
   }
   out += '\n# ===== Fn0_keyMap =====\n';
   for (let i = 0; i < KEY_ENTRIES; i++) {
     const m = fn0[i * 2];
     const k = fn0[i * 2 + 1];
-    out += `${String(i + KEY_ENTRIES).padStart(2, ' ')}    0x${m.toString(16).padStart(2, '0')}   ` +
-           `${keycodeName(k).padEnd(12, ' ')}  # (${modName(m)})\n`;
+    out += `${String(i + KEY_ENTRIES).padStart(2, ' ')}    0x${m.toString(16).padStart(2, '0')}   0x${k.toString(16).padStart(2, '0')}  # ${modName(m)}, ${m === 0xfe ? (MOUSE_LABELS[k] || '?') : (shortName(k) || keycodeName(k))}\n`;
   }
   return out;
 }

@@ -564,15 +564,29 @@ function downloadBlob(blob, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+function exportFilename(ext) {
+  const hand = state.currentDevice ? deviceHand(state.currentDevice) : '?';
+  const now = new Date();
+  const ts = now.getFullYear() +
+    String(now.getMonth() + 1).padStart(2, '0') +
+    String(now.getDate()).padStart(2, '0') + '_' +
+    String(now.getHours()).padStart(2, '0') +
+    String(now.getMinutes()).padStart(2, '0') +
+    String(now.getSeconds()).padStart(2, '0');
+  return `keymap_XS40_${hand}_${ts}.${ext}`;
+}
+
 function exportTxt() {
   const text = km.formatKeymapText(state.data);
-  downloadBlob(new Blob([text], { type: 'text/plain' }), 'keymap.txt');
-  setStatus('已导出 keymap.txt');
+  const name = exportFilename('txt');
+  downloadBlob(new Blob([text], { type: 'text/plain' }), name);
+  setStatus('已导出 ' + name);
 }
 
 function exportBin() {
-  downloadBlob(new Blob([state.data], { type: 'application/octet-stream' }), 'keymap.bin');
-  setStatus('已导出 keymap.bin');
+  const name = exportFilename('bin');
+  downloadBlob(new Blob([state.data], { type: 'application/octet-stream' }), name);
+  setStatus('已导出 ' + name);
 }
 
 // ---- 事件绑定 ----
