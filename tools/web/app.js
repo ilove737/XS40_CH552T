@@ -305,9 +305,11 @@ function renderGrid() {
 function switchEditMode(mode) {
   const isMouse = mode === 'mouse';
   $('mouseFieldset').hidden = !isMouse;
-  $('modFieldset').hidden = isMouse;
-  $('keycodeFieldset').hidden = isMouse;
-  $('btnCapture').hidden = isMouse;
+  $('modFieldset').hidden = true;
+  $('keycodeFieldset').hidden = true;
+  $('kbd104Container').hidden = isMouse;
+  $('modalHint').hidden = isMouse;
+  if (isMouse && capture) { capture.stop(); capture = null; }
 }
 
 function openEdit(idx) {
@@ -318,40 +320,117 @@ function openEdit(idx) {
     `编辑键位 ${idx} (${layerName}, 行${Math.floor(idx / COLS)} 列${idx % COLS})`;
 
   const isMouse = km.isMouseAction(mod);
-  // 设置 radio 选中状态
   document.querySelector('input[name="editMode"][value="' + (isMouse ? 'mouse' : 'keyboard') + '"]').checked = true;
   switchEditMode(isMouse ? 'mouse' : 'keyboard');
 
   if (isMouse) {
-    // 鼠标动作模式：设置下拉框选中项
-    const sel = $('mouseSelect');
-    let found = false;
-    for (const opt of sel.options) {
-      if (parseInt(opt.value, 0) === key) {
-        sel.value = opt.value;
-        found = true;
-        break;
-      }
-    }
-    if (!found) sel.value = '1';
+    document.querySelectorAll('.mouse-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.code) === key);
+    });
   } else {
-    // 普通键盘模式：设置修饰符复选框和键码输入
     for (const [name] of km.MOD_LIST) {
       $('mod_' + name).checked = !!(mod & km.MOD[name]);
     }
     $('hexInput').value = '0x' + key.toString(16).padStart(2, '0');
     $('nameInput').value = keyNameOf(key);
+    // 自动启动捕获
+    if (!capture) {
+      capture = new KeyCapture();
+      capture.start();
+    }
   }
 
-  $('captureLabel').textContent = '点击「捕获按键」后按目标键…';
-  $('captureLabel').className = 'capture-label';
   $('modal').hidden = false;
-  if (capture) { capture.stop(); capture = null; }
+  renderKeyboard104(key);
 }
 
 function closeEdit() {
   $('modal').hidden = true;
   if (capture) { capture.stop(); capture = null; }
+}
+
+// ---- 104 键盘图渲染（KLE 风格键帽） ----
+function renderKeyboard104(selectedCode) {
+  const container = $('kbd104Container');
+  container.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'kbd104-grid';
+
+  // 修饰键码 → 复选框名称映射
+  const modMap = {
+    0xe0: 'LCTRL', 0xe1: 'LSHIFT', 0xe2: 'LALT', 0xe3: 'LMETA',
+    0xe4: 'RCTRL', 0xe5: 'RSHIFT', 0xe6: 'RALT', 0xe7: 'RMETA',
+  };
+  const isMod = (code) => (code >= 0xe0 && code <= 0xe7);
+
+  let maxCol = 0;
+  for (const row of km.KEYBOARD_104) {
+    for (const item of row) {
+      const col = item[0], span = item[1];
+      const end = col + span;
+      if (end > maxCol) maxCol = end;
+    }
+  }
+  const colW = 32;
+  grid.style.position = 'relative';
+  grid.style.width = (maxCol * colW + 8) + 'px';
+  grid.style.height = (6 * 36) + 'px';
+
+  km.KEYBOARD_104.forEach((row, ri) => {
+    const rowTop = ri * 36;
+
+    for (const item of row) {
+      const [col, span, code, label, h = 1] = item;
+
+      const cap = document.createElement('div');
+      cap.className = 'kbd104-cap';
+      cap.style.position = 'absolute';
+      cap.style.left = (col * colW) + 'px';
+      cap.style.top = rowTop + 'px';
+      cap.style.width = (span * colW) + 'px';
+      cap.style.height = (36 * h) + 'px';
+
+      // 高亮：选中键码 或 已勾选的修饰键
+      const isActive = (code === selectedCode) ||
+        (isMod(code) && $('mod_' + modMap[code]).checked);
+      if (isActive) cap.classList.add('active');
+
+      cap.title = '0x' + code.toString(16).padStart(2, '0');
+
+      const border = document.createElement('div');
+      border.className = 'kbd104-border';
+
+      const top = document.createElement('div');
+      top.className = 'kbd104-top';
+
+      const lbl = document.createElement('div');
+      lbl.className = 'kbd104-lbl';
+      lbl.textContent = label;
+
+      cap.append(border, top, lbl);
+      cap.onclick = () => {
+        if (isMod(code)) {
+          // 修饰键：切换复选框
+          const cb = $('mod_' + modMap[code]);
+          cb.checked = !cb.checked;
+          renderKeyboard104(selectedCode);
+        } else {
+          // 普通键：点击已选中则取消，否则选中
+          if (code === selectedCode) {
+            $('hexInput').value = '0x00';
+            $('nameInput').value = '';
+            renderKeyboard104(-1);
+          } else {
+            $('hexInput').value = '0x' + code.toString(16).padStart(2, '0');
+            $('nameInput').value = keyNameOf(code);
+            renderKeyboard104(code);
+          }
+        }
+      };
+      grid.append(cap);
+    }
+  });
+  container.append(grid);
 }
 
 function collectMod() {
@@ -366,9 +445,11 @@ function collectMod() {
 }
 
 function collectKey() {
-  // 鼠标动作模式：从下拉框取值
-  if (document.querySelector('input[name="editMode"]:checked').value === 'mouse')
-    return parseInt($('mouseSelect').value, 0) & 0xff;
+  // 鼠标动作模式：从平铺按钮取值
+  if (document.querySelector('input[name="editMode"]:checked').value === 'mouse') {
+    const active = document.querySelector('.mouse-btn.active');
+    return active ? parseInt(active.dataset.code, 0) & 0xff : 1;
+  }
   const name = $('nameInput').value.trim().toUpperCase();
   if (name) {
     const k = km.parseKey(name);
@@ -397,30 +478,20 @@ function applyModToCheckboxes(mod) {
 }
 
 // ---- 按键捕获 ----
-function onCaptureStart() {
-  if ($('modal').hidden) return;
-  capture = new KeyCapture();
-  capture.start();
-  $('captureLabel').textContent = '请按目标键…';
-  $('captureLabel').className = 'capture-label info';
-}
 
 document.addEventListener('keydown', (e) => {
   if (!capture || !capture.capturing) return;
-  if (e.key === 'Escape') return; // 交给关闭逻辑处理，不作为按键捕获
+  if (e.key === 'Escape') return;
   const r = capture.handle(e);
   if (!r) return;
   if (r.type === 'modifier') {
     applyModToCheckboxes(r.mod);
-    $('captureLabel').textContent = '已捕获修饰符，继续按主键…';
-    $('captureLabel').className = 'capture-label info';
+    renderKeyboard104(parseInt($('hexInput').value, 0) || -1);
   } else if (r.type === 'key') {
     applyModToCheckboxes(r.mod);
     $('hexInput').value = '0x' + r.key.toString(16).padStart(2, '0');
     $('nameInput').value = keyNameOf(r.key);
-    $('captureLabel').textContent = `已捕获 0x${r.key.toString(16).padStart(2, '0')}`;
-    $('captureLabel').className = 'capture-label ok';
-    capture.stop();
+    renderKeyboard104(r.key);
   }
 });
 
@@ -514,7 +585,6 @@ function bindEvents() {
   $('btnImport').onclick = onImport;
   $('btnExportTxt').onclick = exportTxt;
   $('btnExportBin').onclick = exportBin;
-  $('btnCapture').onclick = onCaptureStart;
   $('btnCancel').onclick = closeEdit;
   $('btnOk').onclick = onOk;
 
@@ -522,6 +592,14 @@ function bindEvents() {
   document.querySelectorAll('input[name="editMode"]').forEach((radio) => {
     radio.addEventListener('change', () => {
       if (radio.checked) switchEditMode(radio.value);
+    });
+  });
+
+  // 鼠标动作平铺按钮点击
+  document.querySelectorAll('.mouse-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mouse-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     });
   });
 

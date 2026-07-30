@@ -53,25 +53,38 @@
           <label><input type="radio" name="editMode" value="keyboard" checked> 键盘按键</label>
           <label><input type="radio" name="editMode" value="mouse"> 鼠标动作</label>
         </div>
-        <fieldset class="mod-fieldset" id="modFieldset">
+        <fieldset class="mod-fieldset" id="modFieldset" hidden>
           <legend>修饰符</legend>
           <div class="mod-grid" id="modGrid"></div>
         </fieldset>
         <fieldset id="mouseFieldset" hidden>
           <legend>鼠标动作</legend>
-          <select id="mouseSelect" class="mouse-select">
-            <option value="1">MOUSE_LCLICK — 左键点击</option>
-            <option value="2">MOUSE_RCLICK — 右键点击</option>
-            <option value="3">MOUSE_MCLICK — 中键点击</option>
-            <option value="4">MOUSE_UP — 光标上移</option>
-            <option value="5">MOUSE_DOWN — 光标下移</option>
-            <option value="6">MOUSE_LEFT — 光标左移</option>
-            <option value="7">MOUSE_RIGHT — 光标右移</option>
-            <option value="8">MOUSE_WHEEL_UP — 滚轮上滚</option>
-            <option value="9">MOUSE_WHEEL_DN — 滚轮下滚</option>
-          </select>
+          <div class="mouse-group">
+            <div class="mouse-group-label">点击</div>
+            <div class="mouse-grid">
+              <button class="mouse-btn" data-code="1">左键</button>
+              <button class="mouse-btn" data-code="2">右键</button>
+              <button class="mouse-btn" data-code="3">中键</button>
+            </div>
+          </div>
+          <div class="mouse-group">
+            <div class="mouse-group-label">移动</div>
+            <div class="mouse-grid grid-4">
+              <button class="mouse-btn" data-code="4">↑</button>
+              <button class="mouse-btn" data-code="5">↓</button>
+              <button class="mouse-btn" data-code="6">←</button>
+              <button class="mouse-btn" data-code="7">→</button>
+            </div>
+          </div>
+          <div class="mouse-group">
+            <div class="mouse-group-label">滚轮</div>
+            <div class="mouse-grid">
+              <button class="mouse-btn" data-code="8">滚轮↑</button>
+              <button class="mouse-btn" data-code="9">滚轮↓</button>
+            </div>
+          </div>
         </fieldset>
-        <fieldset id="keycodeFieldset">
+        <fieldset id="keycodeFieldset" hidden>
           <legend>键码</legend>
           <div class="keycode-row">
             <label>十六进制</label>
@@ -81,11 +94,8 @@
             <datalist id="keynamelist"></datalist>
           </div>
         </fieldset>
-        <div class="capture-row">
-          <button id="btnCapture" type="button">🎯 捕获按键</button>
-          <span id="captureLabel" class="capture-label">点击「捕获按键」后按目标键…</span>
-        </div>
-        <p class="modal-hint">提示：若组合键与系统全局热键冲突，可能无法捕获到该按键。</p>
+        <p class="modal-hint" id="modalHint">在键盘上按下目标键，或点击下方键盘图直接选择。</p>
+        <div id="kbd104Container"></div>
       </div>
       <div class="modal-footer">
         <button id="btnCancel" type="button">取消</button>
