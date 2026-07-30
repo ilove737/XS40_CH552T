@@ -21,6 +21,24 @@ let capture = null;            // KeyCapture 实例（弹窗捕获时非 null）
 // ---- DOM 工具 ----
 const $ = (id) => document.getElementById(id);
 function setStatus(msg) { $('statusbar').textContent = msg; }
+// 显示/隐藏"未检测到设备"兜底提示横幅
+function showNotFoundHint() {
+  const el = $('notFound');
+  if (el) el.hidden = false;
+}
+function hideNotFoundHint() {
+  const el = $('notFound');
+  if (el) el.hidden = true;
+}
+// 打开/关闭"排查帮助"弹窗
+function openHelp() {
+  const el = $('helpModal');
+  if (el) el.hidden = false;
+}
+function closeHelp() {
+  const el = $('helpModal');
+  if (el) el.hidden = true;
+}
 function keyNameOf(code) {
   for (const [n, v] of Object.entries(km.KEY_NAMES)) if (v === code) return n;
   return '';
@@ -34,8 +52,8 @@ function init() {
   }
   buildModCheckboxes();
   buildKeynameDatalist();
-  renderGrid();
   bindEvents();
+  setTimeout(() => onRefresh(), 100);
 }
 
 function buildModCheckboxes() {
@@ -93,7 +111,11 @@ async function onConnect() {
   try {
     setStatus('请求授权…（请在弹窗中同时勾选左手、右手两个条目）');
     const devs = await hid.requestDevice();
-    if (!devs.length) { setStatus('已取消授权或未选择设备'); return; }
+    if (!devs.length) {
+      setStatus('已取消授权，或弹窗中未出现 XS40 设备');
+      showNotFoundHint();
+      return;
+    }
     let ok = 0, fail = 0;
     for (const dev of devs) {
       try {
@@ -113,6 +135,7 @@ async function onConnect() {
       setStatus(`已连接 ${ok} 个键盘（左手 + 右手）`);
     } else {
       setStatus('未连接任何设备，请点「连接键盘」授权。');
+      showNotFoundHint();
     }
   } catch (e) {
     setStatus('连接失败: ' + e.message);
@@ -145,8 +168,14 @@ async function onRefresh() {
     }
     refreshTree();
     updateConnBadge();
+    // 自动选中第一个设备的主层
+    if (state.devices.length > 0 && !state.currentDevice) {
+      await selectDevice(state.devices[0], 0);
+    }
     if (state.devices.length === 0) {
+      renderGrid();
       setStatus('未检测到已配对的 XS40 键盘，请点「连接键盘」授权。');
+      showNotFoundHint();
     } else if (fail) {
       setStatus(`已枚举 ${ok} 个键盘，但 ${fail} 个打开失败：重新点「连接键盘」并勾选该设备。`);
     } else {
@@ -160,6 +189,7 @@ async function onRefresh() {
 function updateConnBadge() {
   const badge = $('connStatus');
   if (state.devices.length > 0) {
+    hideNotFoundHint();
     badge.textContent = `已连接 ${state.devices.length}`;
     badge.className = 'status-badge on';
   } else {
@@ -250,18 +280,7 @@ async function selectDevice(dev, layer) {
 }
 
 function afterLoad() {
-  $('layerTitle').textContent = state.currentLayer ? 'Fn0_keyMap (Fn层)' : 'mainKeyMap (主层)';
-  updateHandLabel();
   renderGrid();
-}
-
-function updateHandLabel() {
-  const dev = state.currentDevice;
-  const hand = dev ? deviceHand(dev) : null;
-  const lbl = $('handLabel');
-  if (hand === 'L') lbl.textContent = 'L 左手';
-  else if (hand === 'R') lbl.textContent = 'R 右手';
-  else lbl.textContent = '? 未检测';
 }
 
 // ---- 网格渲染 ----
@@ -583,6 +602,7 @@ function exportFilename(ext) {
 }
 
 function exportTxt() {
+  if (!state.currentDevice) { alert('请先在左侧设备树中选择需要导出的键盘。'); return; }
   const text = km.formatKeymapText(state.data);
   const name = exportFilename('txt');
   downloadBlob(new Blob([text], { type: 'text/plain' }), name);
@@ -590,6 +610,7 @@ function exportTxt() {
 }
 
 function exportBin() {
+  if (!state.currentDevice) { alert('请先在左侧设备树中选择需要导出的键盘。'); return; }
   const name = exportFilename('bin');
   downloadBlob(new Blob([state.data], { type: 'application/octet-stream' }), name);
   setStatus('已导出 ' + name);
@@ -599,6 +620,7 @@ function exportBin() {
 function bindEvents() {
   $('btnConnect').onclick = onConnect;
   $('btnRefresh').onclick = onRefresh;
+  $('notFoundClose').onclick = hideNotFoundHint;
   $('btnRead').onclick = onRead;
   $('btnWrite').onclick = onWrite;
   $('btnDefault').onclick = onDefault;
@@ -607,6 +629,14 @@ function bindEvents() {
   $('btnExportBin').onclick = exportBin;
   $('btnCancel').onclick = closeEdit;
   $('btnOk').onclick = onOk;
+
+  // 排查帮助弹窗
+  $('btnHelp').onclick = openHelp;
+  $('btnHelpFromNotice').onclick = openHelp;
+  $('btnHelpClose').onclick = closeHelp;
+  $('helpModal').addEventListener('click', (e) => {
+    if (e.target === $('helpModal')) closeHelp();
+  });
 
   // 编辑模式切换（键盘/鼠标）
   document.querySelectorAll('input[name="editMode"]').forEach((radio) => {
@@ -625,7 +655,9 @@ function bindEvents() {
 
   // 点击弹窗背景不关闭，避免误丢编辑；仅取消/确定生效
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !$('modal').hidden) closeEdit();
+    if (e.key !== 'Escape') return;
+    if (!$('helpModal').hidden) { closeHelp(); return; }
+    if (!$('modal').hidden) closeEdit();
   });
 }
 

@@ -98,20 +98,23 @@ export async function requestDevice() {
   if (!isWebHidSupported()) {
     throw new Error('当前浏览器不支持 WebHID（请使用 Chrome / Edge）。');
   }
-  const devices = await navigator.hid.requestDevice({
-    filters: [{ vendorId: VID, productId: PID }],
-  });
+  let devices;
+  try {
+    devices = await navigator.hid.requestDevice({
+      filters: [{ vendorId: VID, productId: PID }],
+    });
+  } catch (e) {
+    // 用户取消授权或过滤失败，返回空
+    return [];
+  }
   if (!devices || devices.length === 0) return [];
-  // 不过滤键盘/鼠标，直接交给 selectRepresentative 挑选"含 Feature Report"的设备。
   return selectRepresentative(devices);
 }
 
 // 获取已配对（之前授权过）且未加入列表的设备。
 export async function getPairedDevices() {
   if (!isWebHidSupported()) return [];
-  const devices = await navigator.hid.getDevices({
-    filters: [{ vendorId: VID, productId: PID }],
-  });
+  const devices = await navigator.hid.getDevices();
   return selectRepresentative(devices);
 }
 

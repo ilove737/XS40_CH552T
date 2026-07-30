@@ -9,7 +9,7 @@
 </head>
 <body>
   <header>
-    <h1>XS40_CH552T 键位映射编辑器 <span class="web-tag">WebHID</span></h1>
+    <h1>XS40_CH552T 键位映射编辑器</h1>
     <span id="connStatus" class="status-badge off">未连接</span>
   </header>
 
@@ -18,25 +18,38 @@
     <button id="btnRefresh">刷新</button>
     <span class="sep"></span>
     <button id="btnRead">读取设备</button>
-    <button id="btnWrite">写入设备</button>
+    <button id="btnWrite" class="danger">写入设备</button>
     <button id="btnDefault">恢复默认</button>
     <span class="sep"></span>
-    <button id="btnImport">导入文件</button>
+    <button id="btnImport" class="warning">导入文件</button>
     <button id="btnExportTxt">导出 .txt</button>
     <button id="btnExportBin">导出 .bin</button>
     <span class="sep"></span>
-    <span id="handLabel" class="hand-label">? 未检测</span>
     <input type="file" id="fileInput" accept=".txt,.bin" hidden>
+  </div>
+
+  <div class="notice" id="notFound" hidden>
+    <div class="notice-icon">!</div>
+    <div class="notice-body">
+      <div class="notice-title">未检测到 XS40 键盘</div>
+      <div class="notice-text">
+        若「连接键盘」弹窗里<strong>没有 XS40 设备</strong>，或列表中始终为空，点「排查帮助」查看解决步骤。
+      </div>
+    </div>
+    <button class="notice-action" id="btnHelpFromNotice" type="button">排查帮助</button>
+    <button class="notice-close" id="notFoundClose" type="button" aria-label="关闭">×</button>
   </div>
 
   <main>
     <aside class="sidebar">
-      <div class="sidebar-title">设备 / 层</div>
+      <div class="sidebar-title">
+        <span>设备 / 层</span>
+        <button class="sidebar-help-btn" id="btnHelp" type="button" title="排查帮助">?</button>
+      </div>
       <ul id="deviceTree" class="tree"></ul>
       <p class="hint" id="sideHint">点击「连接键盘」后，这里会列出已插入的 XS40 键盘（支持左右手双设备）。</p>
     </aside>
     <section class="editor">
-      <div class="layer-title" id="layerTitle">mainKeyMap (主层)</div>
       <div class="grid" id="grid"></div>
       <p class="grid-hint">点击任意按键进行编辑。每个按键 2 字节：[修饰符, 键码]。</p>
     </section>
@@ -100,6 +113,37 @@
       <div class="modal-footer">
         <button id="btnCancel" type="button">取消</button>
         <button id="btnOk" class="primary" type="button">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 排查帮助弹窗 -->
+  <div class="modal-backdrop" id="helpModal" hidden>
+    <div class="modal">
+      <div class="modal-header">未检测到 XS40 键盘 · 排查帮助</div>
+      <div class="modal-body">
+        <p class="notice-text">若「连接键盘」弹窗里<strong>没有 XS40 设备</strong>，或列表中始终为空，通常是因为系统（尤其 Linux 内核）在为键盘创建 <code>/dev/hidraw*</code> 节点时偶发失败，导致浏览器根本看不到它。</p>
+        <ol class="notice-steps">
+          <li>确认左手、右手两个 XS40 键盘已通过 USB 正常连接；</li>
+          <li><strong>重新拔插键盘</strong>（拔下再插上），等待 1~2 秒；</li>
+          <li>点上方「刷新」按钮重新枚举；</li>
+          <li>若仍为空，点「连接键盘」在系统弹窗中勾选左手 + 右手两个条目；</li>
+          <li>Linux 下若提示无权限（或设备节点不可访问），请按以下步骤添加 udev 规则（只需做一次）：
+            <pre class="notice-cmd"># 1. 新建规则文件（写入 XS40 的 VID/PID 并放开权限）
+echo 'SUBSYSTEM=="hidraw", ATTRS{idVendor}=="413d", ATTRS{idProduct}=="2107", MODE="0666"' \
+  | sudo tee /etc/udev/rules.d/99-xs40-keyboard.rules
+
+# 2. 重新加载规则并触发，使其立即生效
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+# 3. 重新拔插两个键盘，刷新本页后再点「连接键盘」</pre>
+            临时替代方案（重启会失效）：<code>sudo chmod 666 /dev/hidraw*</code> 后刷新页面。
+          </li>
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button id="btnHelpClose" type="button">知道了</button>
       </div>
     </div>
   </div>
