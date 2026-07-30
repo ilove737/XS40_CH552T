@@ -250,7 +250,7 @@ export function readKeymapText(text) {
 }
 
 // Shift 组合键 → 最终字符映射
-const SHIFTED_CHARS = {
+export const SHIFTED_CHARS = {
   0x1e: '!', 0x1f: '@', 0x20: '#', 0x21: '$', 0x22: '%',
   0x23: '^', 0x24: '&', 0x25: '*', 0x26: '(', 0x27: ')',
   0x2d: '_', 0x2e: '+',

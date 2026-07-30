@@ -271,6 +271,12 @@ function keyDisplay(mod, key) {
     const name = km.mouseShortName(key);
     return { text: '🖱' + (name ? '\n' + name : ''), cls: 'key-mouse' };
   }
+  if ((mod & (0x02 | 0x20)) && key in km.SHIFTED_CHARS) {
+    return { text: km.SHIFTED_CHARS[key], cls: 'key-mod' };
+  }
+  if (key in km.SHIFTED_CHARS) {
+    return { text: km.SHIFTED_CHARS[key] + '\n' + (km.shortName(key) || ''), cls: 'key-normal' };
+  }
   const prefix = km.modPrefix(mod);
   const name = km.shortName(key);
   let text;
