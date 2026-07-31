@@ -5,6 +5,10 @@ description = "XS40_CH552T 键位映射编辑器 (Tauri 桌面版)"
 authors = ["lxs"]
 edition = "2021"
 
+[[bin]]
+name = "xs40keymap"
+path = "src/main.rs"
+
 [lib]
 name = "xs40_keymap_tauri"
 crate-type = ["staticlib", "cdylib", "rlib"]
