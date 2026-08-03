@@ -21,7 +21,7 @@ TARGET = XS40_CH552T
 
 # 基础编译选项（不含布局宏定义）
 CFLAGS_BASE  = -mmcs51
-CFLAGS_BASE += --xram-loc 0x0000 --xram-size 0x0400 --code-size 0x3600
+CFLAGS_BASE += --xram-loc 0x0000 --xram-size 0x0400 --code-size 0x3800
 CFLAGS_BASE += --iram-size 256
 
 # 源文件（位于 src/ 目录）

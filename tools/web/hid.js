@@ -1,5 +1,5 @@
 // hid.js
-// WebHID 通信层（对应 tools/set_keymap.py 的 hidapi 实现）
+// WebHID 通信层
 // 使用浏览器原生 navigator.hid，无需后端 / libusb。
 import { VID, PID, REPORT_ID, KEYMAP_SIZE } from './keymap.js';
 
